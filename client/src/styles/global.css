@@ -1,0 +1,322 @@
+/*
+ * FinanzasClaras - Design System Variables
+ * Basado en: Esmeralda Clarity (from Stitch)
+ */
+
+:root {
+  /* --- Primary Colors --- */
+  --primary: #00694c;
+  --primary-container: #008560;
+  --primary-fixed: #86f8c9;
+  --primary-fixed-dim: #68dbae;
+
+  /* --- Secondary Colors --- */
+  --secondary: #3e6655;
+  --secondary-container: #bdead3;
+  --secondary-fixed: #c0ecd6;
+  --secondary-fixed-dim: #a5d0ba;
+
+  /* --- Tertiary Colors --- */
+  --tertiary: #993f3a;
+  --tertiary-container: #b85751;
+  --tertiary-fixed: #ffdad6;
+  --tertiary-fixed-dim: #ffb3ad;
+
+  /* --- Surface Palette (Cloud System) --- */
+  --surface: #f8f9fa;
+  --surface-bright: #f8f9fa;
+  --surface-container: #edeeef;
+  --surface-container-high: #e7e8e9;
+  --surface-container-highest: #e1e3e4;
+  --surface-container-low: #f3f4f5;
+  --surface-container-lowest: #ffffff;
+  --surface-dim: #d9dadb;
+  --surface-variant: #e1e3e4;
+
+  /* --- Background Colors --- */
+  --background: #f8f9fa;
+  --on-background: #191c1d;
+
+  /* --- On-Surface Colors --- */
+  --on-surface: #191c1d;
+  --on-surface-variant: #3d4943;
+
+  /* --- Error Colors --- */
+  --error: #ba1a1a;
+  --error-container: #ffdad6;
+  --on-error: #ffffff;
+  --on-error-container: #93000a;
+
+  /* --- Success Colors --- */
+  --success: #68dbae;
+  --success-dim: #68dbae;
+
+  /* --- Outline Colors --- */
+  --outline: #6d7a73;
+  --outline-variant: #bccac1;
+
+  /* --- Spacing Scale (base: 1rem = 16px) --- */
+  --spacing-1: 0.25rem;   /* 4px */
+  --spacing-2: 0.5rem;    /* 8px */
+  --spacing-3: 0.75rem;   /* 12px */
+  --spacing-4: 1rem;      /* 16px */
+  --spacing-6: 1.3rem;    /* 24px */
+  --spacing-8: 1.5rem;    /* 24px */
+  --spacing-12: 2rem;     /* 32px */
+  --spacing-16: 2.5rem;   /* 40px */
+  --spacing-20: 3rem;     /* 48px */
+  --spacing-24: 3.5rem;   /* 56px */
+
+  /* --- Border Radius --- */
+  --radius-sm: 0.25rem;   /* 4px */
+  --radius-md: 0.75rem;   /* 12px */
+  --radius-lg: 1rem;      /* 16px */
+  --radius-full: 9999px;  /* pill */
+
+  /* --- Shadows --- */
+  --shadow-ambient: 0 8px 24px rgba(25, 28, 29, 0.06);
+  --shadow-focus: 0 8px 24px rgba(17, 20, 21, 0.06);
+
+  /* --- Z-Index --- */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 300;
+}
+
+/*
+ * Tipografía
+ * Headlines & Display: Manrope
+ * Body & Labels: Inter
+ */
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Manrope'), url('/fonts/manrope-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Manrope'), url('/fonts/manrope-semibold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Manrope'), url('/fonts/manrope-bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Inter'), url('/fonts/inter-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Inter'), url('/fonts/inter-medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Inter'), url('/fonts/inter-semibold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Inter'), url('/fonts/inter-bold.woff2') format('woff2');
+}
+
+/*
+ * Reset Básico
+ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--surface);
+  color: var(--on-background);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/*
+ * Tamaños de texto (Editorial Scale)
+ */
+
+.display-lg {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.headline-md {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.headline-sm {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.33;
+}
+
+.title-lg {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.title-md {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.body-lg {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.body-md {
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.43;
+}
+
+.label-sm {
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.33;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.caption {
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.33;
+}
+
+/*
+ * Utilidades de Color
+ */
+
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--secondary); }
+.text-tertiary { color: var(--tertiary); }
+.text-on-error { color: var(--on-error); }
+.text-on-surface { color: var(--on-surface); }
+
+.bg-primary { background-color: var(--primary); }
+.bg-secondary { background-color: var(--secondary); }
+.bg-tertiary { background-color: var(--tertiary); }
+.bg-surface { background-color: var(--surface); }
+.bg-surface-container { background-color: var(--surface-container); }
+.bg-surface-container-highest { background-color: var(--surface-container-highest); }
+.bg-surface-container-lowest { background-color: var(--surface-container-lowest); }
+
+.bg-primary-fixed-dim { background-color: var(--primary-fixed-dim); }
+.bg-secondary-container { background-color: var(--secondary-container); }
+.bg-tertiary-fixed-dim { background-color: var(--tertiary-fixed-dim); }
+
+/*
+ * Utilidades de Spacing
+ */
+
+.m-1 { margin: var(--spacing-1); }
+.m-2 { margin: var(--spacing-2); }
+.m-3 { margin: var(--spacing-3); }
+.m-4 { margin: var(--spacing-4); }
+.m-6 { margin: var(--spacing-6); }
+.m-8 { margin: var(--spacing-8); }
+.m-12 { margin: var(--spacing-12); }
+
+.p-1 { padding: var(--spacing-1); }
+.p-2 { padding: var(--spacing-2); }
+.p-3 { padding: var(--spacing-3); }
+.p-4 { padding: var(--spacing-4); }
+.p-6 { padding: var(--spacing-6); }
+.p-8 { padding: var(--spacing-8); }
+.p-12 { padding: var(--spacing-12); }
+
+/*
+ * Utilidades de Border Radius
+ */
+
+.round-sm { border-radius: var(--radius-sm); }
+.round-md { border-radius: var(--radius-md); }
+.round-lg { border-radius: var(--radius-lg); }
+.round-full { border-radius: var(--radius-full); }
+
+.round-corner-sm { border-top-left-radius: var(--radius-sm); border-top-right-radius: var(--radius-sm); }
+.round-corner-md { border-top-left-radius: var(--radius-md); border-top-right-radius: var(--radius-md); }
+
+/*
+ * Utilidades de Display
+ */
+
+.d-flex { display: flex; }
+.d-block { display: block; }
+.d-none { display: none; }
+
+.ai-center { align-items: center; }
+.jc-center { justify-content: center; }
+.jc-between { justify-content: space-between; }
+.gap-1 { gap: var(--spacing-1); }
+.gap-2 { gap: var(--spacing-2); }
+.gap-4 { gap: var(--spacing-4); }
+
+/*
+ * Fondo oscuro para dark mode (opcional)
+ */
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: var(--surface-dim);
+    color: var(--on-surface);
+  }
+}
+
+/*
+ * Print styles
+ */
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+}

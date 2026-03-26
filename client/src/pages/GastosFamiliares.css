@@ -1,0 +1,111 @@
+.gastos-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-4);
+}
+
+.gastos-section {
+  margin-bottom: var(--spacing-6);
+}
+
+.gastos-section h2 {
+  margin-bottom: var(--spacing-3);
+}
+
+.gastos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-3);
+}
+
+.gastos-card {
+  border-radius: var(--radius-md);
+  padding: var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.card-label {
+  font-size: var(--label-sm);
+  color: var(--on-surface-variant);
+}
+
+.gastos-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-3);
+}
+
+.gasto-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  background: var(--surface-container);
+  border-radius: var(--radius-full);
+  font-size: var(--body-md);
+}
+
+.gasto-label {
+  flex: 1;
+}
+
+.gasto-value {
+  font-weight: 600;
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.2rem;
+}
+
+.gasto-icon {
+  font-size: 1.2rem;
+}
+
+.gastos-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-3) var(--spacing-4);
+  background: var(--surface-variant);
+  border-radius: var(--radius-md);
+}
+
+.cuota-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.budget-card {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  background: var(--surface-container);
+  border-radius: var(--radius-md);
+}
+
+.budget-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  font-size: var(--body-md);
+}
+
+.budget-row span:last-child {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: var(--title-lg);
+}
+
+.budget-section {
+  background: var(--surface-container);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
+}
+
+.text-success {
+  color: var(--primary-fixed-dim);
+}

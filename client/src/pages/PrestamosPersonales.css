@@ -1,0 +1,142 @@
+.prestamos-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-4);
+}
+
+.prestamos-selectors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+}
+
+.selector-group label {
+  display: block;
+  margin-bottom: var(--spacing-1);
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--label-sm);
+}
+
+.prestamos-result {
+  margin-bottom: var(--spacing-6);
+}
+
+.result-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-3);
+}
+
+@screen mobile {
+  .result-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.result-card {
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
+  text-align: center;
+}
+
+.result-card h3 {
+  font-size: var(--label-sm);
+  color: var(--on-surface-variant);
+  margin-bottom: var(--spacing-2);
+}
+
+.result-card .display-lg {
+  font-family: 'Manrope', sans-serif;
+}
+
+.result-card.highlight {
+  background: var(--surface-variant);
+}
+
+.prestamos-comparativa {
+  margin-bottom: var(--spacing-6);
+}
+
+.comparativa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-3);
+}
+
+.comparativa-card {
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
+  border: 1px solid var(--outline-variant);
+  background: var(--surface-container);
+  transition: all 0.2s ease;
+}
+
+.comparativa-card:hover {
+  background: var(--surface-container-high);
+}
+
+.comparativa-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-3);
+}
+
+.comparativa-titulo {
+  font-weight: 500;
+  font-family: 'Manrope', sans-serif;
+}
+
+.tag {
+  background: var(--primary-fixed-dim);
+  color: var(--primary);
+  font-size: var(--caption);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+}
+
+.comparativa-info div {
+  font-size: var(--body-md);
+  color: var(--on-surface-variant);
+  margin-bottom: var(--spacing-1);
+}
+
+.comparativa-result span {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: var(--title-md);
+}
+
+.prestamos-info {
+  padding: var(--spacing-4);
+  background: var(--surface-container);
+  border-radius: var(--radius-md);
+}
+
+.consejos-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-4);
+}
+
+@screen mobile {
+  .consejos-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.consejo-item {
+  display: flex;
+  gap: var(--spacing-2);
+  font-size: var(--body-md);
+  color: var(--on-surface);
+  line-height: 1.6;
+}
+
+.consejo-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
