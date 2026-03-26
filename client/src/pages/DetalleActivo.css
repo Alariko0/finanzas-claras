@@ -1,0 +1,212 @@
+.detalle-activo-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-4);
+}
+
+.detalle-header-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-6);
+}
+
+.header-card {
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.header-label {
+  font-size: var(--label-sm);
+  color: var(--on-surface-variant);
+}
+
+.detalle-header-cards .display-lg {
+  font-family: 'Manrope', sans-serif;
+}
+
+.detalle-metrics {
+  margin-bottom: var(--spacing-6);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-3);
+}
+
+.metric-card {
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
+  text-align: center;
+  background: var(--surface-container);
+}
+
+.metric-label {
+  font-size: var(--label-sm);
+  color: var(--on-surface-variant);
+}
+
+.metric-value {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: var(--headline-md);
+  display: block;
+  margin-top: var(--spacing-2);
+}
+
+.highlight {
+  background: var(--surface-container-high);
+}
+
+.detalle-historial {
+  margin-bottom: var(--spacing-6);
+}
+
+.chart-container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-4);
+  background: var(--surface-container);
+  border-radius: var(--radius-md);
+}
+
+.chart-bars {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: flex-end;
+  height: 120px;
+}
+
+.bar-container {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+}
+
+.bar {
+  width: 100%;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  transition: height 0.3s ease;
+}
+
+.chart-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 var(--spacing-2);
+  font-size: var(--caption);
+  color: var(--on-surface-variant);
+  margin-top: var(--spacing-1);
+}
+
+.detalle-ingresos {
+  margin-bottom: var(--spacing-6);
+}
+
+.ingresos-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--body-md);
+}
+
+.ingresos-table th {
+  background: var(--surface-variant);
+  padding: var(--spacing-3);
+  text-align: left;
+  font-weight: 600;
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--label-sm);
+  color: var(--on-surface-variant);
+}
+
+.ingresos-table td {
+  padding: var(--spacing-2);
+  border-bottom: 1px solid var(--outline-variant);
+  font-family: 'Manrope', sans-serif;
+}
+
+.ingresos-table tr:last-child td {
+  border-bottom: 2px solid var(--primary);
+}
+
+.ingresos-table tr.highlight td {
+  background: var(--surface-container);
+  font-weight: 600;
+}
+
+.positive {
+  color: var(--primary-fixed-dim);
+}
+
+.negative {
+  color: var(--tertiary);
+}
+
+.detalle-proyeccion {
+  margin-bottom: var(--spacing-6);
+}
+
+.proyeccion-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-3);
+}
+
+.proyeccion-card {
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--outline-variant);
+}
+
+.proyeccion-label {
+  display: block;
+  font-size: var(--label-sm);
+  color: var(--on-surface-variant);
+  margin-bottom: var(--spacing-2);
+}
+
+.proyeccion-sub {
+  display: block;
+  font-size: var(--caption);
+  color: var(--on-surface-variant);
+  margin-top: var(--spacing-1);
+}
+
+.detalle-notas {
+  padding: var(--spacing-4);
+  background: var(--surface-container);
+  border-radius: var(--radius-md);
+}
+
+.notas-list {
+  display: grid;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-3);
+}
+
+@screen mobile {
+  .notas-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.nota-item {
+  padding: var(--spacing-2) var(--spacing-3);
+  background: var(--surface-variant);
+  border-radius: var(--radius-md);
+  font-size: var(--body-md);
+  color: var(--on-surface);
+}
+
+.nota-item strong {
+  display: block;
+  color: var(--on-surface-variant);
+  font-size: var(--label-sm);
+  margin-bottom: var(--spacing-1);
+}

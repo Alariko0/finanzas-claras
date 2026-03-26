@@ -1,0 +1,112 @@
+.irpf-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-4);
+}
+
+.irpf-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+}
+
+@screen mobile {
+  .irpf-inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+.input-group label {
+  display: block;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  margin-bottom: var(--spacing-1);
+  color: var(--on-surface-variant);
+  font-size: var(--label-sm);
+}
+
+.input-field {
+  width: 100%;
+  padding: var(--spacing-3) var(--spacing-4);
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  border: none;
+  border-bottom: 2px solid var(--outline-variant);
+  border-radius: var(--round-corner-sm);
+  background: var(--surface-container-highest);
+  color: var(--on-surface);
+  transition: all 0.2s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  background: var(--surface-container-lowest);
+  border-bottom-color: var(--primary);
+}
+
+.input-field::placeholder {
+  color: var(--on-surface-variant);
+}
+
+.irpf-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+}
+
+.result-card {
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
+  overflow: hidden;
+}
+
+.irpf-chart {
+  padding: var(--spacing-4);
+  background: var(--surface-container);
+  border-radius: var(--radius-md);
+}
+
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.chart-legend {
+  display: flex;
+  gap: var(--spacing-8);
+  font-size: var(--label-sm);
+}
+
+.legend-color {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+}
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-2);
+  max-width: 100%;
+}
+
+.chart-bar-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.chart-bar {
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%);
+  min-height: 20px;
+  transition: height 0.3s ease;
+  border-radius: var(--radius-sm);
+}
