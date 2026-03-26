@@ -329,3 +329,26 @@ LOG DE CORRECCIONES AUTOMÁTICO
 2026-03-26 19:30 | IRPF.jsx | Corregido typo tramosCalculated → tramosCalculados | Fase 0
 
 Claude debe usar este log para consultar qué bugs ya fueron corregidos y evitar repetir correcciones.
+
+═══════════════════════════════════════════════════
+BLOQUE SUGERIDO: GESTIÓN DE GIT / SINCRONIZACIÓN
+═══════════════════════════════════════════════════
+
+- GIT AUTOMÁTICO
+
+- Cada vez que se complete un bug, una fase, o se creen/modifiquen archivos importantes:
+
+- Añade los archivos modificados al stage:
+- git add <archivos-modificados>
+- Haz commit con un mensaje claro, usando el formato:
+- [Fase X] Bug/Feature: breve descripción
+
+Ejemplo:
+
+[Fase 0] Bug: Corregido typo tramosCalculated → tramosCalculados en IRPF.jsx
+Mantén una rama principal main sincronizada con origin/main. Cada vez que completes una fase, haz:
+git push origin main
+Si hay conflictos al hacer push o pull, resuélvelos antes de continuar.
+Claude debe usar este flujo automáticamente, de forma que siempre haya un historial claro de commits y los cambios estén reflejados en GitHub.
+
+Opcional: Para commits menores (como creación de CSS vacíos o tests), puede agruparlos en un commit de tipo “[Fase N] Setup archivos iniciales”.
