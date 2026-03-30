@@ -87,56 +87,12 @@
  * Tipografía
  * Headlines & Display: Manrope
  * Body & Labels: Inter
+ * Fuentes cargadas desde Google Fonts
  */
 
-@font-face {
-  font-family: 'Manrope';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Manrope'), url('/fonts/manrope-regular.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Manrope';
-  font-style: normal;
-  font-weight: 600;
-  src: local('Manrope'), url('/fonts/manrope-semibold.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Manrope';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Manrope'), url('/fonts/manrope-bold.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Inter'), url('/fonts/inter-regular.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 500;
-  src: local('Inter'), url('/fonts/inter-medium.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  src: local('Inter'), url('/fonts/inter-semibold.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Inter'), url('/fonts/inter-bold.woff2') format('woff2');
-}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 /*
  * Reset Básico

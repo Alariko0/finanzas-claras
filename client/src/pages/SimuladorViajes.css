@@ -1,0 +1,91 @@
+/* SimuladorViajes - Basado en Esmeralda Clarity */
+
+.viajes-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-4);
+}
+
+.viajes-page .page-header {
+  margin-bottom: var(--spacing-4);
+}
+
+.viajes-page .input-group {
+  margin-bottom: var(--spacing-2);
+}
+
+.viajes-page .input-field {
+  width: 100%;
+  padding: var(--spacing-1);
+  border: none;
+  background: var(--surface-container-highest);
+  border-bottom: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+}
+
+.viajes-page .input-field:focus {
+  outline: none;
+  background: var(--surface-container-lowest);
+  border-bottom-color: var(--primary);
+}
+
+.viajes-page .participants-list {
+  margin: var(--spacing-4) 0;
+  padding: var(--spacing-2);
+  background: var(--surface-variant);
+  border-radius: var(--radius-md);
+}
+
+.viajes-page .participant-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-1) 0;
+  border-bottom: 1px solid var(--surface-container);
+}
+
+.viajes-page .expense-list {
+  margin: var(--spacing-4) 0;
+  padding: var(--spacing-2);
+  background: var(--surface-container-low);
+  border-radius: var(--radius-md);
+}
+
+.viajes-page .expense-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-1) 0;
+  border-bottom: 1px solid var(--surface-container);
+}
+
+.viajes-page .settlement-card {
+  margin: var(--spacing-4) 0;
+  padding: var(--spacing-2);
+  background: var(--primary-fixed-dim);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--primary);
+}
+
+.viajes-page .summary-tab {
+  margin-top: var(--spacing-4);
+  padding: var(--spacing-2);
+  background: var(--surface-variant);
+  border-radius: var(--radius-md);
+}
+
+.viajes-page .transfer-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-1) 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .viajes-page {
+    padding: var(--spacing-2);
+  }
+}

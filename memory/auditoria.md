@@ -1,0 +1,1 @@
+- [Auditoría Bugs](auditoria_bugs.md) - Hallazgos de bugs y deuda técnica de FinanzasClaras

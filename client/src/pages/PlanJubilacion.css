@@ -1,0 +1,76 @@
+/* PlanJubilacion - Basado en Esmeralda Clarity */
+
+.plan-jubilacion-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-4);
+}
+
+.plan-jubilacion-page .page-header {
+  margin-bottom: var(--spacing-4);
+}
+
+.plan-jubilacion-page .input-group {
+  margin-bottom: var(--spacing-2);
+}
+
+.plan-jubilacion-page .input-field {
+  width: 100%;
+  padding: var(--spacing-1);
+  border: none;
+  background: var(--surface-container-highest);
+  border-bottom: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+}
+
+.plan-jubilacion-page .input-field:focus {
+  outline: none;
+  background: var(--surface-container-lowest);
+  border-bottom-color: var(--primary);
+}
+
+.plan-jubilacion-page .result-card {
+  margin: var(--spacing-4) 0;
+  padding: var(--spacing-2);
+  background: var(--surface-container-low);
+  border-radius: var(--radius-md);
+}
+
+.plan-jubilacion-page .projection-chart {
+  margin: var(--spacing-4) 0;
+  height: 250px;
+  background: var(--surface-variant);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-1);
+  padding: var(--spacing-2);
+}
+
+.plan-jubilacion-page .chart-bar {
+  flex: 1;
+  min-width: 40px;
+  background: var(--primary);
+  border-radius: var(--radius-four);
+  transition: height 0.3s ease;
+}
+
+.plan-jubilacion-page .coverage-info {
+  margin-top: var(--spacing-4);
+  padding: var(--spacing-2);
+  background: var(--surface-variant);
+  border-radius: var(--radius-md);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .plan-jubilacion-page {
+    padding: var(--spacing-2);
+  }
+
+  .projection-chart {
+    height: 200px;
+  }
+}

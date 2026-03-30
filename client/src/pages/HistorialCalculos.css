@@ -1,0 +1,162 @@
+/* HistorialCalculos - Basado en Esmeralda Clarity */
+
+.historial-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-4);
+}
+
+.historial-page .page-header {
+  margin-bottom: var(--spacing-6);
+}
+
+.historial-page .filters {
+  display: flex;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-4);
+  flex-wrap: wrap;
+}
+
+.historial-page .filter-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.historial-page .filter-label {
+  font-weight: 500;
+  color: var(--on-surface);
+}
+
+.historial-page .filter-select {
+  padding: var(--spacing-1) var(--spacing-2);
+  border: none;
+  background: var(--surface-container-highest);
+  border-bottom: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+}
+
+.historial-page .filter-select:focus {
+  outline: none;
+  background: var(--surface-container-lowest);
+  border-bottom-color: var(--primary);
+}
+
+.historial-page .filter-button {
+  padding: var(--spacing-1) var(--spacing-2);
+  border: none;
+  background: var(--surface-variant);
+  border-radius: var(--radius-full);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.historial-page .filter-button:hover {
+  background: var(--surface-container);
+}
+
+.historial-page .filter-button.active {
+  background: var(--primary);
+  color: var(--surface-container-lowest);
+}
+
+.historial-page .calculations-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.historial-page .calculo-card {
+  padding: var(--spacing-3);
+  background: var(--surface-container-low);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.historial-page .calculo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-ambient);
+}
+
+.historial-page .calculo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-2);
+}
+
+.historial-page .calculo-type {
+  padding: var(--spacing-0-5) var(--spacing-1);
+  background: var(--primary-fixed-dim);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.historial-page .calculo-title {
+  font-weight: 600;
+  color: var(--primary);
+  margin: 0;
+  font-size: var(--font-size-md);
+}
+
+.historial-page .calculo-result {
+  font-size: var(--font-size-sm);
+  color: var(--on-surface-variant);
+  margin: 0;
+}
+
+.historial-page .calculo-date {
+  font-size: var(--font-size-xs);
+  color: var(--on-surface-variant);
+  margin: 0;
+}
+
+.historial-page .calculo-detail {
+  font-size: var(--font-size-xs);
+  color: var(--on-surface-variant);
+  margin: 0;
+  padding-top: var(--spacing-1);
+}
+
+.historial-page .empty-state {
+  text-align: center;
+  padding: var(--spacing-6);
+  background: var(--surface-variant);
+  border-radius: var(--radius-md);
+  color: var(--on-surface-variant);
+}
+
+.historial-page .help-section {
+  margin-top: var(--spacing-6);
+  padding: var(--spacing-3);
+  background: var(--surface-variant);
+  border-radius: var(--radius-md);
+}
+
+.historial-page .help-section h3 {
+  margin: 0 0 var(--spacing-1) 0;
+  color: var(--primary);
+}
+
+.historial-page .help-section p {
+  margin: 0 0 var(--spacing-1) 0;
+  font-size: var(--font-size-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .historial-page {
+    padding: var(--spacing-2);
+  }
+
+  .historial-page .filters {
+    flex-direction: column;
+  }
+}

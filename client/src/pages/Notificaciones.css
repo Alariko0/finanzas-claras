@@ -1,0 +1,124 @@
+/* Notificaciones - Basado en Esmeralda Clarity */
+
+.notificaciones-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-4);
+}
+
+.notificaciones-page .page-header {
+  margin-bottom: var(--spacing-4);
+}
+
+.notificaciones-page .notifications-list {
+  margin-top: var(--spacing-4);
+}
+
+.notificaciones-page .notification-card {
+  padding: var(--spacing-2);
+  margin-bottom: var(--spacing-2);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.notificaciones-page .notification-card:hover {
+  background: var(--surface-container);
+}
+
+.notificaciones-page .notification-badge {
+  padding: var(--spacing-0-5) var(--spacing-1);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  margin-right: var(--spacing-1);
+}
+
+.notificaciones-page .notification-info {
+  background: var(--primary-fixed-dim);
+  color: var(--primary);
+}
+
+.notificaciones-page .notification-warning {
+  background: var(--tertiary-fixed);
+  color: var(--tertiary);
+}
+
+.notificaciones-page .notification-urgent {
+  background: var(--error-container);
+  color: var(--error);
+}
+
+.notificaciones-page .notification-title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  margin-bottom: var(--spacing-0-5);
+  font-size: var(--font-size-md);
+}
+
+.notificaciones-page .notification-message {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--on-surface-variant);
+  margin-bottom: var(--spacing-1);
+}
+
+.notificaciones-page .notification-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-1);
+}
+
+.notificaciones-page .action-button {
+  padding: var(--spacing-0-5) var(--spacing-1);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid currentColor;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+.notificaciones-page .action-button:hover {
+  opacity: 0.8;
+}
+
+.notificaciones-page .empty-state {
+  text-align: center;
+  padding: var(--spacing-4);
+  background: var(--surface-variant);
+  border-radius: var(--radius-md);
+  color: var(--on-surface-variant);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .notificaciones-page {
+    padding: var(--spacing-2);
+  }
+}
+
+/* Mensajes de estado */
+.notificaciones-page .error-message {
+  padding: var(--spacing-1) var(--spacing-2);
+  background: var(--error-container);
+  color: var(--on-error-container);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-2);
+  font-size: var(--font-size-sm);
+}
+
+.notificaciones-page .success-message {
+  padding: var(--spacing-1) var(--spacing-2);
+  background: var(--primary-fixed-dim);
+  color: var(--primary);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-2);
+  font-size: var(--font-size-sm);
+}
+
+.notificaciones-page .loading {
+  text-align: center;
+  color: var(--on-surface-variant);
+  font-style: italic;
+}
