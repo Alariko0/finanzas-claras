@@ -34,4 +34,4 @@ Thumbs.db
 *.turbo
 
 # MacOS
-*.DS_Store
+*.DS_Storeserver/.env
