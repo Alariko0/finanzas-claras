@@ -89,7 +89,7 @@ function App() {
             <Route path="/ia" element={<AsistenteIA />} />
 
             {/* Página principal - Dashboard */}
-            <Route path="/" element={<div className="dashboard-placeholder">Bienvenido a FinanzasClaras</div>} />
+            <Route path="/" element={<Inicio />} />
 
             {/* Ruta por defecto */}
             <Route path="*" element={<div className="not-found">Página no encontrada</div>} />

@@ -276,4 +276,4 @@ npm run build
 
 ## 📄 Licencia
 
-Propietario - FinanzasClaras © 2026
+Propietario - Alariko0 © 2026

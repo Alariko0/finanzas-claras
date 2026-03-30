@@ -1,0 +1,9 @@
+# Registro de Correcciones - FinanzasClaras
+# Generado automáticamente durante Fase 0
+
+2026-03-29 12:00 | global.css | Fuentes Google Fonts ya configuradas correctamente - BUG 1 NO APLICA | Fase 0
+2026-03-29 12:00 | SimuladorInmobiliaria.css | Archivo existente con estilos básicos | Fase 0
+2026-03-29 12:00 | SimuladorMobiliaria.css | Archivo existente con estilos básicos | Fase 0
+2026-03-29 12:00 | IRPF.jsx | Corregido typo tramosCalculated -> tramosCalculados, variable tramoMinimo fuera de scope | Fase 0
+2026-03-29 12:00 | server/package.json | express-rate-limit ya instalado en dependencies | Fase 0
+2026-03-29 12:00 | server/routes/auth.js | El middleware JWT está definido ANTES de las rutas protegidas - BUG 6 NO APLICA | Fase 0

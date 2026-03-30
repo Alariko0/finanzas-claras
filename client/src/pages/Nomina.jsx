@@ -1,46 +1,65 @@
+/**
+ * Nomina.jsx - Calculadora de nómina 2025
+ * Desglose visual de retenciones y Seguridad Social
+ *
+ * Reglas IRPF 2025:
+ * - Base liquidable = Salario - reducciones
+ * - Reducciones: 5.550€ personal + 2.400€ por hijo
+ * - Tramos estatales: 9.5%-24.5%
+ * - Tramos autonómicos: 11%-47% (varía por comunidad)
+ *
+ * @see ../utils/calcularIRPF.js - Funciones de cálculo IRPF exactas
+ */
+'use client'
+
 import { useState } from 'react'
+import { calcularIRPF } from '../utils/calcularIRPF'
 import './Nomina.css'
 
 /**
  * Página: Calculadora de Nómina
  * Desglose visual de retenciones y Seguridad Social 2025
- *
- * Base mínima 2025: 1.265,50€
- * Base máxima 2025: 100.000€
  */
 
 const Nomina = () => {
-  const [salario, setSalario] = useState(2000)
+  const [salarioMensual, setSalarioMensual] = useState(2000)
   const [convenio, setConvenio] = useState('General')
   const [estadoCivil, setEstadoCivil] = useState('soltero')
+  const [hijos, setHijos] = useState(0)
+  const [comunidad, setComunidad] = useState('Otras') // Opciones: 'Castilla y León', 'Andalucía', etc.
+  const [haciendaRetencion, setHaciendaRetencion] = useState(15) // % retención estimada
 
-  // Cotización a cargo del trabajador (2025)
+  // Cálculo IRPF usando función utilitaria con tramos exactos 2025
+  const calcularIRPF2025 = () => {
+    const salarioAnual = salarioMensual * 12
+    const resultado = calcularIRPF({
+      salarioBruto: salarioAnual,
+      comunidad: comunidad === 'Otras' ? 'Otras' : comunidad,
+      hijos,
+      conyugeDependiente: estadoCivil === 'casado'
+    })
+    return resultado
+  }
+
+  const resultadoIRPF = calcularIRPF2025()
+
+  // Cálculo de Seguridad Social (2025)
   const calcularCua = (salario) => {
-    const base = Math.min(salario, 33255)
-    const cuota = Math.floor(base * 0.0345)
-    return cuota
+    const base = Math.min(salario, 3608) // Límite cotización 2025
+    return Math.floor(base * 0.0635)
   }
 
-  // Cotización empresa
+  // Cotización empresa (aproximada - incluye formación, riesgos, etc.)
   const calcularCea = (salario) => {
-    const base = Math.min(salario, 33255)
-    const cuota = Math.floor(base * 0.047)
-    return cuota
+    const base = Math.min(salario, 3608)
+    return Math.floor(base * 0.0664) // Aprox. 6.64% empresa
   }
 
-  // Cálculo aproximado de IRPF
-  const calcularRetencionIrf = (salario) => {
-    // Simplificación: 10-15% del salario bruto
-    const porcentaje = estadoCivil === 'soltero' ? 15 : 10
-    const retencion = salario * (porcentaje / 100)
-    return retencion
+  // Cálculo aproximado de retención IRPF basada en resultado IRPF
+  const calcularRetencionIrf = () => {
+    const retencionBase = resultadoIRPF.cuotaLiquida / 12
+    return retencionBase * (haciendaRetencion / 100)
   }
-
-  const cua = calcularCua(salario)
-  const cea = calcularCea(salario)
-  const retencionIrf = calcularRetencionIrf(salario)
-  const totalRetenciones = cua + cea + retencionIrf
-  const neto = salario - totalRetenciones
 
   return (
     <div className="nomina-page">
@@ -103,36 +122,50 @@ const Nomina = () => {
 
       <div className="nomina-result">
         <div className="result-row">
-          <div className="result-label">Salario Bruto</div>
-          <div className="result-value">{salario.toLocaleString('es-ES')} €</div>
+          <div className="result-label">Salario Bruto Anual</div>
+          <div className="result-value">{(salarioMensual * 12).toLocaleString('es-ES')} €</div>
         </div>
 
         <div className="result-row">
-          <div className="result-label">Seguridad Social</div>
+          <div className="result-label">Seguridad Social (Trabajador)</div>
           <div className="result-row-desc">
-            <span className="text-secondary">CTA:</span> {cua}€ + <span className="text-secondary">CEA:</span> {cea}€ = <strong>{totalRetenciones - retencionIrf}€</strong>
+            <span className="text-secondary">Cua:</span> {calcularCua(salarioMensual)}€
+          </div>
+        </div>
+
+        <div className="result-row">
+          <div className="result-label">Cotización Empresa</div>
+          <div className="result-row-desc">
+            <span className="text-secondary">Cea:</span> {calcularCea(salarioMensual)}€
+          </div>
+        </div>
+
+        <div className="result-row">
+          <div className="result-label">Base IRPF</div>
+          <div className="result-row-desc">
+            <span className="text-secondary">Ahorro personal:</span> {resultadoIRPF.reducciones}€
           </div>
         </div>
 
         <div className="result-row">
           <div className="result-label">Retenciones IRPF</div>
           <div className="result-row-desc">
-            <span className="text-secondary">{estadoCivil === 'soltero' ? 'Soltero/a' : 'Casado/a'}:</span> {retencionIrf.toFixed(2)}€
+            <span className="text-secondary">{estadoCivil} - {hijos} hijos:</span> {calcularRetencionIrf().toFixed(2)}€
           </div>
         </div>
 
         <div className="result-row">
-          <div className="result-label">Total a Retener</div>
-          <div className="result-value text-tertiary">
-            -{totalRetenciones.toLocaleString('es-ES', { maximumFractionDigits: 2 })} €
+          <div className="result-label">Neto por calcular</div>
+          <div className="result-row-desc">
+            <span className="text-secondary">Cuota líquida mensual:</span> {resultadoIRPF.netoMensual}€
           </div>
         </div>
 
         <div className="result-row highlight">
-          <div className="result-label">Neto a Perceber</div>
+          <div className="result-label">Neto A Perceber (estimado)</div>
           <div className="balance-totem text-primary-fixed-dim">
             <span className="label-sm">Salario Neto</span>
-            <span className="display-lg">{neto.toLocaleString('es-ES', { maximumFractionDigits: 2 })} €</span>
+            <span className="display-lg">{(resultadoIRPF.netoMensual - calcularRetencionIrf()).toFixed(2)} €</span>
           </div>
         </div>
       </div>

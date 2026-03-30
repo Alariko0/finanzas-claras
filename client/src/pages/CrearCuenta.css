@@ -1,0 +1,97 @@
+/* CrearCuenta - Basado en Esmeralda Clarity */
+
+.crear-cuenta-page {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: var(--spacing-4);
+}
+
+.crear-cuenta-page .form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: var(--spacing-2);
+}
+
+.crear-cuenta-page .form-group {
+  margin-bottom: var(--spacing-2);
+}
+
+.crear-cuenta-page .form-group label {
+  display: block;
+  margin-bottom: var(--spacing-1);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--on-surface);
+}
+
+.crear-cuenta-page .form-input {
+  width: 100%;
+  padding: var(--spacing-1);
+  border: none;
+  background: var(--surface-container-highest);
+  border-bottom: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+  box-sizing: border-box;
+}
+
+.crear-cuenta-page .form-input:focus {
+  outline: none;
+  background: var(--surface-container-lowest);
+  border-bottom-color: var(--primary);
+}
+
+.crear-cuenta-page .password-requirements {
+  margin-top: var(--spacing-1);
+  font-size: var(--font-size-xs);
+  color: var(--on-surface-variant);
+}
+
+.crear-cuenta-page .validation-error {
+  color: var(--tertiary);
+  font-size: var(--font-size-xs);
+  margin-top: var(--spacing-1);
+}
+
+.crear-cuenta-page .submit-button {
+  width: 100%;
+  padding: var(--spacing-2);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  margin-top: var(--spacing-2);
+  cursor: pointer;
+}
+
+.crear-cuenta-page .submit-button:hover {
+  box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.4);
+}
+
+.crear-cuenta-page .login-link {
+  margin-top: var(--spacing-2);
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--primary);
+}
+
+.crear-cuenta-page .info-text {
+  padding: var(--spacing-2);
+  background: var(--surface-variant);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-3);
+  font-size: var(--font-size-sm);
+  color: var(--on-surface-variant);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .crear-cuenta-page {
+    padding: var(--spacing-2);
+  }
+}

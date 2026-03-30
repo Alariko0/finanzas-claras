@@ -1,0 +1,53 @@
+/* SimuladorMobiliaria - Basado en Esmeralda Clarity */
+
+.mobiliaria-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-4);
+}
+
+.mobiliaria-page .page-header {
+  margin-bottom: var(--spacing-4);
+}
+
+.mobiliaria-page .input-group {
+  margin-bottom: var(--spacing-2);
+}
+
+.mobiliaria-page .input-field {
+  width: 100%;
+  padding: var(--spacing-1);
+  border: none;
+  background: var(--surface-container-highest);
+  border-bottom: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+}
+
+.mobiliaria-page .input-field:focus {
+  outline: none;
+  background: var(--surface-container-lowest);
+  border-bottom-color: var(--primary);
+}
+
+.mobiliaria-page .result-card {
+  margin: var(--spacing-4) 0;
+  padding: var(--spacing-2);
+  background: var(--surface-container-low);
+  border-radius: var(--radius-md);
+}
+
+.mobiliaria-page .tax-savings {
+  margin-top: var(--spacing-4);
+  padding: var(--spacing-2);
+  background: var(--surface-variant);
+  border-radius: var(--radius-md);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mobiliaria-page {
+    padding: var(--spacing-2);
+  }
+}

@@ -110,3 +110,10 @@
   transition: height 0.3s ease;
   border-radius: var(--radius-sm);
 }
+
+.result-hint {
+  margin-top: var(--spacing-2);
+  font-size: 0.875rem;
+  color: var(--on-surface-variant);
+  font-style: italic;
+}
