@@ -13,7 +13,7 @@
 'use client'
 
 import { useState } from 'react'
-import { calcularIRPF } from '../utils/calcularIRPF'
+import { calcularIRPF, calcularCuotaSeguridadSocial, calcularCuotaEmpresa, calcularRetencionIRPF } from '../utils/calcularIRPF'
 import './Nomina.css'
 
 /**
@@ -43,20 +43,12 @@ const Nomina = () => {
 
   const resultadoIRPF = calcularIRPF2025()
 
-  // Cálculo de Seguridad Social (2025)
-  const calcularCua = (salario) => {
-    const base = Math.min(salario, 3608) // Límite cotización 2025
-    return Math.floor(base * 0.0635)
-  }
+  // Cálculo de Seguridad Social (usando la función del util)
+  const cua = calcularCuotaSeguridadSocial(salarioMensual)
+  const cea = calcularCuotaEmpresa(salarioMensual)
 
-  // Cotización empresa (aproximada - incluye formación, riesgos, etc.)
-  const calcularCea = (salario) => {
-    const base = Math.min(salario, 3608)
-    return Math.floor(base * 0.0664) // Aprox. 6.64% empresa
-  }
-
-  // Cálculo aproximado de retención IRPF basada en resultado IRPF
-  const calcularRetencionIrf = () => {
+  // Cálculo de retención IRPF aproximado
+  const retencionIrf = () => {
     const retencionBase = resultadoIRPF.cuotaLiquida / 12
     return retencionBase * (haciendaRetencion / 100)
   }
@@ -76,8 +68,8 @@ const Nomina = () => {
           <input
             id="salario"
             type="number"
-            value={salario}
-            onChange={(e) => setSalario(parseInt(e.target.value) || 0)}
+            value={salarioMensual}
+            onChange={(e) => setSalarioMensual(parseInt(e.target.value) || 0)}
             className="input-field"
             min="0"
             max="200000"
@@ -178,7 +170,7 @@ const Nomina = () => {
               <div
                 className="progress-fill"
                 style={{
-                  width: `${(cua / salario) * 100}%`,
+                  width: `${(cua / salarioMensual) * 100}%`,
                   backgroundColor: 'var(--primary)'
                 }}
               />
@@ -194,13 +186,13 @@ const Nomina = () => {
               <div
                 className="progress-fill"
                 style={{
-                  width: `${(retencionIrf / salario) * 100}%`,
+                  width: `${(retencionIrf() / salarioMensual) * 100}%`,
                   backgroundColor: 'var(--tertiary)'
                 }}
               />
             </div>
             <div className="progress-label">
-              <span className="text-tertiary">{retencionIrf.toFixed(2)}€</span>
+              <span className="text-tertiary">{retencionIrf().toFixed(2)}€</span>
             </div>
           </div>
         </div>

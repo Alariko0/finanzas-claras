@@ -138,14 +138,14 @@ const SimuladorInmobiliaria = () => {
           <div className="metric-card">
             <span className="metric-label">Cap Rate</span>
             <span className="metric-value">
-              {((precioAlquilerMensual * 12 - gastosAnuales) / precioCompra) * 100.toFixed(1)}%
+              {Math.round(((precioAlquilerMensual * 12 - gastosAnuales) / precioCompra) * 100, 1)}%
             </span>
           </div>
 
           <div className="metric-card">
             <span className="metric-label">Cash on Cash</span>
             <span className="metric-value">
-              {((ingresosAnuales - 50000) / (precioCompra - 50000)) * 100.toFixed(1)}%
+              {Math.round(((ingresosAnuales - 50000) / (precioCompra - 50000)) * 100, 1)}%
             </span>
           </div>
 

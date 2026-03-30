@@ -22,11 +22,6 @@ const SimuladorViajes = () => {
   const [porcentajes, setPorcentajes] = useState({})
   const [error, setError] = useState('') // Validación de errores
   const [success, setSuccess] = useState('') // Mensajes de éxito
-  const [participantes, setParticipantes] = useState([])
-  const [gastos, setGastos] = useState([])
-  const [nuevoGasto, setNuevoGasto] = useState('')
-  const [nuevoParticipante, setNuevoParticipante] = useState('')
-  const [porcentajes, setPorcentajes] = useState({})
 
   // Validación para agregar participantes
   const agregarParticipante = () => {
@@ -140,7 +135,7 @@ const SimuladorViajes = () => {
             razon: `Por ${debe.descripcion || 'desglose'}`
           })
           saldoPendiente += debeCantidad
-        }
+        })
       } else if (neto < 0) {
         // Esta persona debe ser pagada
         saldoPendiente += neto
