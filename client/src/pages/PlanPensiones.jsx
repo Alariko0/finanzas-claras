@@ -15,7 +15,7 @@ const PlanPensiones = () => {
 
   // Límite fiscal 2025: 1.500€ anuales
   const LIMITE_FISCAL = 1500
-  const ahorroFiscal = Math.min(aportacionAnual, LIMITE_Fiscal) * 22.5 / 100
+  const ahorroFiscal = Math.min(aportacionAnual, LIMITE_FISCAL) * 22.5 / 100
 
   const calcularPensiones = () => {
     const anos = anosHastaJubilacion

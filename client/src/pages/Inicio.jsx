@@ -30,6 +30,13 @@ const Inicio = () => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showLoginModal, setShowLoginModal] = useState(false)
+  const [activeTab, setActiveTab] = useState('login')
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    nombre: '',
+    confirmPassword: ''
+  })
 
   // Cargar estado de autenticación
   useEffect(() => {

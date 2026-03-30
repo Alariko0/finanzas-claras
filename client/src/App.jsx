@@ -7,6 +7,7 @@ import Navbar from './components/Navbar'
  */
 
 // Grupo A - Núcleo Fiscal
+import Inicio from './pages/Inicio'
 import IRPF from './pages/IRPF'
 import Nomina from './pages/Nomina'
 

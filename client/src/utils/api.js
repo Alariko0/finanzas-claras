@@ -37,7 +37,7 @@ async function fetchWithAuth(endpoint, options = {}) {
 
   // Manejo de errores
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({})
+    const errorData = await response.json().catch(() => ({}))
     const errorMessages = {
       400: 'Solicitud incorrecta',
       401: 'No autorizado. Por favor, inicia sesión nuevamente.',
