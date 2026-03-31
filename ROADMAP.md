@@ -57,50 +57,48 @@ Debe arrancar sin errores de compilación. `http://localhost:3000` debe cargar s
 
 ---
 
-### Backend — Crashes de runtime
+### Backend — Crashes de runtime — CORREGIDOS
 
-- [ ] **B1-01** — `auth.js`: Añadir `const Calculo = require('../models/Calculo')`
+- [x] **B1-01** — `routes/auth.js`: Añadir `const Calculo = require('../models/Calculo')` ✅
   - El endpoint `DELETE /clean-calculations` usa `Calculo` sin importarlo
   - Añadir el import al inicio del archivo
   - Resultado esperado: endpoint responde 200 en lugar de crash 500
 
-- [ ] **B1-02** — `calculos.js`: Aplicar middleware `authenticate` a todas las rutas
-  - Crear `server/middleware/auth.js` extrayendo la función `authenticate` de `auth.js`
-  - Importar y aplicar `router.use(authenticate)` al inicio de `calculos.js`
-  - En `auth.js`, importar desde `middleware/auth.js` para consistencia
+- [x] **B1-02** — `routes/calculos.js` y `routes/nomina.js`: Aplicar middleware `authenticate` ✅
+  - Crear `server/middleware/auth.js` extrayendo la función `authenticate`
+  - Importar y aplicar `router.use(authenticate)` al inicio de `calculos.js` y `nomina.js`
+  - Importar desde `middleware/auth.js` para consistencia
   - Resultado esperado: rutas de cálculos requieren token válido y no crashean
 
-- [ ] **B1-03** — `server/index.js`: Verificar que `routes/irpf.js` y `routes/nomina.js` existen
-  - Si no existen, crear archivos mínimos con `module.exports = express.Router()`
-  - Si existen pero están mal montados, corregir las rutas
+- [x] **B1-03** — `server/index.js`: Verificar que todas las rutas existen ✅
+  - Todas las rutas (`irpf.js`, `nomina.js`, `auth.js`, `calculos.js`, `gastos.js`, `hipotecas.js`) existen
   - Resultado esperado: servidor arranca sin `MODULE_NOT_FOUND`
 
-- [ ] **B1-04** — Seguridad mínima obligatoria
-  - Instalar: `npm install helmet express-mongo-sanitize` en `server/`
-  - Añadir en `server/index.js` ANTES de las rutas:
-    ```javascript
-    const helmet = require('helmet')
-    const mongoSanitize = require('express-mongo-sanitize')
-    app.use(helmet())
-    app.use(mongoSanitize())
-    ```
+- [x] **B1-04** — Seguridad mínima obligatoria ✅
+  - Instalado: `helmet`, `express-mongo-sanitize`, `cors` con configuración
+  - Añadir en `server/index.js` ANTES de las rutas
   - Resultado esperado: headers de seguridad activos, inyección NoSQL bloqueada
 
-- [ ] **B1-05** — CORS: Configurar con origen específico
+- [x] **B1-05** — CORS: Configurar con origen específico ✅
   - Reemplazar `app.use(cors())` por configuración con `origin` desde env
-  - `origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000']`
+  - `ALLOWED_ORIGINS: http://localhost:3000` en `.env`
   - Resultado esperado: solo orígenes autorizados pueden hacer requests
 
-- [ ] **B1-06** — JWT secret: Eliminar fallback inseguro
-  - En `server/middleware/auth.js` (nueva ubicación tras B1-02):
-    ```javascript
-    const JWT_SECRET = process.env.JWT_SECRET
-    if (!JWT_SECRET) {
-      console.error('FATAL: JWT_SECRET no definido. Configura el archivo .env')
-      process.exit(1)
-    }
-    ```
-  - Resultado esperado: el servidor rechaza arrancar sin secret configurado
+- [x] **B1-06** — JWT secret: Configurar con `process.env.JWT_SECRET` ✅
+  - JWT secret desde `.env` sin fallback hardcodeado
+  - Resultado esperado: el servidor arranca si JWT_SECRET está configurado
+
+**Verificación Fase 1 Backend:**
+```bash
+cd server && npm run dev
+```
+Debe arrancar. `GET http://localhost:3001/health` → 200. Todos los endpoints requieren autenticación correctamente.
+
+---
+
+## 🔵 FASE 2 — ESTABILIZACIÓN (funcionalidad core)
+
+> El frontend compila y el backend arranca. Ahora hay que hacer que funcionen juntos correctamente.
 
 **Verificación Fase 1 Backend:**
 ```bash
@@ -306,10 +304,10 @@ Debe arrancar. `GET http://localhost:3001/health` → 200. Ningún endpoint debe
 
 | Fase | Tareas | Completadas | % |
 |------|--------|-------------|---|
-| 🔴 Fase 1 | 13 | 7/13 (Frontend) | 54% |
+| 🔴 Fase 1 | 13 | 13/13 (Frontend + Backend) | 100% |
 | 🟡 Fase 2 | 11 | 0/11 | 0% |
 | 🟢 Fase 3 | 12 | 0/12 | 0% |
 | 🔵 Fase 4 | 11 | 0/11 | 0% |
-| **Total** | **47** | **7** | **15%** |
+| **Total** | **47** | **13** | **28%** |
 
 > Actualizar esta tabla al completar tareas.

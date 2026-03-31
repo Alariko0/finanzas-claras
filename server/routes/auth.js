@@ -5,12 +5,14 @@
  * @route POST /api/auth/register - Registrar usuario nuevo
  * @route POST /api/auth/login - Login y obtener JWT
  * @route GET /api/auth/profile - Obtener perfil usuario (con token)
+ * @route DELETE /api/auth/clean-calculations - Limpiar cálculos (admin only)
  */
 
 const express = require('express')
 const router = express.Router()
 const Usuario = require('../models/Usuario')
-const jwt = require('jsonwebtoken')
+const Calculo = require('../models/Calculo')
+const { authenticate } = require('../middleware/auth')
 
 /**
  * Validación de usuario
@@ -176,35 +178,10 @@ router.get('/profile', authenticate, async (req, res) => {
 })
 
 /**
- * Middleware para verificar JWT
+ * Middleware para verificar JWT (ya importado de ../middleware/auth)
+ * Nota: authenticate está definido en server/middleware/auth.js
  */
-function authenticate(req, res, next) {
-  try {
-    const authHeader = req.headers.authorization
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({
-        success: false,
-        message: 'Token no proporcionado o inválido'
-      })
-    }
-
-    const token = authHeader.split(' ')[1]
-
-    const secret = process.env.JWT_SECRET || 'FC_SECRET_KEY_CHANGE_ME_IN_PRODUCTION'
-
-    const decoded = jwt.verify(token, secret)
-
-    req.usuario = decoded
-    next()
-  } catch (error) {
-    console.error('Error verificando token:', error)
-    res.status(401).json({
-      success: false,
-      message: 'Token inválido o expirado'
-    })
-  }
-}
 
 /**
  * Limpiar todos los cálculos (endpoint de utilidad)

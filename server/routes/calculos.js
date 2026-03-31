@@ -1,6 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const Calculo = require('../models/Calculo')
+const { authenticate } = require('../middleware/auth')
+
+// Aplicar autenticación a todas las rutas
+router.use(authenticate)
 
 // Obtener lista de cálculos
 router.get('/', async (req, res) => {
