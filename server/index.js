@@ -13,14 +13,40 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const helmet = require('helmet')
+const mongoSanitize = require('express-mongo-sanitize')
 
 // Configuración del servidor
 const app = express()
 const PORT = process.env.PORT || 3001
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/finanzas-claras'
+const JWT_SECRET = process.env.JWT_SECRET || 'FC_SECRET_KEY_CHANGE_ME_IN_PRODUCTION'
+
+// Validar JWT_SECRET (no continuar sin él en producción)
+if (!JWT_SECRET || JWT_SECRET === 'FC_SECRET_KEY_CHANGE_ME_IN_PRODUCTION') {
+  console.warn('ADVERTENCIA: JWT_SECRET no configurado correctamente')
+}
+
+// Seguridad básica con helmet
+app.use(helmet())
+
+// Configuración de CORS con origen específico
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000']
+app.use(cors({
+  origin: function(origin, callback) {
+    // Permitir navegación programática (página desde app)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('No permitido por CORS'))
+    }
+  }
+}))
+
+// Protección contra inyección MongoDB
+app.use(mongoSanitize())
 
 // Middleware
-app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 

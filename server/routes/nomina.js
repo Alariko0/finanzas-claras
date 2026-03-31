@@ -1,5 +1,9 @@
 const express = require('express')
 const router = express.Router()
+const { authenticate } = require('../middleware/auth')
+
+// Aplicar autenticación a todas las rutas
+router.use(authenticate)
 
 /**
  * Rutas de cálculo de nómina
