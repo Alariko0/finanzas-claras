@@ -11,91 +11,13 @@
 
 import { useState } from 'react'
 import { calcularIRPF as calcularIRPFUtils } from '../utils/calcularIRPF'
+import { TRAMOS_AUTONOMICOS_2025 } from '../utils/calcularIRPF'
 import './IRPF.css'
 
 /**
  * IRPF.jsx - Calculadora de IRPF 2025
  * Tramos estatales y autonómicos exactos
  */
-
-// Tramos autonómicos 2025 - Definición completa
-const TRAMOS_AUTONOMICOS_2025 = {
-  'Andalucía': {
-    min: 0, max: 12609, porc: 47, reduccion: 1087.5,
-    max1: 18594, porc1: 37, reduccion1: 0,
-    max2: 34124, porc2: 31, reduccion2: 0,
-    max3: 199528, porc3: 26, reduccion3: 0,
-    max4: Infinity, porc4: 23, reduccion4: 0
-  },
-  'Castilla y León': {
-    min: 0, max: 8707, porc: 16, reduccion: 0,
-    max1: 14210, porc1: 23, reduccion1: 0,
-    max2: 23466, porc2: 29, reduccion2: 0,
-    max3: 29493, porc3: 33, reduccion3: 0,
-    max4: 43403, porc4: 40, reduccion4: 0,
-    max5: 69514, porc5: 44, reduccion5: 0,
-    max6: 132296, porc6: 46, reduccion6: 0,
-    max7: Infinity, porc7: 47, reduccion7: 0
-  },
-  'Comunidad de Madrid': {
-    min: 0, max: 11955, porc: 19, reduccion: 0,
-    max1: 18922, porc1: 27, reduccion1: 0,
-    max2: 30093, porc2: 31, reduccion2: 0,
-    max3: 35000, porc3: 33, reduccion3: 0,
-    max4: 48490, porc4: 35, reduccion4: 0,
-    max5: 79681, porc5: 42, reduccion5: 0,
-    max6: 136500, porc6: 44, reduccion6: 0,
-    max7: Infinity, porc7: 47, reduccion7: 0
-  },
-  'Cataluña': {
-    min: 0, max: 12450, porc: 11, reduccion: 0,
-    max1: 20200, porc1: 15.5, reduccion1: 0,
-    max2: 27700, porc2: 17, reduccion2: 0,
-    max3: 48620, porc3: 21, reduccion3: 0,
-    max4: 65200, porc4: 26, reduccion4: 0,
-    max5: 140820, porc5: 31, reduccion5: 0,
-    max6: Infinity, porc6: 33, reduccion6: 0
-  },
-  'País Vasco': {
-    min: 0, max: 11955, porc: 19, reduccion: 0,
-    max1: 18922, porc1: 27, reduccion1: 0,
-    max2: 30093, porc2: 31, reduccion2: 0,
-    max3: 35000, porc3: 33, reduccion3: 0,
-    max4: 48490, porc4: 35, reduccion4: 0,
-    max5: 79681, porc5: 42, reduccion5: 0,
-    max6: 136500, porc6: 44, reduccion6: 0,
-    max7: Infinity, porc7: 47, reduccion7: 0
-  },
-  'Valencia': {
-    min: 0, max: 12450, porc: 11.5, reduccion: 0,
-    max1: 19955, porc1: 16.5, reduccion1: 0,
-    max2: 34000, porc2: 21, reduccion2: 0,
-    max3: 42400, porc3: 26, reduccion3: 0,
-    max4: 68655, porc4: 29, reduccion4: 0,
-    max5: 134220, porc5: 33, reduccion5: 0,
-    max6: Infinity, porc6: 36, reduccion6: 0
-  },
-  'Asturias': {
-    min: 0, max: 11955, porc: 19, reduccion: 0,
-    max1: 18922, porc1: 27, reduccion1: 0,
-    max2: 30093, porc2: 31, reduccion2: 0,
-    max3: 35000, porc3: 33, reduccion3: 0,
-    max4: 48490, porc4: 35, reduccion4: 0,
-    max5: 79681, porc5: 42, reduccion5: 0,
-    max6: 136500, porc6: 44, reduccion6: 0,
-    max7: Infinity, porc7: 47, reduccion7: 0
-  },
-  'Galicia': {
-    min: 0, max: 11955, porc: 19, reduccion: 0,
-    max1: 18922, porc1: 27, reduccion1: 0,
-    max2: 30093, porc2: 31, reduccion2: 0,
-    max3: 35000, porc3: 33, reduccion3: 0,
-    max4: 48490, porc4: 35, reduccion4: 0,
-    max5: 79681, porc5: 42, reduccion5: 0,
-    max6: 136500, porc6: 44, reduccion6: 0,
-    max7: Infinity, porc7: 47, reduccion7: 0
-  }
-}
 
 const IRPF = () => {
   const [rendimientoAnual, setRendimientoAnual] = useState(25000)
