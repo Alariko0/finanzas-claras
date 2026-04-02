@@ -176,12 +176,12 @@ export const calcularIRPF = ({ salarioBruto, comunidad = 'Otras', hijos = 0, con
   // Calcular impuesto estatal
   const impuestoEstatal = tramosCalculados.reduce((sum, t) => sum + t.impuesto, 0)
 
-  // Cuota total de Seguridad Social
+  // Cuota total de Seguridad Social (sobre salario bruto, no base liquidable)
   const cuotasSS = {
-    contingencias: baseLiquidable * (SS_2025.contingencias / 100),
-    desempleo: baseLiquidable * (SS_2025.desempleo / 100),
-    formacion: baseLiquidable * (SS_2025.formacion / 100),
-    total: baseLiquidable * (SS_2025.total / 100)
+    contingencias: salarioBruto * (SS_2025.contingencias / 100),
+    desempleo: salarioBruto * (SS_2025.desempleo / 100),
+    formacion: salarioBruto * (SS_2025.formacion / 100),
+    total: salarioBruto * (SS_2025.total / 100)
   }
 
   // Impuesto total
@@ -190,11 +190,18 @@ export const calcularIRPF = ({ salarioBruto, comunidad = 'Otras', hijos = 0, con
   // Cuota líquida
   const cuotaLiquida = Math.max(0, impuestoTotal - reduccionesTotales - reduccionExtra)
 
-  // Neto mensual (14 pagas o 12)
-  const netoMensual = cuotaLiquida / 14
+  // Neto anual (bruto - SS total - cuota líquida)
+  const netoAnual = salarioBruto - cuotasSS.total - cuotaLiquida
 
-  // Neto 14 pagas
-  const netoCatorce = Math.round(cuotaLiquida - Math.min(cuotaLiquida, 10000)) // Aproximación
+  // Neto mensual: 14 pagas o 12
+  const netoMensual14 = netoAnual / 14
+  const netoMensual12 = netoAnual / 12
+
+  // Neto mensual por default (14 pagas)
+  const netoMensual = netoMensual14
+
+  // Neto con 14 pagas (sin ajuste)
+  const netoCatorce = netoMensual14
 
   // Porcentaje de retención (aproximado según tramo)
   const retencionPct = Math.round((impuestoTotal / salarioBruto) * 100)
