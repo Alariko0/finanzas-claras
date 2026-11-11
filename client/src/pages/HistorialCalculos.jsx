@@ -7,7 +7,6 @@
 'use client'
 
 import { useState } from 'react'
-import { calculos, obtenerToken } from '../utils/api'
 import './HistorialCalculos.css'
 
 /**

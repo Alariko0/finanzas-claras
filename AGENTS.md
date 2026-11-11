@@ -9,7 +9,7 @@ Monorepo MERN (MongoDB, Express, React, Node.js) — aplicación financiera/fisc
 | Paquete | Stack | Puerto |
 |---------|-------|--------|
 | `client/` | React 18 + Vite + React Router DOM | 3000 |
-| `server/` | Express + MongoDB + Mongoose + JWT | 3001 |
+| `server/` | Express + Supabase + JWT | 3001 |
 
 ## Comandos de Desarrollo
 
@@ -30,7 +30,7 @@ cd server && npm run lint       # ESLint
 ```
 
 ### Variables de Entorno (server)
-Crear `.env` desde `.env.example`. Clave: `MONGODB_URI`, `JWT_SECRET`, `ALLOWED_ORIGINS`.
+Crear `.env` desde `.env.example` en `server/` y `client/`. Server: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `ALLOWED_ORIGINS`. Client: `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`. Nunca subir `.env`.
 
 ### Tests
 **No hay framework de tests configurado.** Si se añaden, usar Vitest para client y Jest/Supertest para server.

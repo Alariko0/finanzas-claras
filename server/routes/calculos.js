@@ -1,17 +1,21 @@
 const express = require('express')
 const router = express.Router()
 const calculoController = require('../controllers/calculoController')
-const { authenticate } = require('../middleware/auth')
-const { calculoValidator } = require('../middleware/validation')
+const { authenticate, conSupabaseUsuario } = require('../middleware/auth')
+const {
+  calculoValidator,
+  calculoActualizarValidator,
+  idValidator,
+  paginacionValidator
+} = require('../middleware/validation')
 
-// Aplicar autenticación a todas las rutas
-router.use(authenticate)
+// Todas las rutas exigen sesión y usan el cliente del usuario (RLS)
+router.use(authenticate, conSupabaseUsuario)
 
-// Rutas
-router.get('/', calculoController.listar)
-router.get('/:id', calculoController.obtener)
+router.get('/', paginacionValidator, calculoController.listar)
+router.get('/:id', idValidator, calculoController.obtener)
 router.post('/', calculoValidator, calculoController.crear)
-router.put('/:id', calculoController.actualizar)
-router.delete('/:id', calculoController.eliminar)
+router.put('/:id', idValidator, calculoActualizarValidator, calculoController.actualizar)
+router.delete('/:id', idValidator, calculoController.eliminar)
 
 module.exports = router

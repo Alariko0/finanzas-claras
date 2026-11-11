@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
+import RutaProtegida from './components/RutaProtegida'
 
 /**
  * FinanzasClaras - App principal
@@ -81,10 +82,10 @@ function App() {
 
             {/* Grupo G - Cuenta y Configuración */}
             <Route path="/account" element={<CrearCuenta />} />
-            <Route path="/account/perfil" element={<ConfiguracionPerfil />} />
-            <Route path="/account/historial" element={<HistorialCalculos />} />
-            <Route path="/account/modulos" element={<PersonalizarModulos />} />
-            <Route path="/account/notificaciones" element={<Notificaciones />} />
+            <Route path="/account/perfil" element={<RutaProtegida><ConfiguracionPerfil /></RutaProtegida>} />
+            <Route path="/account/historial" element={<RutaProtegida><HistorialCalculos /></RutaProtegida>} />
+            <Route path="/account/modulos" element={<RutaProtegida><PersonalizarModulos /></RutaProtegida>} />
+            <Route path="/account/notificaciones" element={<RutaProtegida><Notificaciones /></RutaProtegida>} />
 
             {/* Grupo H - IA y Sistema */}
             <Route path="/ia" element={<AsistenteIA />} />

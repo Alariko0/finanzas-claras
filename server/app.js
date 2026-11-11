@@ -1,12 +1,11 @@
 /**
- * app.js - Aplicación Express (sin listen ni conexión a BD)
+ * app.js - Aplicación Express (sin listen)
  * Separada de index.js para poder testearla con Supertest.
  */
 
 const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
-const mongoSanitize = require('express-mongo-sanitize')
 const rateLimit = require('express-rate-limit')
 
 const app = express()
@@ -15,7 +14,7 @@ const app = express()
 app.use(helmet())
 
 // CORS con orígenes permitidos
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000']
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',').map((o) => o.trim()) || ['http://localhost:3000']
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -26,12 +25,8 @@ app.use(cors({
   }
 }))
 
-// Middleware
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
-// Protección contra inyección MongoDB (después de parsear el body)
-app.use(mongoSanitize())
+// Body parsers con límite explícito
+app.use(express.json({ limit: '100kb' }))
 
 // Rate limiting global
 const limiter = rateLimit({
@@ -43,7 +38,6 @@ app.use('/api/', limiter)
 // Routes
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/calculos', require('./routes/calculos'))
-app.use('/api/irpf', require('./routes/irpf'))
 app.use('/api/nomina', require('./routes/nomina'))
 app.use('/api/gastos', require('./routes/gastos'))
 app.use('/api/hipotecas', require('./routes/hipotecas'))

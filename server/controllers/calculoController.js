@@ -1,158 +1,140 @@
 /**
- * calculoController.js - Controlador de cálculos guardados
- * CRUD de cálculos (IRPF, Nómina, Hipotecas, etc.)
+ * calculoController.js - Cálculos guardados por el usuario
+ * Todas las consultas usan el cliente del usuario: RLS garantiza que solo ve lo suyo.
  */
 
-const Calculo = require('../models/Calculo')
+const COLUMNAS = 'id, tipo, titulo, datos_entrada, resultado, created_at, updated_at'
+
+const aApi = (fila) => ({
+  id: fila.id,
+  tipo: fila.tipo,
+  titulo: fila.titulo,
+  datosEntrada: fila.datos_entrada,
+  resultado: fila.resultado,
+  createdAt: fila.created_at,
+  updatedAt: fila.updated_at
+})
+
+const noEncontrado = (res) =>
+  res.status(404).json({ success: false, message: 'Cálculo no encontrado' })
+
+const falloInterno = (res, mensaje, error) => {
+  console.error(`${mensaje}:`, error.message)
+  res.status(500).json({ success: false, message: mensaje })
+}
 
 /**
- * Listar cálculos del usuario autenticado
- * GET /api/calculos
+ * GET /api/calculos?page=1&limit=20
  */
 exports.listar = async (req, res) => {
   try {
-    const calculos = await Calculo.find({ usuario: req.usuario.id }).sort({ createdAt: -1 })
+    const page = req.query.page || 1
+    const limit = req.query.limit || 20
+    const desde = (page - 1) * limit
+
+    const { data, error, count } = await req.supabase
+      .from('calculos')
+      .select(COLUMNAS, { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range(desde, desde + limit - 1)
+
+    if (error) throw error
+
     res.json({
       success: true,
-      calculos
+      data: { calculos: data.map(aApi), total: count, page, limit }
     })
   } catch (error) {
-    console.error('Error al obtener cálculos:', error)
-    res.status(500).json({
-      success: false,
-      message: 'Error al obtener cálculos',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    })
+    falloInterno(res, 'Error al obtener cálculos', error)
   }
 }
 
 /**
- * Obtener un cálculo específico
  * GET /api/calculos/:id
  */
 exports.obtener = async (req, res) => {
   try {
-    const calculo = await Calculo.findOne({
-      _id: req.params.id,
-      usuario: req.usuario.id
-    })
+    const { data, error } = await req.supabase
+      .from('calculos')
+      .select(COLUMNAS)
+      .eq('id', req.params.id)
+      .maybeSingle()
 
-    if (!calculo) {
-      return res.status(404).json({
-        success: false,
-        message: 'Cálculo no encontrado'
-      })
-    }
+    if (error) throw error
+    if (!data) return noEncontrado(res)
 
-    res.json({
-      success: true,
-      calculo
-    })
+    res.json({ success: true, data: { calculo: aApi(data) } })
   } catch (error) {
-    console.error('Error al obtener cálculo:', error)
-    res.status(500).json({
-      success: false,
-      message: 'Error al obtener cálculo',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    })
+    falloInterno(res, 'Error al obtener cálculo', error)
   }
 }
 
 /**
- * Crear un cálculo
  * POST /api/calculos
+ * user_id lo fija la BD (auth.uid()); el cliente no puede elegirlo.
  */
 exports.crear = async (req, res) => {
   try {
-    const { tipo, titulo, datosEntrada, resultado, enlaceCompartido = '', visibilidad = 'privado' } = req.body
+    const { tipo, titulo, datosEntrada, resultado } = req.body
 
-    const calculo = new Calculo({
-      usuario: req.usuario.id,
-      tipo,
-      titulo,
-      datosEntrada,
-      resultado,
-      enlaceCompartido,
-      visibilidad
-    })
+    const { data, error } = await req.supabase
+      .from('calculos')
+      .insert({ tipo, titulo, datos_entrada: datosEntrada, resultado })
+      .select(COLUMNAS)
+      .single()
 
-    await calculo.save()
+    if (error) throw error
 
-    res.status(201).json({
-      success: true,
-      calculo
-    })
+    res.status(201).json({ success: true, data: { calculo: aApi(data) } })
   } catch (error) {
-    console.error('Error al crear cálculo:', error)
-    res.status(500).json({
-      success: false,
-      message: 'Error al crear cálculo',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    })
+    falloInterno(res, 'Error al crear cálculo', error)
   }
 }
 
 /**
- * Actualizar un cálculo
  * PUT /api/calculos/:id
+ * Lista blanca: solo titulo, datosEntrada y resultado.
  */
 exports.actualizar = async (req, res) => {
   try {
-    const calculo = await Calculo.findOneAndUpdate(
-      { _id: req.params.id, usuario: req.usuario.id },
-      req.body,
-      { new: true, runValidators: true }
-    )
+    const cambios = {}
+    if (req.body.titulo !== undefined) cambios.titulo = req.body.titulo
+    if (req.body.datosEntrada !== undefined) cambios.datos_entrada = req.body.datosEntrada
+    if (req.body.resultado !== undefined) cambios.resultado = req.body.resultado
 
-    if (!calculo) {
-      return res.status(404).json({
-        success: false,
-        message: 'Cálculo no encontrado'
-      })
-    }
+    const { data, error } = await req.supabase
+      .from('calculos')
+      .update(cambios)
+      .eq('id', req.params.id)
+      .select(COLUMNAS)
+      .maybeSingle()
 
-    res.json({
-      success: true,
-      calculo
-    })
+    if (error) throw error
+    if (!data) return noEncontrado(res)
+
+    res.json({ success: true, data: { calculo: aApi(data) } })
   } catch (error) {
-    console.error('Error al actualizar cálculo:', error)
-    res.status(500).json({
-      success: false,
-      message: 'Error al actualizar cálculo',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    })
+    falloInterno(res, 'Error al actualizar cálculo', error)
   }
 }
 
 /**
- * Eliminar un cálculo
  * DELETE /api/calculos/:id
  */
 exports.eliminar = async (req, res) => {
   try {
-    const calculo = await Calculo.findOneAndDelete({
-      _id: req.params.id,
-      usuario: req.usuario.id
-    })
+    const { data, error } = await req.supabase
+      .from('calculos')
+      .delete()
+      .eq('id', req.params.id)
+      .select('id')
+      .maybeSingle()
 
-    if (!calculo) {
-      return res.status(404).json({
-        success: false,
-        message: 'Cálculo no encontrado'
-      })
-    }
+    if (error) throw error
+    if (!data) return noEncontrado(res)
 
-    res.json({
-      success: true,
-      message: 'Cálculo eliminado correctamente'
-    })
+    res.json({ success: true, message: 'Cálculo eliminado correctamente' })
   } catch (error) {
-    console.error('Error al eliminar cálculo:', error)
-    res.status(500).json({
-      success: false,
-      message: 'Error al eliminar cálculo',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    })
+    falloInterno(res, 'Error al eliminar cálculo', error)
   }
 }

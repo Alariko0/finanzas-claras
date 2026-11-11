@@ -1,104 +1,113 @@
 /**
  * ConfiguracionPerfil.jsx - Gestión de perfil y preferencias
- * Carga datos de usuario desde backend MongoDB
+ * Perfil y preferencias guardados en Supabase (vía API); contraseña vía Supabase Auth.
  *
  * @see ../utils/api.js - API client con autenticación
  */
 'use client'
 
 import { useState, useEffect } from 'react'
-import { auth, obtenerToken } from '../utils/api'
+import { perfil as perfilApi } from '../utils/api'
+import { useAuth } from '../context/AuthContext'
 import './ConfiguracionPerfil.css'
 
 /**
  * ConfiguracionPerfil - Gestión de perfil y preferencias
  */
 
+const MODULOS_POR_DEFECTO = {
+  hipotecas: true,
+  inversion: true,
+  viajes: true,
+  jubilacion: true
+}
+
+// La API guarda las preferencias como modulo_<nombre>
+const desdeApi = (preferencias = {}) =>
+  Object.fromEntries(
+    Object.keys(MODULOS_POR_DEFECTO).map((clave) => [
+      clave,
+      preferencias[`modulo_${clave}`] ?? MODULOS_POR_DEFECTO[clave]
+    ])
+  )
+
+const haciaApi = (modulos) =>
+  Object.fromEntries(Object.entries(modulos).map(([clave, activo]) => [`modulo_${clave}`, activo]))
+
 const ConfiguracionPerfil = () => {
+  const { user, cambiarPassword } = useAuth()
   const [loading, setLoading] = useState(true)
-  const [nombre, setNombre] = useState('Usuario')
-  const [email, setEmail] = useState('usuario@email.com')
-  const [contraseñaActual, setContraseñaActual] = useState('')
+  const [nombre, setNombre] = useState('')
   const [nuevaContraseña, setNuevaContraseña] = useState('')
   const [confirmarNueva, setConfirmarNueva] = useState('')
-  const [modulos, setModulos] = useState({
-    hipotecas: true,
-    inversion: true,
-    viajes: true,
-    jubilacion: true
-  })
+  const [modulos, setModulos] = useState(MODULOS_POR_DEFECTO)
   const [feedback, setFeedback] = useState({ tipo: '', mensaje: '' })
+
+  const mostrarFeedback = (tipo, mensaje) => {
+    setFeedback({ tipo, mensaje })
+    setTimeout(() => setFeedback({ tipo: '', mensaje: '' }), 4000)
+  }
 
   // Cargar perfil del usuario
   useEffect(() => {
+    let activo = true
+
     const cargarPerfil = async () => {
       try {
-        const token = localStorage.getItem('fc_token')
-        if (token) {
-          const response = await auth.perfil(token)
-          if (response.usuario) {
-            setNombre(response.usuario.nombre)
-            setEmail(response.usuario.email)
-            // Cargar preferencias guardadas
-            const preferencias = JSON.parse(localStorage.getItem('fc_modulos') || '{}')
-            setModulos(preferencias)
-          }
+        const datos = await perfilApi.obtener()
+        if (activo) {
+          setNombre(datos.nombre)
+          setModulos(desdeApi(datos.preferencias))
         }
       } catch (error) {
-        console.error('Error cargando perfil:', error)
+        if (activo) mostrarFeedback('error', error.message)
       } finally {
-        setLoading(false)
+        if (activo) setLoading(false)
       }
     }
 
     cargarPerfil()
+    return () => { activo = false }
   }, [])
 
   const handleSave = async (e) => {
     e.preventDefault()
-    setFeedback({ tipo: '', mensaje: '' })
 
-    // Guardar cambios
-    localStorage.setItem('fc_nombre', nombre)
-    localStorage.setItem('fc_email', email)
-    localStorage.setItem('fc_modulos', JSON.stringify(modulos))
-
-    setFeedback({
-      tipo: 'success',
-      mensaje: 'Perfil guardado correctamente'
-    })
-
-    setTimeout(() => {
-      setFeedback({ tipo: '', mensaje: '' })
-    }, 3000)
+    try {
+      const datos = await perfilApi.actualizar({
+        nombre: nombre.trim(),
+        preferencias: haciaApi(modulos)
+      })
+      setNombre(datos.nombre)
+      mostrarFeedback('success', 'Perfil guardado correctamente')
+    } catch (error) {
+      const detalle = error.errores?.[0]?.message
+      mostrarFeedback('error', detalle || error.message)
+    }
   }
 
   const handlePasswordChange = async (e) => {
     e.preventDefault()
-    setFeedback({ tipo: '', mensaje: '' })
 
     if (nuevaContraseña !== confirmarNueva) {
-      setFeedback({ tipo: 'error', mensaje: 'Las contraseñas no coinciden.' })
+      mostrarFeedback('error', 'Las contraseñas no coinciden.')
       return
     }
 
-    // Validar longitud y complejidad
-    if (nuevaContraseña.length < 8) {
-      setFeedback({ tipo: 'error', mensaje: 'La contraseña debe tener al menos 8 caracteres.' })
+    if (nuevaContraseña.length < 8 || !/[A-Z]/.test(nuevaContraseña) || !/[0-9]/.test(nuevaContraseña)) {
+      mostrarFeedback('error', 'La contraseña debe tener 8+ caracteres, una mayúscula y un número.')
       return
     }
 
-    setFeedback({
-      tipo: 'success',
-      mensaje: 'Contraseña actualizada con éxito'
-    })
+    const resultado = await cambiarPassword(nuevaContraseña)
 
-    setTimeout(() => {
-      setFeedback({ tipo: '', mensaje: '' })
-      setContraseñaActual('')
+    if (resultado.ok) {
       setNuevaContraseña('')
       setConfirmarNueva('')
-    }, 3000)
+      mostrarFeedback('success', 'Contraseña actualizada con éxito')
+    } else {
+      mostrarFeedback('error', resultado.mensaje)
+    }
   }
 
   if (loading) {
@@ -127,6 +136,8 @@ const ConfiguracionPerfil = () => {
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
               className="form-input"
+              minLength={2}
+              maxLength={50}
             />
           </div>
 
@@ -135,9 +146,9 @@ const ConfiguracionPerfil = () => {
             <input
               id="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={user?.email || ''}
               className="form-input"
+              readOnly
             />
           </div>
 
@@ -151,17 +162,6 @@ const ConfiguracionPerfil = () => {
         <h2 className="section-title">Seguridad</h2>
         <form onSubmit={handlePasswordChange}>
           <div className="form-group">
-            <label htmlFor="contraseñaActual">Contraseña Actual</label>
-            <input
-              id="contraseñaActual"
-              type="password"
-              value={contraseñaActual}
-              onChange={(e) => setContraseñaActual(e.target.value)}
-              className="form-input"
-            />
-          </div>
-
-          <div className="form-group">
             <label htmlFor="nuevaContraseña">Nueva Contraseña</label>
             <input
               id="nuevaContraseña"
@@ -169,6 +169,7 @@ const ConfiguracionPerfil = () => {
               value={nuevaContraseña}
               onChange={(e) => setNuevaContraseña(e.target.value)}
               className="form-input"
+              autoComplete="new-password"
             />
           </div>
 
@@ -180,6 +181,7 @@ const ConfiguracionPerfil = () => {
               value={confirmarNueva}
               onChange={(e) => setConfirmarNueva(e.target.value)}
               className="form-input"
+              autoComplete="new-password"
             />
           </div>
 
@@ -221,7 +223,6 @@ const ConfiguracionPerfil = () => {
       <div className="info-text">
         <p>
           <strong>Aviso:</strong> No compartas tu contraseña con nadie.
-          Las preferencias de módulos se guardan localmente.
         </p>
       </div>
     </div>

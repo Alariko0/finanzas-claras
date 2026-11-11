@@ -7,9 +7,9 @@
  */
 'use client'
 
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { auth, obtenerToken, eliminarToken, obtenerUsuario } from '../utils/api'
+import { useAuth } from '../context/AuthContext'
 import './Inicio.css'
 
 /**
@@ -19,8 +19,8 @@ import './Inicio.css'
  */
 
 const Inicio = () => {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const { user, registrar, entrar, salir } = useAuth()
+  const location = useLocation()
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [activeTab, setActiveTab] = useState('login')
   const [formData, setFormData] = useState({
@@ -32,70 +32,57 @@ const Inicio = () => {
   const [errorMsg, setErrorMsg] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
 
-  // Cargar estado de autenticación
+  // Si una ruta protegida nos redirigió aquí, abrir el login
   useEffect(() => {
-    const token = obtenerToken()
-    const userData = obtenerUsuario()
-
-    if (token && userData) {
-      setUser(userData)
+    if (location.state?.requiereLogin && !user) {
+      setActiveTab('login')
+      setShowLoginModal(true)
     }
-
-    setLoading(false)
-  }, [])
+  }, [location.state, user])
 
   // Logout
   const logout = async () => {
-    try {
-      eliminarToken()
-      setUser(null)
-      setSuccessMsg('Has cerrado sesión correctamente.')
-      setTimeout(() => setSuccessMsg(''), 3000)
-    } catch (err) {
-      console.error('Error al cerrar sesión:', err)
-      setErrorMsg('Error al cerrar sesión.')
-      setTimeout(() => setErrorMsg(''), 3000)
-    }
+    await salir()
+    setSuccessMsg('Has cerrado sesión correctamente.')
+    setTimeout(() => setSuccessMsg(''), 3000)
   }
 
-  // Login con API
+  // Login con Supabase Auth
   const handleLogin = async (email, password) => {
     setErrorMsg('')
     setSuccessMsg('')
-    try {
-      const response = await auth.login({ email, password })
 
-      if (response.success) {
-        setUser(response.usuario)
-        setShowLoginModal(false)
-        setSuccessMsg(response.message)
-        setTimeout(() => setSuccessMsg(''), 3000)
-      } else {
-        setErrorMsg(response.message)
-      }
-    } catch (err) {
-      setErrorMsg('Error en el login: ' + err.message)
+    const resultado = await entrar({ email, password })
+
+    if (resultado.ok) {
+      setShowLoginModal(false)
+      setFormData({ email: '', password: '', nombre: '', confirmPassword: '' })
+      setSuccessMsg('Sesión iniciada correctamente.')
+      setTimeout(() => setSuccessMsg(''), 3000)
+    } else {
+      setErrorMsg(resultado.mensaje)
       setTimeout(() => setErrorMsg(''), 5000)
     }
   }
 
-  // Registro con API
+  // Registro con Supabase Auth
   const handleRegister = async (nombre, email, password) => {
     setErrorMsg('')
     setSuccessMsg('')
-    try {
-      const response = await auth.registro({ nombre, email, password })
 
-      if (response.success) {
-        setUser(response.usuario)
-        setShowLoginModal(false)
-        setSuccessMsg(response.message)
-        setTimeout(() => setSuccessMsg(''), 3000)
-      } else {
-        setErrorMsg(response.message)
-      }
-    } catch (err) {
-      setErrorMsg('Error en el registro: ' + err.message)
+    const resultado = await registrar({ nombre, email, password })
+
+    if (resultado.ok) {
+      setShowLoginModal(false)
+      setFormData({ email: '', password: '', nombre: '', confirmPassword: '' })
+      setSuccessMsg(
+        resultado.requiereConfirmacion
+          ? 'Cuenta creada. Revisa tu correo y confirma tu dirección para iniciar sesión.'
+          : 'Cuenta creada correctamente.'
+      )
+      setTimeout(() => setSuccessMsg(''), 8000)
+    } else {
+      setErrorMsg(resultado.mensaje)
       setTimeout(() => setErrorMsg(''), 5000)
     }
   }
@@ -174,7 +161,7 @@ const Inicio = () => {
               <p className="hero-subtitle">
                 Calculadoras fiscales, financieras y de planificación personal
               </p>
-              <p className="user-status">{user.rol === 'admin' ? 'Modo administrador activo' : 'Versión estándar'}</p>
+              <p className="user-status">{user.esAdmin ? 'Modo administrador activo' : 'Versión estándar'}</p>
               <button onClick={logout} className="logout-button">
                 Cerrar sesión
               </button>

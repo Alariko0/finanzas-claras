@@ -2,12 +2,13 @@
  * CrearCuenta.jsx - Registro de nuevo usuario
  * Formulario con validación en tiempo real
  *
- * @see ../utils/api.js - Función de registro auth.registro()
+ * @see ../utils/api.js - Función de registro useAuth().registrar()
  */
 'use client'
 
 import { useState } from 'react'
-import { auth, guardarToken } from '../utils/api'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import './CrearCuenta.css'
 
 /**
@@ -16,6 +17,8 @@ import './CrearCuenta.css'
  */
 
 const CrearCuenta = () => {
+  const { registrar } = useAuth()
+  const navigate = useNavigate()
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
   const [contraseña, setContraseña] = useState('')
@@ -61,25 +64,20 @@ const CrearCuenta = () => {
     setSubmitting(true)
 
     try {
-      // Llamada al API de registro
-      const response = await auth.registro({ nombre, email, password: contraseña })
+      const resultado = await registrar({ nombre: nombre.trim(), email: email.trim(), password: contraseña })
 
-      if (response.message) {
-        // Éxito
-        guardarToken(response.token)
-        setInfo(response.message)
-        setInfo(`¡Cuenta creada correctamente! Redirigiendo...`)
-
-        // Simular redirección
-        setTimeout(() => {
-          window.location.href = '/'
-        }, 1500)
-      } else if (response.message) {
-        // Error del servidor
-        setError(response.message)
+      if (!resultado.ok) {
+        setError(resultado.mensaje)
+        return
       }
-    } catch (err) {
-      setError('Error al crear la cuenta: ' + (err.message || 'Email ya registrado'))
+
+      if (resultado.requiereConfirmacion) {
+        setInfo('Cuenta creada. Revisa tu correo y confirma tu dirección para iniciar sesión.')
+        return
+      }
+
+      setInfo('¡Cuenta creada correctamente! Redirigiendo...')
+      setTimeout(() => navigate('/'), 1500)
     } finally {
       setSubmitting(false)
     }

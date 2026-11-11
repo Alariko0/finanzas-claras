@@ -1,22 +1,22 @@
 /**
- * Auth routes - Autenticación con JWT
+ * Auth routes
  *
- * @route POST /api/auth/register - Registrar usuario nuevo
- * @route POST /api/auth/login - Login y obtener JWT
- * @route GET /api/auth/profile - Obtener perfil usuario (con token)
- * @route DELETE /api/auth/clean-calculations - Limpiar cálculos (admin only)
+ * El registro, login, logout y refresco de sesión los hace el cliente con
+ * Supabase Auth. El servidor solo expone el perfil del usuario autenticado.
+ *
+ * @route GET   /api/auth/profile - Obtener perfil
+ * @route PATCH /api/auth/profile - Actualizar nombre y preferencias
  */
 
 const express = require('express')
 const router = express.Router()
-const authController = require('../controllers/authController')
-const { authenticate } = require('../middleware/auth')
-const { registroValidator, loginValidator } = require('../middleware/validation')
+const perfilController = require('../controllers/perfilController')
+const { authenticate, conSupabaseUsuario } = require('../middleware/auth')
+const { perfilValidator } = require('../middleware/validation')
 
-// Rutas
-router.post('/register', registroValidator, authController.registro)
-router.post('/login', loginValidator, authController.login)
-router.get('/profile', authenticate, authController.perfil)
-router.delete('/clean-calculations', authenticate, authController.limpiarCalculos)
+router.use(authenticate, conSupabaseUsuario)
+
+router.get('/profile', perfilController.obtener)
+router.patch('/profile', perfilValidator, perfilController.actualizar)
 
 module.exports = router

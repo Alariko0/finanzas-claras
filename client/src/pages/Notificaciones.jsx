@@ -7,7 +7,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { auth, obtenerToken } from '../utils/api'
 import './Notificaciones.css'
 
 /**
@@ -25,7 +24,6 @@ const Notificaciones = () => {
   // Fetch notificaciones desde backend
   const cargarNotificaciones = async () => {
     try {
-      const token = obtenerToken()
 
       // Mock data para demo - En Fase 6 se conectará con la API real
       const mockAlertas = [
@@ -73,7 +71,6 @@ const Notificaciones = () => {
   // Marcar como leída
   const marcarLeida = async (id) => {
     try {
-      const token = obtenerToken()
 
       // Actualizar estado local
       setAlertas(alertas.map(a => a.id === id ? { ...a, leida: true } : a))
@@ -97,7 +94,6 @@ const Notificaciones = () => {
   // Limpieza masiva
   const limpiarTodo = async () => {
     try {
-      const token = obtenerToken()
 
       // En Fase 6 se conectará con API real
       // await fetch('/api/notificaciones/limpiar', {

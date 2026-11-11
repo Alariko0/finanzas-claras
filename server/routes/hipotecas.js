@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const Prestamo = require('../models/Prestamo')
-const { authenticate } = require('../middleware/auth')
+
+// TEMPORAL: este cálculo se sustituye en la fase 4 por server/services/prestamos.js
+// (el TAE y el redondeo actuales no son correctos).
 
 // Cálculo de cuota hipotecaria
 const calcularCuotaMensual = (monto, tasa, plazo) => {
@@ -42,47 +43,10 @@ router.post('/calcular', (req, res) => {
       }
     })
   } catch (error) {
+    console.error('Error al calcular hipoteca:', error.message)
     res.status(500).json({
-      message: 'Error al calcular hipoteca',
-      error: error.message
-    })
-  }
-})
-
-// Obtener lista de préstamos guardados (requiere autenticación)
-router.get('/mis-prestamos', authenticate, async (req, res) => {
-  try {
-    const prestamos = await Prestamo.find({ usuario: req.usuario.id })
-      .populate('usuario', 'nombre')
-      .sort({ createdAt: -1 })
-
-    res.json({ prestamos })
-  } catch (error) {
-    res.status(500).json({
-      message: 'Error al obtener préstamos',
-      error: error.message
-    })
-  }
-})
-
-// Crear nuevo préstamo (requiere autenticación)
-router.post('/crear', authenticate, async (req, res) => {
-  try {
-    const prestamo = new Prestamo({
-      usuario: req.usuario.id,
-      tipo: 'hipoteca',
-      ...req.body
-    })
-
-    await prestamo.save()
-
-    res.status(201).json({
-      prestamo
-    })
-  } catch (error) {
-    res.status(500).json({
-      message: 'Error al crear préstamo',
-      error: error.message
+      success: false,
+      message: 'Error al calcular hipoteca'
     })
   }
 })
