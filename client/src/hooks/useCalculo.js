@@ -8,14 +8,19 @@ import { useEffect, useState } from 'react'
  * @param {Object} entrada - Cuerpo que recibe la API
  * @param {Object} [opciones]
  * @param {string} [opciones.invalido] - Si hay texto, no se llama a la API y se muestra como error
+ * @param {boolean} [opciones.omitir] - Si es true, no se calcula nada ni se muestra error (aún no hay datos)
  * @param {number} [opciones.espera=350] - Debounce en ms
  * @returns {{resultado: Object|null, error: string, cargando: boolean}}
  */
-export default function useCalculo(calcular, entrada, { invalido = '', espera = 350 } = {}) {
+export default function useCalculo(calcular, entrada, { invalido = '', omitir = false, espera = 350 } = {}) {
   const [estado, setEstado] = useState({ resultado: null, error: '', cargando: false })
   const clave = JSON.stringify(entrada)
 
   useEffect(() => {
+    if (omitir) {
+      setEstado({ resultado: null, error: '', cargando: false })
+      return undefined
+    }
     if (invalido) {
       setEstado({ resultado: null, error: invalido, cargando: false })
       return undefined
@@ -36,7 +41,7 @@ export default function useCalculo(calcular, entrada, { invalido = '', espera = 
       cancelado = true
       clearTimeout(temporizador)
     }
-  }, [calcular, clave, invalido, espera])
+  }, [calcular, clave, invalido, omitir, espera])
 
   return estado
 }

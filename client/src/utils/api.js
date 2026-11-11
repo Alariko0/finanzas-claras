@@ -129,3 +129,15 @@ export const prestamos = {
   cuadro: calcularPrestamo('cuadro'),
   amortizacion: calcularPrestamo('amortizacion')
 }
+
+/**
+ * Calculadoras del hogar (públicas). `reparto` divide los gastos compartidos entre las personas;
+ * `presupuesto` reparte un ingreso mensual en el método 50/30/20 o en partidas libres.
+ */
+const calcularHogar = (ruta) => async (entrada) =>
+  (await peticion(`/hogar/${ruta}`, { method: 'POST', body: entrada }, { auth: false })).data.resultado
+
+export const hogar = {
+  reparto: calcularHogar('reparto'),
+  presupuesto: calcularHogar('presupuesto')
+}

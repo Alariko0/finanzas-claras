@@ -244,7 +244,55 @@ const prestamoAmortizacionValidator = [
   handleValidationErrors
 ]
 
+/* ───────────── Calculadoras del hogar (públicas): reparto de gastos y presupuesto ───────────── */
+
+const importeValido = (v, max = 10000000) => esNumero(v) && v >= 0 && v <= max
+const textoCorto = (v) => typeof v === 'string' && v.length <= 50
+const CATEGORIAS_GASTO = ['necesidades', 'deseos', 'ahorro']
+
+const gastoValido = (g) => esObjetoPlano(g) && importeValido(g.importe) &&
+  (g.concepto === undefined || (typeof g.concepto === 'string' && g.concepto.length <= 100)) &&
+  (g.categoria === undefined || CATEGORIAS_GASTO.includes(g.categoria))
+
+const personaHogarValida = (p) => esObjetoPlano(p) && importeValido(p.ingresoMensual) &&
+  (p.nombre === undefined || textoCorto(p.nombre)) &&
+  (p.gastosIndividuales === undefined ||
+    (Array.isArray(p.gastosIndividuales) && p.gastosIndividuales.length <= 50 && p.gastosIndividuales.every(gastoValido)))
+
+const hogarRepartoValidator = [
+  body('metodo').optional().isIn(['proporcional', 'igual']).withMessage('metodo debe ser proporcional o igual'),
+  body('personas').isArray({ min: 1, max: 10 }).withMessage('personas debe ser una lista de 1 a 10 personas').bail()
+    .custom((lista) => lista.every(personaHogarValida))
+    .withMessage('personas contiene datos no válidos (ingresoMensual numérico, nombre de hasta 50 caracteres, gastosIndividuales como lista de hasta 50 gastos con importe numérico y categoria necesidades, deseos o ahorro)'),
+  body('gastosCompartidos').optional().isArray({ max: 100 }).withMessage('gastosCompartidos debe ser una lista de hasta 100 gastos').bail()
+    .custom((lista) => lista.every(gastoValido))
+    .withMessage('gastosCompartidos contiene datos no válidos (importe numérico y categoria necesidades, deseos o ahorro)'),
+  handleValidationErrors
+]
+
+const hogarPresupuestoValidator = [
+  body('modo').optional().isIn(['50-30-20', 'libre']).withMessage('modo debe ser 50-30-20 o libre'),
+  numero('ingresoMensual', { min: 0.01, max: 10000000, obligatorio: true }),
+  body('porcentajes').optional().custom((v) => esObjetoPlano(v) &&
+    Object.entries(v).every(([k, p]) => ['necesidades', 'deseos', 'ahorro'].includes(k) && esNumero(p) && p >= 0 && p <= 100))
+    .withMessage('porcentajes debe tener necesidades, deseos y ahorro entre 0 y 100'),
+  body('gastado').optional().custom((v) => esObjetoPlano(v) &&
+    Object.entries(v).every(([k, g]) => ['necesidades', 'deseos', 'ahorro'].includes(k) && importeValido(g)))
+    .withMessage('gastado debe tener importes numéricos para necesidades, deseos y ahorro'),
+  body('partidas').optional().isArray({ max: 20 }).withMessage('partidas debe ser una lista de hasta 20 partidas').bail()
+    .custom((lista) => lista.every((p) => esObjetoPlano(p) && esNumero(p.porcentaje) && p.porcentaje > 0 && p.porcentaje <= 100 &&
+      (p.nombre === undefined || textoCorto(p.nombre)) &&
+      (p.ahorro === undefined || typeof p.ahorro === 'boolean') &&
+      (p.gastado === undefined || importeValido(p.gastado))))
+    .withMessage('partidas contiene datos no válidos (porcentaje entre 0 y 100, ahorro verdadero o falso, gastado numérico)'),
+  numero('objetivoAhorro', { min: 0.01, max: 1000000000 }),
+  numero('ahorroActual', { max: 1000000000 }),
+  handleValidationErrors
+]
+
 module.exports = {
+  hogarRepartoValidator,
+  hogarPresupuestoValidator,
   TIPOS_CALCULO,
   MODULOS_PREFERENCIAS,
   handleValidationErrors,

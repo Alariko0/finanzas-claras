@@ -43,6 +43,7 @@ app.use(require('./routes/health'))
 // por eso van antes de los límites generales y de escritura
 app.use('/api/fiscal', require('./routes/fiscal'))
 app.use('/api/prestamos', require('./routes/prestamos'))
+app.use('/api/hogar', require('./routes/hogar'))
 
 // Rate limiting: general para toda la API y más estricto en escrituras
 app.use('/api/', limitadorGeneral)

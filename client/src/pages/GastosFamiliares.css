@@ -126,3 +126,104 @@
   margin-top: var(--spacing-2);
   font-size: var(--body-md);
 }
+
+.gastos-page .gastos-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-4);
+}
+
+.gastos-page .gastos-fila {
+  display: grid;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.gastos-page .gastos-fila-personas {
+  grid-template-columns: 2fr 1fr auto;
+}
+
+.gastos-page .gastos-fila-gastos {
+  grid-template-columns: 2fr 1fr 1fr auto;
+}
+
+.gastos-page .gastos-persona {
+  margin-bottom: var(--spacing-6);
+}
+
+.gastos-page .gastos-persona h3 {
+  margin-bottom: var(--spacing-3);
+  font-family: var(--font-headline);
+  font-size: var(--font-size-lg);
+}
+
+.gastos-page .gastos-enlace {
+  margin: var(--spacing-6) 0 0;
+  font-size: var(--label-sm);
+  color: var(--on-surface-variant);
+}
+
+.gastos-page .gastos-enlace a {
+  color: var(--primary);
+}
+
+.gastos-page .gastos-fila-cabecera {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+}
+
+.gastos-page .gastos-quitar {
+  padding: var(--spacing-2) var(--spacing-4);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--surface-container-highest);
+  color: var(--on-surface-variant);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.gastos-page .gastos-quitar:hover:not(:disabled) {
+  color: var(--on-surface);
+}
+
+.gastos-page .gastos-quitar:disabled,
+.gastos-page .action-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.gastos-page .gastos-results.calculando {
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.gastos-page .gastos-error {
+  margin-bottom: var(--spacing-6);
+  padding: var(--spacing-4) var(--spacing-6);
+  border-radius: var(--radius-xl);
+  background: var(--error-container);
+  color: var(--on-error-container);
+}
+
+.gastos-page .gastos-avisos {
+  margin: var(--spacing-6) 0 0;
+  padding-left: var(--spacing-6);
+  font-size: var(--label-sm);
+  color: var(--on-surface-variant);
+}
+
+@media (max-width: 768px) {
+  .gastos-page .gastos-fila-personas,
+  .gastos-page .gastos-fila-gastos {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .gastos-page .gastos-fila-cabecera {
+    display: none;
+  }
+}
