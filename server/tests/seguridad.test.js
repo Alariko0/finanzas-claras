@@ -5,6 +5,11 @@ describe('superficie de autenticación (sin mocks)', () => {
   test.each([
     ['get', '/api/calculos'],
     ['post', '/api/calculos'],
+    ['get', '/api/nominas'],
+    ['get', '/api/nominas/resumen'],
+    ['post', '/api/nominas'],
+    ['put', '/api/nominas/22222222-2222-4222-8222-222222222222'],
+    ['delete', '/api/nominas/22222222-2222-4222-8222-222222222222'],
     ['get', '/api/auth/profile'],
     ['patch', '/api/auth/profile']
   ])('%s %s sin token → 401', async (metodo, ruta) => {

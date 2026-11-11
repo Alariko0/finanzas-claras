@@ -19,6 +19,7 @@ const HACIENDA_AUTONOMICA_2026 =
 export const TEMAS = [
   { clave: 'irpf', titulo: 'IRPF' },
   { clave: 'nomina', titulo: 'Nómina, retenciones y Seguridad Social' },
+  { clave: 'convenios', titulo: 'Convenios colectivos' },
   { clave: 'pension', titulo: 'Pensión pública de jubilación' },
   { clave: 'hipotecas', titulo: 'Hipotecas y préstamos' },
   { clave: 'datos', titulo: 'Datos estadísticos' }
@@ -167,6 +168,18 @@ export const FUENTES = {
     pdf: boePdf('BOE-A-2024-26694'),
     regula: 'Su disposición final séptima modificó la LIRPF: el último tramo de la escala del ahorro pasa al 30 % en total (15 % por parte), desde 2025.'
   },
+  convenioHosteleriaMadrid: {
+    tema: 'convenios',
+    titulo: 'Convenio Colectivo del Sector de Hostelería y Actividades Turísticas de la Comunidad de Madrid',
+    referencia: 'BOCM núm. 82, 6-4-2024 (BOCM-20240406-2), código 28002085011981. Vigencia 2023-2025; tablas hasta 2025',
+    url: 'https://www.bocm.es/boletin/CM_Orden_BOCM/2024/04/06/BOCM-20240406-2.PDF',
+    pdf: 'https://www.ccoo-servicios.es/archivos/BOCM-20240406-Conv-hosteleria.pdf',
+    regula:
+      'Salario base mensual por nivel y tipo de establecimiento (tablas de 2023, 2024 y 2025), 14 pagas con las extraordinarias el 20 de ' +
+      'junio y el 20 de diciembre (art. 26), plus convenio (art. 29), manutención (art. 28), plus de formación (art. 31), complemento de ' +
+      'permanencia (art. 30), nocturnidad (art. 27), jornada de 1.800 horas al año (art. 14) y revisión salarial del 6 %, 5 % y 4 % (art. 5). ' +
+      'No incluye tablas de 2026 ni las del Anexo III (empresas con porcentaje de servicio).'
+  },
   lgss: {
     tema: 'pension',
     titulo: 'Real Decreto Legislativo 8/2015, Ley General de la Seguridad Social (LGSS)',
@@ -218,7 +231,7 @@ export const PAGINAS = {
   nomina: {
     nombre: 'Nómina',
     ruta: '/nomina',
-    fuentes: ['ordenCotizacion2026', 'rdl3_2026', 'algoritmoAeat', 'rirpf', 'rd142_2024', 'rd1975_2008', 'lirpf', 'rdl4_2024', 'manualRentaEscalas', 'manualRentaMinimos']
+    fuentes: ['ordenCotizacion2026', 'rdl3_2026', 'algoritmoAeat', 'rirpf', 'rd142_2024', 'rd1975_2008', 'lirpf', 'rdl4_2024', 'manualRentaEscalas', 'manualRentaMinimos', 'convenioHosteleriaMadrid']
   },
   planJubilacion: {
     nombre: 'Plan de jubilación',

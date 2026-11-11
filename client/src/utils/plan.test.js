@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { construirTramos, descendientesDe, construirEntradaNomina } from './plan'
+import { combinarHistorial, construirTramos, descendientesDe, construirEntradaNomina } from './plan'
 
 describe('construirTramos', () => {
   const hoy = { anio: 2026, mes: 11 }
@@ -57,5 +57,32 @@ describe('utils de nómina', () => {
     const base = { brutoAnual: 30000, pagas: 14, prorrateo: true, grupo: 1, contrato: 'indefinido', situacion: 1, hijos: 0, hijosMenores3: 0, edad: 40 }
     expect(construirEntradaNomina(base)).toMatchObject({ situacionFamiliar: 3, prorrateo: true, grupoCotizacion: 1, contribuyente: { edad: 40 } })
     expect(construirEntradaNomina({ ...base, pagas: 12 }).prorrateo).toBe(false)
+    expect(construirEntradaNomina({ ...base, pagas: 16 }).prorrateo).toBe(true)
+  })
+})
+
+describe('combinarHistorial', () => {
+  const manual = [{ desde: '2020-01', hasta: '2026-09', baseMensual: 1800 }]
+
+  test('sin nóminas deja el historial escrito a mano', () => {
+    expect(combinarHistorial(manual, [])).toEqual(manual)
+  })
+
+  test('las nóminas sustituyen sus meses y el resto del historial se conserva, sin meses repetidos', () => {
+    const r = combinarHistorial(manual, [{ mes: '2026-03', base: 2400 }, { mes: '2026-09', base: 2500 }])
+    expect(r).toEqual([
+      { desde: '2020-01', hasta: '2026-02', baseMensual: 1800 },
+      { desde: '2026-04', hasta: '2026-08', baseMensual: 1800 },
+      { desde: '2026-03', hasta: '2026-03', baseMensual: 2400 },
+      { desde: '2026-09', hasta: '2026-09', baseMensual: 2500 }
+    ])
+  })
+
+  test('un mes al principio del tramo no deja un tramo vacío', () => {
+    const r = combinarHistorial([{ desde: '2026-01', hasta: '2026-02', baseMensual: 1000 }], [{ mes: '2026-01', base: 1500 }])
+    expect(r).toEqual([
+      { desde: '2026-02', hasta: '2026-02', baseMensual: 1000 },
+      { desde: '2026-01', hasta: '2026-01', baseMensual: 1500 }
+    ])
   })
 })

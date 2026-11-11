@@ -7,6 +7,7 @@
 
 import { Link } from 'react-router-dom'
 import { CATEGORIAS, useHogar } from '../context/HogarContext'
+import { useNominas } from '../context/NominasContext'
 import { euro, porcentaje } from '../utils/formato'
 import './GastosFamiliares.css'
 
@@ -24,6 +25,10 @@ const GastosFamiliares = () => {
   const {
     metodo, setMetodo, personas, setPersonas, gastos, setGastos, nuevoId, resultado, error, cargando
   } = useHogar()
+
+  // Ingreso neto real: el que sale de las nóminas registradas (media mensual del año, con pagas extra)
+  const { resumen } = useNominas()
+  const ingresoNomina = resumen?.proyeccion?.ingresoMensualMedio
 
   const importe = (e) => Math.min(10000000, Math.max(0, Number(e.target.value) || 0))
   const cambiarPersona = (id, campo, valor) =>
@@ -57,6 +62,22 @@ const GastosFamiliares = () => {
 
       <div className="gastos-section">
         <h2 className="headline-md">Personas</h2>
+        {ingresoNomina > 0 && (
+          <div className="gastos-nomina">
+            <p>
+              <strong>Según tus nóminas</strong> cobras de media {euro(ingresoNomina)} netos al mes
+              (última nómina: {euro(resumen.ultima.liquido)}).
+            </p>
+            <button
+              type="button"
+              className="action-button"
+              disabled={personas[0].ingresoMensual === ingresoNomina}
+              onClick={() => cambiarPersona(personas[0].id, 'ingresoMensual', ingresoNomina)}
+            >
+              Usar en {personas[0].nombre || 'la primera persona'}
+            </button>
+          </div>
+        )}
         <div className="gastos-editor">
           <div className="gastos-fila gastos-fila-personas gastos-fila-cabecera" aria-hidden="true">
             <span>Nombre</span><span>Ingresos al mes (€)</span><span />

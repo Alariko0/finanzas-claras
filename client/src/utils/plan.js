@@ -15,7 +15,7 @@ export function construirEntradaNomina(f) {
   return {
     brutoAnual: f.brutoAnual,
     pagas: f.pagas,
-    prorrateo: f.pagas === 14 && f.prorrateo,
+    prorrateo: f.pagas > 12 && f.prorrateo,
     grupoCotizacion: f.grupo,
     contrato: f.contrato,
     // La situación 1 exige hijos: sin ellos se calcula como «otra»
@@ -53,4 +53,32 @@ export function construirTramos(p, hoy) {
       }
     })
     .filter((t) => t.hasta >= t.desde)
+}
+
+const indiceMes = (texto) => {
+  const [anio, mes] = texto.split('-').map(Number)
+  return anio * 12 + mes - 1
+}
+
+/**
+ * Historial de cotización con las nóminas reales: cada mes de las nóminas (`bases`: { mes, base })
+ * sustituye lo que el usuario hubiera escrito a mano para ese mes, y el resto del historial manual
+ * se mantiene. Devuelve tramos listos para POST /api/pension/jubilacion (sin meses repetidos).
+ */
+export function combinarHistorial(tramos, bases) {
+  let restos = tramos.map((t) => ({ desde: indiceMes(t.desde), hasta: indiceMes(t.hasta), baseMensual: t.baseMensual }))
+  for (const { mes } of bases) {
+    const m = indiceMes(mes)
+    restos = restos.flatMap((t) => {
+      if (m < t.desde || m > t.hasta) return [t]
+      return [
+        ...(m > t.desde ? [{ ...t, hasta: m - 1 }] : []),
+        ...(m < t.hasta ? [{ ...t, desde: m + 1 }] : [])
+      ]
+    })
+  }
+  return [
+    ...restos.map((t) => ({ desde: mesTexto(t.desde), hasta: mesTexto(t.hasta), baseMensual: t.baseMensual })),
+    ...bases.map((b) => ({ desde: b.mes, hasta: b.mes, baseMensual: b.base }))
+  ]
 }

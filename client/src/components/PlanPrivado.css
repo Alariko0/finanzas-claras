@@ -34,3 +34,22 @@
   border-radius: var(--radius-xl);
   background: var(--surface-container-low);
 }
+
+/* Aportaciones que salen de las nóminas registradas */
+.plan-privado-nominas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+  padding: var(--spacing-4) var(--spacing-6);
+  border-radius: var(--radius-lg);
+  background: var(--surface-container);
+  font-size: var(--font-size-sm);
+  color: var(--on-surface-variant);
+}
+
+.plan-privado-nominas strong {
+  color: var(--on-surface);
+}

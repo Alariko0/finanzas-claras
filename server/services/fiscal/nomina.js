@@ -24,6 +24,11 @@ const { estimarRetencionNomina } = require('./retencionNomina')
  */
 
 const SS = datos.SEGURIDAD_SOCIAL
+
+// Número de pagas al año que admite la calculadora. El Estatuto de los Trabajadores (art. 31) solo
+// garantiza dos extraordinarias: 15, 16 o 18 dependen del convenio. Las extras de más de 14 pagas
+// se tratan igual que las de 14 (mismo importe que una ordinaria, solo llevan IRPF).
+const PAGAS_ADMITIDAS = [12, 14, 15, 16, 18]
 const UNIDADES = 10000 // céntimos × centésimas de punto
 
 const centesimas = (pct) => Math.round(pct * 100)
@@ -90,8 +95,8 @@ function mapear(o, factor = 1) {
 function calcularNomina(entrada = {}) {
   const brutoAnual = aCentimos(importe(entrada.brutoAnual, 'brutoAnual', { minimo: 0.01 }))
   const pagas = entrada.pagas ?? 14
-  if (pagas !== 12 && pagas !== 14) throw new ErrorEntrada('pagas debe ser 12 o 14')
-  const prorrateo = pagas === 14 ? !!entrada.prorrateo : true
+  if (!PAGAS_ADMITIDAS.includes(pagas)) throw new ErrorEntrada(`pagas debe ser ${PAGAS_ADMITIDAS.join(', ')}`)
+  const prorrateo = pagas > 12 ? !!entrada.prorrateo : true
   const grupo = entrada.grupoCotizacion ?? 1
   if (!Number.isInteger(grupo) || grupo < 1 || grupo > 11) throw new ErrorEntrada('grupoCotizacion debe ser un entero de 1 a 11')
   const contrato = entrada.contrato ?? 'indefinido'
@@ -118,17 +123,18 @@ function calcularNomina(entrada = {}) {
   const irpfSobre = (brutoCentimos) => Math.floor((brutoCentimos * tipoCentesimas + 5000) / 10000)
   const irpfAnual = aCentimos(retencion.importeAnual)
 
-  // Pagos: 12 mensuales (o 12 + 2 extra sin prorrateo)
+  // Pagos: 12 mensuales (o 12 ordinarios + las pagas extra, todas del mismo importe, sin prorrateo)
   let pagos
   if (pagas === 12 || prorrateo) {
     const bruto = Math.round(brutoAnual / 12)
     const irpf = irpfSobre(bruto)
-    pagos = { cantidad: 12, ordinaria: { bruto, ss: ss.totalTrabajador, irpf, neto: bruto - ss.totalTrabajador - irpf } }
+    pagos = { cantidad: 12, extras: 0, ordinaria: { bruto, ss: ss.totalTrabajador, irpf, neto: bruto - ss.totalTrabajador - irpf } }
   } else {
-    const bruto = Math.round(brutoAnual / 14)
+    const bruto = Math.round(brutoAnual / pagas)
     const irpf = irpfSobre(bruto)
     pagos = {
-      cantidad: 14,
+      cantidad: pagas,
+      extras: pagas - 12,
       ordinaria: { bruto, ss: ss.totalTrabajador, irpf, neto: bruto - ss.totalTrabajador - irpf },
       extra: { bruto, ss: 0, irpf, neto: bruto - irpf }
     }
@@ -163,9 +169,9 @@ function calcularNomina(entrada = {}) {
     },
     netoAnual: euros(brutoAnual - ssAnualTrabajador - irpfAnual),
     costeEmpresaAnual: euros(brutoAnual + ssAnualEmpresa),
-    paga: { cantidad: pagos.cantidad, ordinaria: salida(pagos.ordinaria), extra: salida(pagos.extra) },
+    paga: { cantidad: pagos.cantidad, extras: pagos.extras, ordinaria: salida(pagos.ordinaria), extra: salida(pagos.extra) },
     avisos
   }
 }
 
-module.exports = { calcularNomina, cotizacionMensual }
+module.exports = { calcularNomina, cotizacionMensual, porcentaje, baseMinimaMensual, PAGAS_ADMITIDAS }

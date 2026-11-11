@@ -46,6 +46,7 @@ app.use('/api/prestamos', require('./routes/prestamos'))
 app.use('/api/hogar', require('./routes/hogar'))
 app.use('/api/jubilacion', require('./routes/jubilacion'))
 app.use('/api/pension', require('./routes/pension'))
+app.use('/api/convenios', require('./routes/convenios'))
 
 // Rate limiting: general para toda la API y más estricto en escrituras
 app.use('/api/', limitadorGeneral)
@@ -54,6 +55,7 @@ app.use('/api/', limitadorEscritura)
 // Routes
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/calculos', require('./routes/calculos'))
+app.use('/api/nominas', require('./routes/nominas'))
 
 // Ruta no encontrada
 app.use((req, res) => {

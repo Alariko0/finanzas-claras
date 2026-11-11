@@ -8,6 +8,8 @@ import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { fiscal } from '../utils/api'
 import useCalculo from '../hooks/useCalculo'
+import { useNominas } from '../context/NominasContext'
+import { usePlan } from '../context/PlanContext'
 import { COMUNIDADES } from '../utils/comunidades'
 import FuentesPie from '../components/FuentesPie'
 import './IRPF.css'
@@ -47,7 +49,23 @@ const IRPF = () => {
     invalido: form.rendimiento >= 0 ? '' : 'El rendimiento no puede ser negativo.'
   })
 
+  // Nóminas reales del usuario: acumulado del año y previsión a diciembre
+  const { resumen } = useNominas()
+  const { nomina, supuestos } = usePlan()
+  const proy = resumen?.proyeccion
+
   const cambiar = (campo, valor) => setForm((anterior) => ({ ...anterior, [campo]: valor }))
+  const usarNominas = () =>
+    setForm((anterior) => ({
+      ...anterior,
+      rendimiento: proy.baseIrpf,
+      cotizaciones: proy.cotizacionesTrabajador,
+      comunidad: nomina.comunidad,
+      edad: Number(supuestos.edadActual) || anterior.edad,
+      hijos: nomina.hijos,
+      hijosMenores3: Math.min(nomina.hijosMenores3, nomina.hijos)
+    }))
+  const conNominas = !!proy && form.rendimiento === proy.baseIrpf && form.cotizaciones === proy.cotizacionesTrabajador
   const numero = (campo) => (e) => cambiar(campo, Math.max(0, Number(e.target.value) || 0))
   const entero = (campo, max) => (e) => {
     const n = Number.parseInt(e.target.value, 10)
@@ -72,6 +90,20 @@ const IRPF = () => {
           <Link to="/nomina">¿Buscas tu sueldo neto mensual? Ir a la calculadora de nómina</Link>
         </p>
       </div>
+
+      {proy && (
+        <div className="irpf-nominas">
+          <p>
+            <strong>Con tus nóminas de {resumen.anio}</strong>: llevas {euro(resumen.acumulado.irpf)} retenidos en
+            {' '}{resumen.mesesRegistrados.length} {resumen.mesesRegistrados.length === 1 ? 'mes' : 'meses'} y la previsión
+            a diciembre es de {euro(proy.baseIrpf)} de rendimiento, {euro(proy.cotizacionesTrabajador)} de Seguridad
+            Social y {euro(proy.irpf)} de retenciones.
+          </p>
+          <button type="button" className="action-button" onClick={usarNominas} disabled={conNominas}>
+            {conNominas ? 'Usando tus nóminas' : 'Usar mis nóminas'}
+          </button>
+        </div>
+      )}
 
       <div className="irpf-inputs">
         <div className="input-group">
@@ -176,6 +208,28 @@ const IRPF = () => {
                 <span className="display-lg">{euro(resultado.cuotaIntegra)}</span>
               </div>
             </div>
+
+            {conNominas && (
+              <div className="result-card surface-container-low">
+                <h3 className="headline-sm">Frente a lo que te retienen</h3>
+                <div className="result-row">
+                  <span className="result-label">Retenciones previstas a diciembre</span>
+                  <span className="result-value">{euro(proy.irpf)}</span>
+                </div>
+                <div className="result-row">
+                  <span className="result-label">Cuota íntegra estimada</span>
+                  <span className="result-value">{euro(resultado.cuotaIntegra)}</span>
+                </div>
+                <div className="result-row">
+                  <span className="result-label">{proy.irpf >= resultado.cuotaIntegra ? 'Retenido de más (orientativo)' : 'Retenido de menos (orientativo)'}</span>
+                  <span className="result-value">{euro(Math.abs(proy.irpf - resultado.cuotaIntegra))}</span>
+                </div>
+                <p className="result-hint">
+                  Orientativo: la cuota íntegra va antes de deducciones (como las de vivienda o donativos) y solo cuenta
+                  tus rendimientos del trabajo. La declaración real puede salir distinta.
+                </p>
+              </div>
+            )}
 
             <div className="result-card surface-container-low">
               <h3 className="headline-sm">Desglose</h3>

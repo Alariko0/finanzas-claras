@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { jubilacion } from '../utils/api'
 import useCalculo from '../hooks/useCalculo'
 import { usePlan, pensionPublicaMensualEfectiva } from '../context/PlanContext'
+import { useNominas } from '../context/NominasContext'
 import { nombreComunidad } from '../utils/comunidades'
 import { descendientesDe } from '../utils/plan'
 import { euro, euroEntero, porcentaje } from '../utils/formato'
@@ -60,6 +61,20 @@ const PlanPrivado = () => {
   const cambia = (campo) => (e) => setPlanPrivado((p) => ({ ...p, [campo]: e.target.value }))
   const f = r?.soportado ? r.fiscal : null
 
+  // Aportaciones al plan de empleo que salen de las nóminas registradas (previsión a diciembre)
+  const { resumen } = useNominas()
+  const proy = resumen?.proyeccion
+  const aportaNominas = proy && (proy.aportacionPlan > 0 || proy.aportacionEmpresaPlan > 0)
+  const usarNominas = () =>
+    setPlanPrivado((p) => ({
+      ...p,
+      aportacionAnual: String(proy.aportacionPlan),
+      contribucionEmpresaAnual: proy.aportacionEmpresaPlan > 0 ? String(proy.aportacionEmpresaPlan) : ''
+    }))
+  const yaUsadas = aportaNominas &&
+    planPrivado.aportacionAnual === String(proy.aportacionPlan) &&
+    planPrivado.contribucionEmpresaAnual === (proy.aportacionEmpresaPlan > 0 ? String(proy.aportacionEmpresaPlan) : '')
+
   return (
     <section className="plan-privado" aria-busy={cargando}>
       <h2 className="headline-md">Plan de pensiones privado</h2>
@@ -69,6 +84,18 @@ const PlanPrivado = () => {
         {' '}({euroEntero(nomina.brutoAnual)} brutos al año, {nombreComunidad(nomina.comunidad)}, {nomina.hijos} hijos a cargo).
         {publica.estimada && ' La pensión pública que se suma al rescatar es la estimada en «Plan de pensiones».'}
       </p>
+
+      {aportaNominas && (
+        <div className="plan-privado-nominas">
+          <p>
+            <strong>Según tus nóminas</strong> aportas {euro(proy.aportacionPlan)} al año a tu plan de empleo
+            y tu empresa {euro(proy.aportacionEmpresaPlan)} (previsión a diciembre).
+          </p>
+          <button type="button" className="action-button" onClick={usarNominas} disabled={yaUsadas}>
+            {yaUsadas ? 'Usando tus nóminas' : 'Usar mis nóminas'}
+          </button>
+        </div>
+      )}
 
       <div className="plan-privado-inputs">
         <div className="input-group">

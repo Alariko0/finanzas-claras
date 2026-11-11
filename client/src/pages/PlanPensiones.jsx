@@ -4,7 +4,9 @@ import { fiscal, pension as pensionApi } from '../utils/api'
 import useCalculo from '../hooks/useCalculo'
 import { usePlan } from '../context/PlanContext'
 import { nombreComunidad } from '../utils/comunidades'
-import { construirEntradaNomina, construirTramos } from '../utils/plan'
+import { combinarHistorial, construirEntradaNomina, construirTramos } from '../utils/plan'
+import { nombreMes, tramosDeNominas } from '../utils/recibo'
+import { useNominas } from '../context/NominasContext'
 import { euro, euroEntero, porcentaje } from '../utils/formato'
 import FuentesPie from '../components/FuentesPie'
 import './PlanPensiones.css'
@@ -52,7 +54,13 @@ const PlanPensiones = () => {
   const { resultado: nom } = useCalculo(fiscal.nomina, entradaNomina, {
     invalido: nomina.brutoAnual > 0 ? '' : 'sin sueldo'
   })
-  const baseNomina = nom?.seguridadSocial.baseCotizacionMensual
+  const baseEstimada = nom?.seguridadSocial.baseCotizacionMensual
+
+  // Nóminas reales: su base actual y las bases de cada mes pasado alimentan el historial
+  const { resumen } = useNominas()
+  const baseReal = resumen?.ultima?.baseCotizacion > 0 ? resumen.ultima.baseCotizacion : undefined
+  const basesNominas = (resumen?.basesCotizacion ?? []).filter((b) => b.mes < FECHA_ACTUAL)
+  const baseNomina = baseReal ?? baseEstimada
   const baseManual = pension.baseActual !== ''
   const baseActual = baseManual ? Number(pension.baseActual) : baseNomina
 
@@ -61,7 +69,7 @@ const PlanPensiones = () => {
     edadActual: Number(supuestos.edadActual),
     edadJubilacion: Number(supuestos.edadJubilacion),
     inflacion: Number(supuestos.inflacion || 0),
-    tramos: construirTramos(pension, { anio: ANIO, mes: MES }),
+    tramos: combinarHistorial(construirTramos(pension, { anio: ANIO, mes: MES }), tramosDeNominas(basesNominas)),
     baseMensualActual: baseActual ?? 0,
     situacionMinimo: pension.situacionMinimo,
     comunidad: nomina.comunidad
@@ -69,8 +77,8 @@ const PlanPensiones = () => {
   if (pension.crecimientoBases !== '') entrada.crecimientoBases = Number(pension.crecimientoBases)
 
   const { resultado: r, error, cargando } = useCalculo(pensionApi.jubilacion, entrada, {
-    invalido: validar(pension, supuestos, baseManual ? Number(pension.baseActual) >= 0 : nomina.brutoAnual > 0),
-    omitir: !baseManual && nomina.brutoAnual > 0 && baseNomina === undefined
+    invalido: validar(pension, supuestos, baseManual ? Number(pension.baseActual) >= 0 : baseReal !== undefined || nomina.brutoAnual > 0),
+    omitir: !baseManual && baseReal === undefined && nomina.brutoAnual > 0 && baseEstimada === undefined
   })
 
   // Plan de jubilación usa esta pensión (euros de hoy) como pensión pública si no se escribe otra
@@ -109,12 +117,18 @@ const PlanPensiones = () => {
           <div><dt>Salario bruto</dt><dd>{euroEntero(nomina.brutoAnual)} al año</dd></div>
           <div>
             <dt>Base de cotización actual</dt>
-            <dd>{baseActual === undefined ? '…' : `${euro(baseActual)} al mes`}{baseManual ? ' (la tuya)' : ' (de tu nómina)'}</dd>
+            <dd>{baseActual === undefined ? '…' : `${euro(baseActual)} al mes`}{baseManual ? ' (la tuya)' : baseReal !== undefined ? ` (de tu nómina de ${nombreMes(resumen.ultima.mes)})` : ' (estimada con tu sueldo)'}</dd>
           </div>
+          {basesNominas.length > 0 && (
+            <div>
+              <dt>Historial de tus nóminas</dt>
+              <dd>{basesNominas.length} {basesNominas.length === 1 ? 'mes' : 'meses'} con su base real</dd>
+            </div>
+          )}
           <div><dt>Comunidad (para el IRPF)</dt><dd>{nombreComunidad(nomina.comunidad)}</dd></div>
         </dl>
         <p className="input-subtitle">
-          Cámbialos en <Link to="/nomina">Nómina</Link> (sueldo y comunidad) y en{' '}
+          Cámbialos en <Link to="/nomina">Nómina</Link> (tus nóminas, sueldo y comunidad) y en{' '}
           <Link to="/jubilacion">Plan de jubilación</Link> (edades e inflación).
         </p>
       </div>

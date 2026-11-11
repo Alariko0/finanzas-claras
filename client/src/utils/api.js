@@ -115,6 +115,7 @@ const calcularFiscal = (ruta) => async (entrada, opciones = {}) =>
 export const fiscal = {
   irpf: calcularFiscal('irpf'),
   nomina: calcularFiscal('nomina'),
+  recibo: calcularFiscal('recibo'), // totales y avisos de una nómina real, sin guardarla
   ahorro: calcularFiscal('ahorro')
 }
 
@@ -161,4 +162,29 @@ export const jubilacion = {
 export const pension = {
   jubilacion: async (entrada) =>
     (await peticion('/pension/jubilacion', { method: 'POST', body: entrada }, { auth: false })).data.resultado
+}
+
+
+/**
+ * Nóminas mensuales reales (recibo concepto a concepto). Exigen sesión. `crear` y `actualizar`
+ * devuelven `{ nomina, avisos }`; `resumen` da lo acumulado del año, la proyección hasta diciembre
+ * y las bases de cotización mes a mes.
+ */
+export const nominas = {
+  listar: async (anio) => (await peticion(`/nominas${anio ? `?anio=${anio}` : ''}`)).data.nominas,
+  resumen: async ({ anio, pagas }) => (await peticion(`/nominas/resumen?anio=${anio}&pagas=${pagas}`)).data.resumen,
+  crear: async (recibo) => (await peticion('/nominas', { method: 'POST', body: recibo })).data,
+  actualizar: async (id, recibo) => (await peticion(`/nominas/${id}`, { method: 'PUT', body: recibo })).data,
+  eliminar: async (id) => peticion(`/nominas/${id}`, { method: 'DELETE' })
+}
+
+/**
+ * Convenios colectivos (datos públicos de solo lectura con su fuente). `retribucion` devuelve el
+ * salario base de las tablas del convenio y sus pluses para una categoría, como punto de partida.
+ */
+export const convenios = {
+  listar: async () => (await peticion('/convenios', {}, { auth: false })).data.convenios,
+  obtener: async (id) => (await peticion(`/convenios/${id}`, {}, { auth: false })).data.convenio,
+  retribucion: async (id, entrada) =>
+    (await peticion(`/convenios/${id}/retribucion`, { method: 'POST', body: entrada }, { auth: false })).data.resultado
 }

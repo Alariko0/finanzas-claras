@@ -145,3 +145,29 @@
     gap: 0;
   }
 }
+
+/* Pestañas: nóminas reales / estimación */
+.nomina-tabs {
+  display: inline-flex;
+  gap: var(--spacing-1);
+  margin-bottom: var(--spacing-8);
+  padding: var(--spacing-1);
+  border-radius: var(--radius-full);
+  background: var(--surface-container-low);
+}
+
+.nomina-tabs button {
+  padding: var(--spacing-2) var(--spacing-6);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--on-surface-variant);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nomina-tabs button.activa {
+  background: var(--primary);
+  color: var(--on-primary);
+}

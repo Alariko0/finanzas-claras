@@ -1,0 +1,157 @@
+/* Registro de nóminas reales mes a mes */
+
+.registro-nominas {
+  display: grid;
+  gap: var(--spacing-6);
+}
+
+.registro-nominas h2 {
+  font-family: var(--font-headline);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--on-surface);
+}
+
+.registro-ayuda {
+  max-width: 44rem;
+  font-size: var(--font-size-sm);
+  color: var(--on-surface-variant);
+}
+
+.registro-aviso,
+.registro-avisos {
+  padding: var(--spacing-4) var(--spacing-6);
+  border-radius: var(--radius-lg);
+  background: var(--surface-container-low);
+  font-size: var(--font-size-sm);
+  color: var(--on-surface-variant);
+}
+
+.registro-avisos {
+  display: grid;
+  gap: var(--spacing-2);
+  list-style: disc inside;
+}
+
+.registro-aviso a,
+.registro-enlaces a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.registro-error {
+  color: var(--error);
+  font-size: var(--font-size-sm);
+}
+
+.registro-nominas > .action-button {
+  justify-self: start;
+}
+
+.registro-resumen {
+  display: grid;
+  gap: var(--spacing-4);
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+
+.registro-resumen > div {
+  display: grid;
+  gap: var(--spacing-1);
+  padding: var(--spacing-6);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container);
+}
+
+.registro-resumen strong {
+  font-family: var(--font-headline);
+  font-size: var(--font-size-2xl);
+  color: var(--primary);
+}
+
+.registro-resumen small {
+  color: var(--on-surface-variant);
+  font-size: var(--font-size-xs);
+}
+
+.registro-tabla-caja {
+  overflow-x: auto;
+  border-radius: var(--radius-xl);
+  background: var(--surface-container);
+}
+
+.registro-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.registro-tabla th,
+.registro-tabla td {
+  padding: var(--spacing-3) var(--spacing-4);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.registro-tabla th {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--on-surface-variant);
+}
+
+.registro-tabla .num {
+  text-align: right;
+}
+
+.registro-tabla tbody tr:nth-child(even) {
+  background: var(--surface-container-low);
+}
+
+.registro-etiqueta {
+  margin-left: var(--spacing-2);
+  padding: 0.1rem var(--spacing-2);
+  border-radius: var(--radius-full);
+  background: var(--surface-container-high);
+  font-size: var(--font-size-xs);
+  color: var(--on-surface-variant);
+}
+
+.registro-etiqueta.vigente {
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
+}
+
+.registro-acciones-fila {
+  text-align: right;
+}
+
+.registro-acciones-fila button {
+  margin-left: var(--spacing-2);
+  padding: var(--spacing-1) var(--spacing-3);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--surface-container-high);
+  color: var(--primary);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.registro-acciones-fila button.peligro {
+  color: var(--error);
+}
+
+.registro-enlaces {
+  font-size: var(--font-size-sm);
+  color: var(--on-surface-variant);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

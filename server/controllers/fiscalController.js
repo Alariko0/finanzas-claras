@@ -1,6 +1,7 @@
 const { liquidacionIRPF } = require('../services/fiscal/liquidacionIRPF')
 const { calcularNomina } = require('../services/fiscal/nomina')
 const { liquidacionAhorro } = require('../services/fiscal/ahorro')
+const { normalizarRecibo } = require('../services/nominaMensual')
 const { copiar, responderCalculo: responder } = require('./responderCalculo')
 
 /*
@@ -39,6 +40,15 @@ const nomina = responder((b) =>
   })
 )
 
+// Recibo de nómina real, concepto a concepto: totales y avisos sin guardar nada (guardar exige sesión)
+const recibo = responder((b) => {
+  const r = normalizarRecibo(copiar(b, [
+    'anio', 'mes', 'tipo', 'fechaCobro', 'encabezado', 'devengos', 'deducciones', 'bases',
+    'aportacionEmpresaPlan', 'liquidoDeclarado'
+  ]))
+  return { totales: r.totales, avisos: r.avisos }
+})
+
 const ahorro = responder((b) =>
   liquidacionAhorro({
     ...copiar(b, ['comunidad', 'baseLiquidableAhorro', 'baseLiquidableGeneral']),
@@ -46,4 +56,4 @@ const ahorro = responder((b) =>
   })
 )
 
-module.exports = { irpf, nomina, ahorro, personas }
+module.exports = { irpf, nomina, recibo, ahorro, personas }

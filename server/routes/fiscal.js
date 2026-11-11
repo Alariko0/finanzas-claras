@@ -5,6 +5,7 @@ const { limitadorCalculos } = require('../middleware/rateLimit')
 const {
   fiscalIrpfValidator,
   fiscalNominaValidator,
+  nominaReciboValidator,
   fiscalAhorroValidator
 } = require('../middleware/validation')
 
@@ -13,6 +14,7 @@ router.use(limitadorCalculos)
 
 router.post('/irpf', fiscalIrpfValidator, fiscalController.irpf)
 router.post('/nomina', fiscalNominaValidator, fiscalController.nomina)
+router.post('/recibo', nominaReciboValidator, fiscalController.recibo)
 router.post('/ahorro', fiscalAhorroValidator, fiscalController.ahorro)
 
 module.exports = router

@@ -80,6 +80,19 @@ describe('calcularNomina — IRPF y neto', () => {
     expect(r.paga.extra).toEqual({ bruto: 2142.86, ss: 0, irpf: 351.86, neto: 1791 })
   })
 
+  test('16 pagas sin prorrateo: 12 ordinarias y 4 extras del mismo importe, solo con IRPF', () => {
+    // Bruto por paga 30.000 / 16 = 1.875; IRPF 16,42 % = 307,88
+    const r = calcularNomina({ ...base, pagas: 16, prorrateo: false })
+    expect(r.paga.cantidad).toBe(16)
+    expect(r.paga.extras).toBe(4)
+    expect(r.paga.ordinaria).toEqual({ bruto: 1875, ss: 162.5, irpf: 307.88, neto: 1404.62 })
+    expect(r.paga.extra).toEqual({ bruto: 1875, ss: 0, irpf: 307.88, neto: 1567.12 })
+  })
+
+  test.each([15, 18])('%i pagas se admiten y tienen pagas − 12 extras', (pagas) => {
+    expect(calcularNomina({ ...base, pagas, prorrateo: false }).paga.extras).toBe(pagas - 12)
+  })
+
   test('14 pagas prorrateadas = 12 pagos mensuales idénticos a los de 12 pagas', () => {
     const a = calcularNomina({ ...base, pagas: 14, prorrateo: true })
     const b = calcularNomina({ ...base, pagas: 12 })

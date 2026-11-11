@@ -4,6 +4,7 @@
  */
 
 const { body, param, query, validationResult } = require('express-validator')
+const { PAGAS_ADMITIDAS } = require('../services/fiscal/nomina')
 
 const TIPOS_CALCULO = [
   'irpf', 'nomina', 'hipoteca', 'prestamo', 'amortizacion',
@@ -176,7 +177,7 @@ const fiscalIrpfValidator = [
 
 const fiscalNominaValidator = [
   numero('brutoAnual', { min: 0.01, obligatorio: true }),
-  body('pagas').optional().isIn([12, 14]).withMessage('pagas debe ser 12 o 14'),
+  body('pagas').optional().isIn(PAGAS_ADMITIDAS).withMessage(`pagas debe ser ${PAGAS_ADMITIDAS.join(', ')}`),
   booleano('prorrateo'),
   body('grupoCotizacion').optional().isInt({ min: 1, max: 11 }).withMessage('grupoCotizacion debe estar entre 1 y 11').toInt(),
   body('contrato').optional().isIn(['indefinido', 'temporal']).withMessage('contrato no válido'),
@@ -349,7 +350,53 @@ const pensionJubilacionValidator = [
   handleValidationErrors
 ]
 
+/* ───────────── Nóminas mensuales (recibo concepto a concepto) ───────────── */
+
+// Solo la forma general; el detalle de cada concepto lo valida services/nominaMensual.js
+const objetoOpcional = (campo) =>
+  body(campo).optional().custom(esObjetoPlano).withMessage(`${campo} debe ser un objeto`)
+
+const nominaReciboValidator = [
+  body().custom(esObjetoPlano).withMessage('El cuerpo debe ser un objeto').bail()
+    .custom((valor) => Buffer.byteLength(JSON.stringify(valor)) <= MAX_JSON_BYTES)
+    .withMessage('La nómina es demasiado grande'),
+  body('anio').custom((v) => Number.isInteger(v) && v >= 2000 && v <= 2100).withMessage('anio debe ser un año entre 2000 y 2100'),
+  body('mes').custom((v) => Number.isInteger(v) && v >= 1 && v <= 12).withMessage('mes debe ser un entero de 1 a 12'),
+  body('tipo').optional().isIn(['ordinaria', 'extra']).withMessage('tipo debe ser ordinaria o extra'),
+  body('fechaCobro').optional({ values: 'null' }).isString().withMessage('fechaCobro debe ser texto'),
+  objetoOpcional('encabezado'),
+  objetoOpcional('devengos'),
+  objetoOpcional('deducciones'),
+  objetoOpcional('bases'),
+  handleValidationErrors
+]
+
+const nominaConsultaValidator = [
+  query('anio').optional().isInt({ min: 2000, max: 2100 }).withMessage('anio debe ser un año entre 2000 y 2100').toInt(),
+  query('pagas').optional().isIn(PAGAS_ADMITIDAS.map(String)).withMessage(`pagas debe ser ${PAGAS_ADMITIDAS.join(', ')}`).toInt(),
+  handleValidationErrors
+]
+
+/* ───────────── Convenios colectivos (datos públicos) ───────────── */
+
+const convenioIdValidator = [
+  param('id').matches(/^[a-z0-9-]{1,60}$/).withMessage('Identificador de convenio no válido'),
+  handleValidationErrors
+]
+
+const convenioRetribucionValidator = [
+  body('anio').custom((v) => Number.isInteger(v) && v >= 2000 && v <= 2100).withMessage('anio debe ser un año entre 2000 y 2100'),
+  body('clase').isIn(['A', 'B', 'C', 'D']).withMessage('clase debe ser A, B, C o D'),
+  body('nivel').isString().isLength({ min: 1, max: 10 }).withMessage('nivel no válido'),
+  booleano('manutencionEnMetalico'),
+  handleValidationErrors
+]
+
 module.exports = {
+  convenioIdValidator,
+  convenioRetribucionValidator,
+  nominaReciboValidator,
+  nominaConsultaValidator,
   pensionJubilacionValidator,
   jubilacionProyeccionValidator,
   jubilacionPlanPrivadoValidator,
