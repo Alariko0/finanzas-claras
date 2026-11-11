@@ -20,6 +20,7 @@ pnpm dev
 | `SUPABASE_PUBLISHABLE_KEY` | Clave publishable (`sb_publishable_…`) | — (obligatoria) |
 | `ALLOWED_ORIGINS` | Orígenes CORS permitidos, separados por coma | `http://localhost:3000` |
 | `PORT` | Puerto del servidor | `3001` |
+| `TRUST_PROXY` | Saltos de proxy de confianza (p. ej. `1` tras un balanceador); necesario para que el rate limit use la IP real | desactivado |
 | `NODE_ENV` | Entorno (`production` oculta detalles de error) | `development` |
 
 El servidor no usa la clave de servicio (`service_role`) en ninguna petición.
@@ -36,7 +37,8 @@ Respuesta: `{ success, message?, data?, errors? }`.
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
-| GET | `/health` | Estado del servicio |
+| GET | `/health` | Liveness: el proceso responde |
+| GET | `/health/ready` | Readiness: Supabase alcanzable (200/503) |
 | GET | `/api/auth/profile` | Perfil del usuario autenticado |
 | PATCH | `/api/auth/profile` | Actualizar `nombre` y `preferencias` |
 | GET | `/api/calculos?page&limit` | Listar cálculos propios (paginado) |
@@ -45,8 +47,8 @@ Respuesta: `{ success, message?, data?, errors? }`.
 | PUT | `/api/calculos/:id` | Actualizar `titulo`, `datosEntrada`, `resultado` |
 | DELETE | `/api/calculos/:id` | Eliminar |
 
-Las rutas `/api/nomina`, `/api/hipotecas/calcular` y `/api/gastos` son **temporales** y se
-sustituyen en las fases 3, 4 y 7 del plan (`PLAN-DE-ACCION.md`).
+Los cálculos fiscales y financieros (IRPF, nómina, préstamos, etc.) se añaden en las fases 3 y 4
+del plan (`PLAN-DE-ACCION.md`) como servicios en `server/services/`.
 
 ## Scripts
 

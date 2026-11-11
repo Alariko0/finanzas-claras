@@ -6,9 +6,17 @@
 const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
-const rateLimit = require('express-rate-limit')
+const { limitadorGeneral, limitadorEscritura } = require('./middleware/rateLimit')
 
 const app = express()
+
+// Detrás de un proxy inverso: TRUST_PROXY = nº de saltos de confianza (p. ej. 1)
+const saltosProxy = Number.parseInt(process.env.TRUST_PROXY, 10)
+if (Number.isInteger(saltosProxy) && saltosProxy > 0) {
+  app.set('trust proxy', saltosProxy)
+}
+
+app.disable('x-powered-by')
 
 // Seguridad básica con helmet
 app.use(helmet())
@@ -25,34 +33,35 @@ app.use(cors({
   }
 }))
 
-// Body parsers con límite explícito
+// Body parser con límite explícito
 app.use(express.json({ limit: '100kb' }))
 
-// Rate limiting global
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100
-})
-app.use('/api/', limiter)
+// Salud (sin rate limit para que los balanceadores no se bloqueen)
+app.use(require('./routes/health'))
+
+// Rate limiting: general para toda la API y más estricto en escrituras
+app.use('/api/', limitadorGeneral)
+app.use('/api/', limitadorEscritura)
 
 // Routes
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/calculos', require('./routes/calculos'))
-app.use('/api/nomina', require('./routes/nomina'))
-app.use('/api/gastos', require('./routes/gastos'))
-app.use('/api/hipotecas', require('./routes/hipotecas'))
 
-// Ruta de salud
-app.get('/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    message: 'FinanzasClaras API está funcionando',
-    timestamp: new Date().toISOString()
-  })
+// Ruta no encontrada
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: 'Ruta no encontrada' })
 })
 
-// Error handling middleware
+// Error handling middleware (último)
 app.use((err, req, res, _next) => {
+  // JSON mal formado o demasiado grande → error del cliente, no 500
+  if (err.type === 'entity.parse.failed') {
+    return res.status(400).json({ success: false, message: 'JSON no válido' })
+  }
+  if (err.type === 'entity.too.large') {
+    return res.status(413).json({ success: false, message: 'Petición demasiado grande' })
+  }
+
   console.error(err.stack)
   res.status(err.status || 500).json({
     success: false,
