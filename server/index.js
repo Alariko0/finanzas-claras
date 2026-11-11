@@ -1,109 +1,29 @@
 /**
- * FinanzasClaras - Servidor Backend (Express + MongoDB)
- *
- * Arquitectura MERN:
- * - Express: Servidor HTTP
- * - MongoDB: Base de datos documental
- * - Mongoose: ODM para MongoDB
- * - JWT: Autenticación
- * - bcryptjs: Hashing de contraseñas
+ * FinanzasClaras - Entry point del servidor
+ * Carga entorno, conecta a la BD y arranca el servidor HTTP.
  */
 
 require('dotenv').config()
-const express = require('express')
-const cors = require('cors')
-const mongoose = require('mongoose')
-const helmet = require('helmet')
-const mongoSanitize = require('express-mongo-sanitize')
 
-// Configuración del servidor
-const app = express()
+const mongoose = require('mongoose')
+
 const PORT = process.env.PORT || 3001
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/finanzas-claras'
-const JWT_SECRET = process.env.JWT_SECRET
 
-// Validar JWT_SECRET (obligatorio para arrancar)
-if (!JWT_SECRET) {
+if (!process.env.JWT_SECRET) {
   console.error('❌ JWT_SECRET no está definido en .env. El servidor no puede arrancar.')
   process.exit(1)
 }
 
-// Seguridad básica con helmet
-app.use(helmet())
+const app = require('./app')
 
-// Configuración de CORS con origen específico
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000']
-app.use(cors({
-  origin: function(origin, callback) {
-    // Permitir navegación programática (página desde app)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true)
-    } else {
-      callback(new Error('No permitido por CORS'))
-    }
-  }
-}))
-
-// Protección contra inyección MongoDB
-app.use(mongoSanitize())
-
-// Middleware
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
-// Rate limiting (preparado para Fase 3)
-const rateLimit = require('express-rate-limit')
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100 // 100 solicitudes por ventana
-})
-app.use('/api/', limiter)
-
-// Routes
-const authRoutes = require('./routes/auth')
-const calculoRoutes = require('./routes/calculos')
-const irpfRoutes = require('./routes/irpf')
-const nominaRoutes = require('./routes/nomina')
-const gastosRoutes = require('./routes/gastos')
-const hipotecasRoutes = require('./routes/hipotecas')
-
-// Definir rutas
-app.use('/api/auth', authRoutes)
-app.use('/api/calculos', calculoRoutes)
-app.use('/api/irpf', irpfRoutes)
-app.use('/api/nomina', nominaRoutes)
-app.use('/api/gastos', gastosRoutes)
-app.use('/api/hipotecas', hipotecasRoutes)
-
-// Conexión a MongoDB
 mongoose
   .connect(MONGODB_URI)
   .then(() => console.log('✅ Conexión a MongoDB establecida'))
   .catch((err) => console.error('❌ Error de conexión a MongoDB:', err.message))
 
-// Ruta de salud
-app.get('/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    message: 'FinanzasClaras API está funcionando',
-    timestamp: new Date().toISOString()
-  })
-})
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack)
-  res.status(err.status || 500).json({
-    message: err.message || 'Error interno del servidor',
-    error: process.env.NODE_ENV === 'development' ? err : undefined
-  })
-})
-
-// Iniciar servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en puerto ${PORT}`)
   console.log(`📡 API disponible en http://localhost:${PORT}/api`)
   console.log(`🏥 Salud en http://localhost:${PORT}/health`)
 })
-
-module.exports = app
