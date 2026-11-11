@@ -34,4 +34,14 @@ Thumbs.db
 *.turbo
 
 # MacOS
-*.DS_Storeserver/.env
+*.DS_Store
+
+# Secretos y entornos (nunca se suben; solo .env.example)
+.env
+.env.*
+!.env.example
+*.env
+supabase/.temp/
+supabase/.branches/
+*.pem
+*.key
