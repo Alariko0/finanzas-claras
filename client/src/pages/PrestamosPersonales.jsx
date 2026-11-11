@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Icono from '../components/Icono'
 import './PrestamosPersonales.css'
 
 /**
@@ -169,19 +170,19 @@ const PrestamosPersonales = () => {
         <h2 className="headline-md">Consejos para Reducir Costos</h2>
         <div className="consejos-list">
           <div className="consejo-item">
-            <span className="consejo-icon">💡</span>
+            <span className="consejo-icon"><Icono nombre="bombilla" /></span>
             <span>Un plazo más largo reduce la cuota mensual, pero aumenta los intereses totales.</span>
           </div>
           <div className="consejo-item">
-            <span className="consejo-icon">🏆</span>
+            <span className="consejo-icon"><Icono nombre="trofeo" /></span>
             <span>Negocia una tasa inferior: cada 0.5% de descuento puede ahorrarte miles en intereses.</span>
           </div>
           <div className="consejo-item">
-            <span className="consejo-icon">📅</span>
+            <span className="consejo-icon"><Icono nombre="jubilacion" /></span>
             <span>Considera pagos anticipados para reducir el capital pendiente y ahorrar intereses.</span>
           </div>
           <div className="consejo-item">
-            <span className="consejo-icon">⚠️</span>
+            <span className="consejo-icon"><Icono nombre="alerta" /></span>
             <span>Evita comisiones por amortización anticipada. Busca productos sin penalización.</span>
           </div>
         </div>

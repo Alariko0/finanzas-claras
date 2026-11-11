@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Icono from '../components/Icono'
 import './AmortizacionAnticipada.css'
 
 /**
@@ -187,16 +188,16 @@ const AmortizacionAnticipada = () => {
         <h2 className="headline-md">Consideraciones</h2>
         <div className="info-list">
           <div className="info-item">
-            <strong>📊 Ahorro en Intereses:</strong> Al reducir el capital pendiente, pagas menos intereses mensuales.
+            <strong><Icono nombre="fiscal" tamano={16} /> Ahorro en Intereses:</strong> Al reducir el capital pendiente, pagas menos intereses mensuales.
           </div>
           <div className="info-item">
-            <strong>⏱️ Reducción de Plazo:</strong> Podrás pagar tu hipoteca antes sin pagar más intereses.
+            <strong><Icono nombre="historial" tamano={16} /> Reducción de Plazo:</strong> Podrás pagar tu hipoteca antes sin pagar más intereses.
           </div>
           <div className="info-item">
-            <strong>⚠️ Penalización:</strong> Revisa las condiciones de tu contrato. Algunas tienen penalización por amortización.
+            <strong><Icono nombre="alerta" tamano={16} /> Penalización:</strong> Revisa las condiciones de tu contrato. Algunas tienen penalización por amortización.
           </div>
           <div className="info-item">
-            <strong>💰 Fuente de Fondos:</strong> Usa ganancias de inversión o ahorros, no deuda para amortizar.
+            <strong><Icono nombre="ahorro" tamano={16} /> Fuente de Fondos:</strong> Usa ganancias de inversión o ahorros, no deuda para amortizar.
           </div>
         </div>
       </div>

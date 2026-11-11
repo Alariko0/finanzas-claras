@@ -1,25 +1,22 @@
-/* Notificaciones - Basado en Esmeralda Clarity */
+/* Notificaciones - Esmeralda Clarity (las primitivas viven en styles/componentes.css) */
 
 .notificaciones-page {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: var(--spacing-4);
-}
-
-.notificaciones-page .page-header {
-  margin-bottom: var(--spacing-4);
+  max-width: 56rem;
 }
 
 .notificaciones-page .notifications-list {
-  margin-top: var(--spacing-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-6);
 }
 
 .notificaciones-page .notification-card {
-  padding: var(--spacing-2);
-  margin-bottom: var(--spacing-2);
-  border-radius: var(--radius-md);
+  padding: var(--spacing-6) var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .notificaciones-page .notification-card:hover {
@@ -27,98 +24,119 @@
 }
 
 .notificaciones-page .notification-badge {
-  padding: var(--spacing-0-5) var(--spacing-1);
+  margin-right: var(--spacing-2);
+  padding: var(--spacing-1) var(--spacing-3);
   border-radius: var(--radius-full);
   font-size: var(--font-size-xs);
-  font-weight: 600;
-  margin-right: var(--spacing-1);
+  font-weight: 700;
 }
 
 .notificaciones-page .notification-info {
-  background: var(--primary-fixed-dim);
+  background: rgba(var(--primary-rgb), 0.12);
   color: var(--primary);
 }
 
 .notificaciones-page .notification-warning {
-  background: var(--tertiary-fixed);
+  background: rgba(255, 179, 173, 0.12);
   color: var(--tertiary);
 }
 
 .notificaciones-page .notification-urgent {
   background: var(--error-container);
-  color: var(--error);
+  color: var(--on-error-container);
 }
 
 .notificaciones-page .notification-title {
-  font-family: var(--font-body);
-  font-weight: 600;
-  margin-bottom: var(--spacing-0-5);
+  margin-bottom: var(--spacing-1);
+  font-family: var(--font-headline);
   font-size: var(--font-size-md);
+  font-weight: 700;
 }
 
 .notificaciones-page .notification-message {
-  font-family: var(--font-body);
+  margin-bottom: var(--spacing-2);
   font-size: var(--font-size-sm);
   color: var(--on-surface-variant);
-  margin-bottom: var(--spacing-1);
 }
 
 .notificaciones-page .notification-actions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--spacing-1);
+  gap: var(--spacing-3);
 }
 
 .notificaciones-page .action-button {
-  padding: var(--spacing-0-5) var(--spacing-1);
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-full);
   background: transparent;
-  border: none;
-  border-bottom: 1px solid currentColor;
-  font-family: var(--font-body);
+  box-shadow: none;
+  color: var(--primary);
   font-size: var(--font-size-sm);
-  cursor: pointer;
 }
 
 .notificaciones-page .action-button:hover {
-  opacity: 0.8;
+  background: rgba(var(--primary-rgb), 0.1);
+  opacity: 1;
 }
 
 .notificaciones-page .empty-state {
+  padding: var(--spacing-12);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
   text-align: center;
-  padding: var(--spacing-4);
-  background: var(--surface-variant);
-  border-radius: var(--radius-md);
   color: var(--on-surface-variant);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .notificaciones-page {
-    padding: var(--spacing-2);
-  }
+/* Mensajes de estado */
+.notificaciones-page .error-message,
+.notificaciones-page .success-message {
+  margin-bottom: var(--spacing-4);
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
 }
 
-/* Mensajes de estado */
 .notificaciones-page .error-message {
-  padding: var(--spacing-1) var(--spacing-2);
   background: var(--error-container);
   color: var(--on-error-container);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-2);
-  font-size: var(--font-size-sm);
 }
 
 .notificaciones-page .success-message {
-  padding: var(--spacing-1) var(--spacing-2);
-  background: var(--primary-fixed-dim);
+  background: rgba(var(--primary-rgb), 0.12);
   color: var(--primary);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-2);
-  font-size: var(--font-size-sm);
 }
 
 .notificaciones-page .loading {
   text-align: center;
-  color: var(--on-surface-variant);
   font-style: italic;
+  color: var(--on-surface-variant);
+}
+
+.notificaciones-page .notification-date {
+  display: block;
+  margin-bottom: var(--spacing-2);
+  font-size: var(--font-size-xs);
+  color: var(--outline);
+}
+
+.notificaciones-page .badge-notification {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-8);
+  padding: var(--spacing-3) var(--spacing-6);
+  border-radius: var(--radius-full);
+  background: rgba(var(--primary-rgb), 0.12);
+}
+
+.notificaciones-page .badge-count {
+  font-family: var(--font-headline);
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.notificaciones-page .badge-label {
+  font-size: var(--font-size-sm);
+  color: var(--on-surface-variant);
 }

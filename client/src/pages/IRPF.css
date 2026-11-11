@@ -1,101 +1,47 @@
-.irpf-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-4);
-}
+/* IRPF - Esmeralda Clarity (las primitivas viven en styles/componentes.css) */
 
 .irpf-inputs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-6);
-}
-
-@screen mobile {
-  .irpf-inputs {
-    grid-template-columns: 1fr;
-  }
-}
-
-.input-group label {
-  display: block;
-  font-family: 'Manrope', sans-serif;
-  font-weight: 500;
-  margin-bottom: var(--spacing-1);
-  color: var(--on-surface-variant);
-  font-size: var(--label-sm);
-}
-
-.input-field {
-  width: 100%;
-  padding: var(--spacing-3) var(--spacing-4);
-  font-family: 'Inter', sans-serif;
-  font-size: 1rem;
-  border: none;
-  border-bottom: 2px solid var(--outline-variant);
-  border-radius: var(--round-corner-sm);
-  background: var(--surface-container-highest);
-  color: var(--on-surface);
-  transition: all 0.2s ease;
-}
-
-.input-field:focus {
-  outline: none;
-  background: var(--surface-container-lowest);
-  border-bottom-color: var(--primary);
-}
-
-.input-field::placeholder {
-  color: var(--on-surface-variant);
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
+  padding: var(--spacing-8) var(--spacing-8) var(--spacing-2);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
 }
 
 .irpf-results {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-6);
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
 }
 
-.result-card {
-  border-radius: var(--radius-md);
-  padding: var(--spacing-4);
+.irpf-page .result-card {
   overflow: hidden;
 }
 
 .irpf-chart {
-  padding: var(--spacing-4);
-  background: var(--surface-container);
-  border-radius: var(--radius-md);
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
 }
 
-.chart-container {
+.irpf-chart .chart-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-4);
+  gap: var(--spacing-6);
 }
 
-.chart-legend {
-  display: flex;
-  gap: var(--spacing-8);
-  font-size: var(--label-sm);
-}
-
-.legend-color {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border-radius: var(--radius-full);
-}
-
-.chart-bars {
+.irpf-chart .chart-bars {
   display: flex;
   align-items: flex-end;
-  gap: var(--spacing-2);
+  gap: var(--spacing-3);
   max-width: 100%;
 }
 
-.chart-bar-container {
+.irpf-chart .chart-bar-container {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -103,17 +49,56 @@
   gap: var(--spacing-1);
 }
 
-.chart-bar {
+.irpf-chart .chart-bars .chart-bar {
+  display: block;
   width: 100%;
+  min-height: 1.25rem;
+  overflow: visible;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%);
-  min-height: 20px;
   transition: height 0.3s ease;
-  border-radius: var(--radius-sm);
 }
 
-.result-hint {
+.irpf-page .result-hint {
   margin-top: var(--spacing-2);
-  font-size: 0.875rem;
-  color: var(--on-surface-variant);
+  font-size: var(--font-size-sm);
   font-style: italic;
+  color: var(--on-surface-variant);
+}
+
+@media (max-width: 768px) {
+  .irpf-inputs {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+.irpf-table {
+  margin-top: var(--spacing-8);
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
+}
+
+.irpf-table h3 {
+  margin-bottom: var(--spacing-6);
+  font-family: var(--font-headline);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.irpf-chart .bar-label {
+  font-size: var(--label-sm);
+  font-weight: 600;
+  color: var(--on-surface-variant);
+}
+
+.irpf-page .result-label {
+  color: var(--on-surface-variant);
+}
+
+.irpf-page .result-value {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  color: var(--on-surface);
 }

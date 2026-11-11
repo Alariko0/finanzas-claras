@@ -1,63 +1,63 @@
-.presupuestos-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-4);
-}
+/* PresupuestosAhorro - Esmeralda Clarity */
 
 .presupuestos-controls {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-6);
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
+  padding: var(--spacing-8) var(--spacing-8) var(--spacing-2);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
 }
 
-@screen mobile {
-  .presupuestos-controls {
-    grid-template-columns: 1fr;
-  }
-}
-
-.control-group label {
+.presupuestos-page .control-group label {
   display: block;
-  margin-bottom: var(--spacing-1);
+  margin-bottom: var(--spacing-2);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
 }
 
 .presupuestos-metodo {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-3);
-  margin-bottom: var(--spacing-6);
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-12);
 }
 
 .metodo-card {
-  border-radius: var(--radius-md);
-  padding: var(--spacing-3);
-  text-align: center;
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
 }
 
 .metodo-card.highlight {
   grid-column: span 2;
   order: -1;
+  background: var(--surface-container-lowest);
 }
 
 .metodo-header {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
-  margin-bottom: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
 }
 
 .metodo-value {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 600;
+  font-family: var(--font-headline);
   font-size: var(--headline-md);
+  font-weight: 800;
+  color: var(--primary);
 }
 
 .metodo-bar {
-  height: 24px;
-  background: var(--surface-variant);
-  border-radius: var(--radius-full);
+  height: 0.5rem;
   overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--surface-container-highest);
 }
 
 .metodo-fill {
@@ -80,22 +80,33 @@
   background: var(--primary);
 }
 
+.presupuestos-categorias {
+  margin-bottom: var(--spacing-12);
+}
+
 .presupuestos-categorias h2 {
-  margin-bottom: var(--spacing-3);
+  margin-bottom: var(--spacing-6);
+  font-size: 1.25rem;
 }
 
 .categorias-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: var(--spacing-3);
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--spacing-4);
 }
 
 .categoria-card {
-  border-radius: var(--radius-md);
-  padding: var(--spacing-3);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
+  gap: var(--spacing-3);
+  padding: var(--spacing-6);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
+  transition: background-color 0.2s ease;
+}
+
+.categoria-card:hover {
+  background: var(--surface-container);
 }
 
 .categoria-header {
@@ -111,37 +122,59 @@
 }
 
 .categoria-nombre {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .categoria-info {
   display: flex;
   justify-content: space-between;
   font-size: var(--label-sm);
+  font-weight: 600;
 }
 
 .presupuestos-meta {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--spacing-4);
-}
-
-@screen mobile {
-  .presupuestos-meta {
-    grid-template-columns: 1fr;
-  }
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--spacing-6);
 }
 
 .meta-card {
-  border-radius: var(--radius-md);
-  padding: var(--spacing-4);
-  text-align: center;
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
 }
 
 .meta-info {
   display: flex;
   justify-content: space-between;
-  margin-top: var(--spacing-2);
+  margin-top: var(--spacing-3);
   font-size: var(--label-sm);
+  font-weight: 600;
   color: var(--on-surface-variant);
+}
+
+@media (max-width: 768px) {
+  .presupuestos-controls {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .metodo-card.highlight {
+    grid-column: auto;
+  }
+}
+
+.presupuestos-page .meta-bar {
+  height: 0.5rem;
+  margin-top: var(--spacing-4);
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--surface-container-highest);
+}
+
+.presupuestos-page .meta-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  transition: width 0.3s ease;
 }

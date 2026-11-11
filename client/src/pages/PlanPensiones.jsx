@@ -36,9 +36,9 @@ const PlanPensiones = () => {
   const resultado = calcularPensiones()
 
   const tiposPlan = [
-    { value: 'individual', label: 'Plan Individual', icon: '👤' },
-    { value: 'empresa', label: 'Plan de Empresa', icon: '🏢' },
-    { value: 'asociado', label: 'Plan Asociado', icon: '🤝' }
+    { value: 'individual', label: 'Plan Individual', icon: 'cuenta' },
+    { value: 'empresa', label: 'Plan de Empresa', icon: 'edificio' },
+    { value: 'asociado', label: 'Plan Asociado', icon: 'grupo' }
   ]
 
   return (

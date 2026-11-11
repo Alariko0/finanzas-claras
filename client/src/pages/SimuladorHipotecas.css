@@ -1,200 +1,119 @@
-.hipotecas-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-4);
-}
+/* SimuladorHipotecas - Esmeralda Clarity (las primitivas viven en styles/componentes.css) */
 
 .hipotecas-grid {
   display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-6);
+  grid-template-columns: minmax(18rem, 24rem) 1fr;
+  gap: var(--spacing-8);
+  margin-bottom: var(--spacing-8);
+  align-items: start;
 }
 
-@screen mobile {
-  .hipotecas-grid {
-    grid-template-columns: 1fr;
-  }
+.hipotecas-inputs {
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
 }
 
-.hipotecas-inputs .input-group {
-  margin-bottom: var(--spacing-4);
-}
-
-@screen mobile {
-  .hipotecas-inputs .input-group {
-    margin-bottom: var(--spacing-2);
-  }
-}
-
-.hipotecas-inputs label {
-  display: block;
-  margin-bottom: var(--spacing-1);
-  font-family: 'Manrope', sans-serif;
-  font-size: var(--label-sm);
-}
-
-.input-range {
-  width: 100%;
-  height: 8px;
-  -webkit-appearance: none;
-  background: var(--surface-variant);
-  border-radius: var(--radius-full);
-  outline: none;
-}
-
-.input-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 24px;
-  height: 24px;
-  border-radius: var(--radius-full);
-  background: var(--primary);
-  cursor: pointer;
-  margin-top: -8px;
-}
-
-.input-value {
-  display: block;
-  text-align: right;
-  font-family: 'Manrope', sans-serif;
-  font-weight: 600;
-  font-size: var(--headline-sm);
-  margin-top: var(--spacing-1);
-}
-
-.hipotecas-inputs .input-subtitle {
-  font-size: var(--caption);
-  color: var(--on-surface-variant);
+.hipotecas-inputs .input-group:last-child {
+  margin-bottom: 0;
 }
 
 .hipotecas-result {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-3);
 }
 
-.result-row {
-  display: flex;
-  justify-content: space-between;
-  padding: var(--spacing-2) 0;
-  border-bottom: 1px solid var(--outline-variant);
-  font-size: var(--body-md);
+.hipotecas-result .result-card {
+  margin-bottom: var(--spacing-4);
+  padding: var(--spacing-12);
 }
 
-.result-row:last-child {
-  border-bottom: none;
+.hipotecas-result .result-card .title-md {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }
 
-.result-row.highlight {
-  background: var(--surface-container);
-  padding: var(--spacing-3);
-  border-radius: var(--radius-md);
-}
-
-.result-row span:last-child {
-  font-weight: 600;
-  font-family: 'Manrope', sans-serif;
-}
-
-.hipotecas-tabla {
-  margin-bottom: var(--spacing-6);
-}
-
-.tabla-container {
-  overflow-x: auto;
-}
-
-.amortizacion-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--body-md);
-}
-
-.amortizacion-table th {
-  background: var(--surface-variant);
-  padding: var(--spacing-3);
-  text-align: left;
-  font-weight: 600;
-  font-family: 'Manrope', sans-serif;
-  font-size: var(--label-sm);
-  color: var(--on-surface-variant);
-  white-space: nowrap;
-}
-
-.amortizacion-table td {
-  padding: var(--spacing-2);
-  border-bottom: 1px solid var(--outline-variant);
-}
-
-.amortizacion-table tr:last-child td {
-  border-bottom: 2px solid var(--primary);
-}
-
-.mes {
-  font-weight: 600;
-  font-family: 'Manrope', sans-serif;
-}
-
-.fecha {
-  color: var(--on-surface-variant);
-  font-size: var(--caption);
-}
-
-.amortizacion-table td:first-child,
-.amortizacion-table td:last-child {
-  font-size: var(--caption);
-}
-
-.hipotecas-chart {
-  padding: var(--spacing-4);
-  background: var(--surface-container);
-  border-radius: var(--radius-md);
-}
-
-.chart-container {
+.hipotecas-result .balance-totem {
   margin-top: var(--spacing-4);
 }
 
-.chart-bar {
-  height: 48px;
-  background: var(--surface-variant);
-  border-radius: var(--radius-md);
-  overflow: hidden;
+.hipotecas-result .balance-totem .label-sm {
+  display: none;
 }
 
-.bar-fill {
-  height: 100%;
-  border-radius: var(--radius-md);
+.hipotecas-result .balance-totem .display-lg {
+  font-size: clamp(2.5rem, 5vw, 4rem);
 }
 
-.chart-legend {
+.hipotecas-tabla,
+.hipotecas-chart {
+  margin-bottom: var(--spacing-8);
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
+}
+
+.hipotecas-tabla .headline-md,
+.hipotecas-chart .headline-md {
+  margin-bottom: var(--spacing-6);
+  font-size: 1.25rem;
+}
+
+.hipotecas-tabla .mes {
+  font-family: var(--font-headline);
+  font-weight: 700;
+}
+
+.hipotecas-tabla .fecha {
+  color: var(--on-surface-variant);
+  font-size: var(--caption);
+}
+
+.hipotecas-chart .chart-bar {
   display: flex;
-  justify-content: space-around;
-  margin-top: var(--spacing-2);
-  font-size: var(--label-sm);
+  height: 1.25rem;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--surface-container-highest);
 }
 
-.legend-item {
+.hipotecas-chart .bar-fill {
+  height: 100%;
+}
+
+.hipotecas-chart .chart-legend {
+  display: flex;
+  gap: var(--spacing-8);
+  margin-top: var(--spacing-4);
+  font-size: var(--body-md);
+  color: var(--on-surface-variant);
+}
+
+.hipotecas-chart .legend-item {
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
 }
 
-.legend-label {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 500;
+.hipotecas-chart .legend-item::before {
+  content: '';
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: var(--radius-full);
 }
 
-.legend-item.primary .legend-color {
+.hipotecas-chart .legend-item.primary::before {
   background: var(--primary);
 }
 
-.legend-item.secondary .legend-color {
+.hipotecas-chart .legend-item.secondary::before {
   background: var(--tertiary);
 }
 
-.legend-color {
-  width: 12px;
-  height: 12px;
-  border-radius: var(--radius-full);
+@media (max-width: 900px) {
+  .hipotecas-grid {
+    grid-template-columns: 1fr;
+  }
 }

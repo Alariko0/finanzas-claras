@@ -199,9 +199,13 @@ const SimuladorHipotecas = () => {
             <div
               className="bar-fill"
               style={{
-                height: `${(monto / (cuota * Math.max(1, plazo))) * 100}%`,
+                width: `${(monto / (cuota * Math.max(1, plazo))) * 100}%`,
                 background: 'var(--primary)'
               }}
+            />
+            <div
+              className="bar-fill"
+              style={{ flex: 1, background: 'var(--tertiary)' }}
             />
           </div>
           <div className="chart-legend">

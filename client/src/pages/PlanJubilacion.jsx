@@ -106,7 +106,7 @@ const PlanJubilacion = () => {
         </div>
       </div>
 
-      <div className="plan-jubilation-results">
+      <div className="plan-jubilacion-results">
         <div className="result-card surface-container-lowest">
           <h2 className="title-md text-primary">Capital Acumulado</h2>
           <div className="balance-totem text-primary-fixed-dim">

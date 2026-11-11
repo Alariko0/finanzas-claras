@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Icono from '../components/Icono'
 import './GestionInversiones.css'
 
 /**
@@ -24,10 +25,10 @@ const GestionInversiones = () => {
   const flujoCajal = ingresosTotales - gastosTotales
 
   const tiposActivos = [
-    { id: 'acciones', nombre: 'Acciones', color: '#008560' },
-    { id: 'inmobiliario', nombre: 'Inmobiliario', color: '#3e6655' },
-    { id: 'fondos', nombre: 'Fondos', color: '#993f3a' },
-    { id: 'cripto', nombre: 'Cripto', color: '#ba1a1a' }
+    { id: 'acciones', nombre: 'Acciones', color: 'var(--primary-container)' },
+    { id: 'inmobiliario', nombre: 'Inmobiliario', color: 'var(--secondary)' },
+    { id: 'fondos', nombre: 'Fondos', color: 'var(--tertiary-container)' },
+    { id: 'cripto', nombre: 'Cripto', color: 'var(--error)' }
   ]
 
   const categorias = ['Mercado', 'Inmobiliario', 'Deuda']
@@ -96,8 +97,10 @@ const GestionInversiones = () => {
             <div key={activo.id} className="activo-card">
               <div className="activo-header">
                 <span className="activo-icon">
-                  {activo.tipo === 'acciones' ? '📈' :
-                   activo.tipo === 'inmobiliario' ? '🏠' : '💰'}
+                  <Icono
+                    nombre={activo.tipo === 'acciones' ? 'inversion' :
+                      activo.tipo === 'inmobiliario' ? 'hipotecas' : 'ahorro'}
+                  />
                 </span>
                 <span className="activo-nombre">{activo.nombre}</span>
                 <span className="activo-tipo">{activo.categoria}</span>

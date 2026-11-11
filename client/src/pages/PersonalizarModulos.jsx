@@ -7,6 +7,7 @@
 'use client'
 
 import { useState } from 'react'
+import Icono from '../components/Icono'
 import './PersonalizarModulos.css'
 
 /**
@@ -15,13 +16,13 @@ import './PersonalizarModulos.css'
 
 const PersonalizarModulos = () => {
   const [modulos, setModulos] = useState({
-    irpf: { nombre: 'IRPF', icon: '📊', desc: 'Cálculo de impuestos 2025', activo: true },
-    nomina: { nombre: 'Nómina', icon: '💰', desc: 'Desglose salarial', activo: true },
-    gastos: { nombre: 'Gastos', icon: '🛒', desc: 'Gastos compartidos', activo: true },
-    hipoteca: { nombre: 'Hipotecas', icon: '🏠', desc: 'Simulador hipotecario', activo: true },
-    inversion: { nombre: 'Inversión', icon: '📈', desc: 'Gestión cartera', activo: true },
-    jubilation: { nombre: 'Jubilación', icon: '📅', desc: 'Planificación', activo: true },
-    viajes: { nombre: 'Viajes', icon: '✈️', desc: 'Presupuestos grupo', activo: true }
+    irpf: { nombre: 'IRPF', icon: 'fiscal', desc: 'Cálculo de impuestos', activo: true },
+    nomina: { nombre: 'Nómina', icon: 'nomina', desc: 'Desglose salarial', activo: true },
+    gastos: { nombre: 'Gastos', icon: 'gastos', desc: 'Gastos compartidos', activo: true },
+    hipoteca: { nombre: 'Hipotecas', icon: 'hipotecas', desc: 'Simulador hipotecario', activo: true },
+    inversion: { nombre: 'Inversión', icon: 'inversion', desc: 'Gestión cartera', activo: true },
+    jubilation: { nombre: 'Jubilación', icon: 'jubilacion', desc: 'Planificación', activo: true },
+    viajes: { nombre: 'Viajes', icon: 'viajes', desc: 'Presupuestos grupo', activo: true }
   })
 
   const toggleModulo = (key) => {
@@ -46,7 +47,7 @@ const PersonalizarModulos = () => {
       <div className="module-grid">
         {Object.entries(modulos).map(([key, mod]) => (
           <div key={key} className="module-card" onClick={() => toggleModulo(key)}>
-            <div className="module-icon">{mod.icon}</div>
+            <div className="module-icon"><Icono nombre={mod.icon} tamano={26} /></div>
             <h3 className="module-name">{mod.nombre}</h3>
             <p className="module-description">{mod.desc}</p>
             <span className={`module-status ${mod.activo ? 'enabled' : 'disabled'}`}>

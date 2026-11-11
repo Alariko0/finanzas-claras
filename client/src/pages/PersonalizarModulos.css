@@ -1,40 +1,35 @@
-/* PersonalizarModulos - Basado en Esmeralda Clarity */
+/* PersonalizarModulos - Esmeralda Clarity (las primitivas viven en styles/componentes.css) */
 
 .modulos-page {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: var(--spacing-4);
-}
-
-.modulos-page .page-header {
-  margin-bottom: var(--spacing-6);
+  max-width: 62.5rem;
 }
 
 .modulos-page .modules-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-6);
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
 }
 
 .modulos-page .module-card {
-  background: var(--surface-container-low);
-  padding: var(--spacing-3);
-  border-radius: var(--radius-md);
   position: relative;
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .modulos-page .module-card:hover {
+  background: var(--surface-container);
   transform: translateY(-4px);
 }
 
 .modulos-page .module-header {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
-  margin-bottom: var(--spacing-2);
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-3);
 }
 
 .modulos-page .module-icon {
@@ -42,110 +37,93 @@
 }
 
 .modulos-page .module-name {
-  font-weight: 600;
-  color: var(--primary);
   margin: 0;
+  font-family: var(--font-headline);
+  font-weight: 700;
+  color: var(--on-surface);
 }
 
 .modulos-page .module-description {
+  margin: 0;
   font-size: var(--font-size-sm);
   color: var(--on-surface-variant);
-  margin: 0;
 }
 
 .modulos-page .module-status {
   position: absolute;
-  top: var(--spacing-2);
-  right: var(--spacing-2);
-  padding: var(--spacing-0-5) var(--spacing-1);
+  top: var(--spacing-6);
+  right: var(--spacing-6);
+  padding: var(--spacing-1) var(--spacing-3);
   border-radius: var(--radius-full);
   font-size: var(--font-size-xs);
-  font-weight: 500;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .modulos-page .module-status.active {
-  background: var(--primary-fixed-dim);
-  color: var(--on-primary-fixed-dim);
+  background: rgba(var(--primary-rgb), 0.12);
+  color: var(--primary);
 }
 
 .modulos-page .module-status.inactive {
-  background: var(--tertiary-fixed-dim);
-  color: var(--on-tertiary-fixed-dim);
+  background: rgba(255, 179, 173, 0.12);
+  color: var(--tertiary);
 }
 
 .modulos-page .module-toggle {
   position: absolute;
-  top: var(--spacing-2);
-  right: var(--spacing-2);
-  width: 52px;
-  height: 28px;
-  background: var(--surface-container-highest);
+  top: var(--spacing-6);
+  right: var(--spacing-6);
+  width: 3.25rem;
+  height: 1.75rem;
   border-radius: var(--radius-full);
+  background: var(--surface-container-highest);
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .modulos-page .module-toggle.active {
-  background: var(--primary);
+  background: var(--primary-container);
 }
 
 .modulos-page .toggle-switch {
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 24px;
-  height: 24px;
-  background: var(--primary);
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 50%;
-  transition: transform 0.3s ease;
+  background: var(--on-surface-variant);
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .modulos-page .module-toggle.active .toggle-switch {
-  transform: translateX(24px);
+  background: var(--on-primary-container);
+  transform: translateX(1.5rem);
 }
 
 .modulos-page .save-button {
   width: 100%;
-  padding: var(--spacing-2) var(--spacing-4);
-  border: none;
-  border-radius: var(--radius-full);
-  background: var(--primary);
-  color: var(--surface-container-lowest);
-  font-family: inherit;
-  font-weight: 500;
-  font-size: var(--font-size-md);
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.modulos-page .save-button:hover {
-  background: var(--primary-container);
 }
 
 .modulos-page .info-box {
-  padding: var(--spacing-3);
-  background: var(--surface-variant);
-  border-radius: var(--radius-md);
-  margin-top: var(--spacing-4);
+  margin-top: var(--spacing-6);
+  padding: var(--spacing-6) var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
 }
 
 .modulos-page .info-box p {
   margin: 0;
   font-size: var(--font-size-sm);
-  color: var(--on-surface-variant);
   line-height: 1.6;
+  color: var(--on-surface-variant);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-  .modulos-page {
-    padding: var(--spacing-2);
-  }
-
   .modulos-page .modules-grid {
     grid-template-columns: 1fr;
-    gap: var(--spacing-3);
+    gap: var(--spacing-4);
   }
 }

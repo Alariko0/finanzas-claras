@@ -1,60 +1,20 @@
-/* SimuladorInmobiliaria - Basado en Esmeralda Clarity */
-
-.inmobiliaria-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-4);
-}
-
-.inmobiliaria-page .page-header {
-  margin-bottom: var(--spacing-4);
-}
-
-.inmobiliaria-page .input-group {
-  margin-bottom: var(--spacing-2);
-}
-
-.inmobiliaria-page .input-field {
-  width: 100%;
-  padding: var(--spacing-1);
-  border: none;
-  background: var(--surface-container-highest);
-  border-bottom: 2px solid transparent;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-body);
-  font-size: var(--font-size-md);
-}
-
-.inmobiliaria-page .input-field:focus {
-  outline: none;
-  background: var(--surface-container-lowest);
-  border-bottom-color: var(--primary);
-}
+/* SimuladorInmobiliaria - Esmeralda Clarity (las primitivas viven en styles/componentes.css) */
 
 .inmobiliaria-page .result-card {
-  margin: var(--spacing-4) 0;
-  padding: var(--spacing-2);
-  background: var(--surface-container-low);
-  border-radius: var(--radius-md);
+  margin: var(--spacing-6) 0;
 }
 
 .inmobiliaria-page .investment-chart {
-  margin: var(--spacing-4) 0;
-  height: 200px;
-  background: var(--surface-container);
-  border-radius: var(--radius-md);
+  height: 12.5rem;
+  margin: var(--spacing-6) 0;
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-lowest);
 }
 
 .inmobiliaria-page .projected-roi {
-  margin-top: var(--spacing-4);
-  padding: var(--spacing-2);
-  background: var(--surface-variant);
-  border-radius: var(--radius-md);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .inmobiliaria-page {
-    padding: var(--spacing-2);
-  }
+  margin-top: var(--spacing-6);
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
 }

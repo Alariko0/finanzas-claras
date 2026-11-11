@@ -7,6 +7,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Icono from '../components/Icono'
 import './Notificaciones.css'
 
 /**
@@ -129,9 +130,9 @@ const Notificaciones = () => {
           alertas.map((notif) => (
             <div key={notif.id} className="notification-card">
               <span className={`notification-badge notification-${notif.tipo}`}>
-                {notif.tipo === 'info' && 'ℹ️ Info'}
-                {notif.tipo === 'warning' && '⚠️ Advertencia'}
-                {notif.tipo === 'urgent' && '🔴 Urgente'}
+                {notif.tipo === 'info' && <><Icono nombre="info" tamano={14} /> Info</>}
+                {notif.tipo === 'warning' && <><Icono nombre="alerta" tamano={14} /> Advertencia</>}
+                {notif.tipo === 'urgent' && <><Icono nombre="urgente" tamano={14} /> Urgente</>}
               </span>
               <h3 className="notification-title">{notif.titulo}</h3>
               <p className="notification-message">{notif.mensaje}</p>

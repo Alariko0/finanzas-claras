@@ -1,142 +1,140 @@
-.prestamos-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-4);
-}
+/* PrestamosPersonales - Esmeralda Clarity */
 
 .prestamos-selectors {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-6);
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
 }
 
-.selector-group label {
-  display: block;
-  margin-bottom: var(--spacing-1);
-  font-family: 'Manrope', sans-serif;
-  font-size: var(--label-sm);
+.prestamos-selectors .selector-group {
+  flex-direction: column;
+  flex-wrap: nowrap;
 }
 
-.prestamos-result {
-  margin-bottom: var(--spacing-6);
-}
-
-.result-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: var(--spacing-3);
-}
-
-@screen mobile {
-  .result-cards {
-    grid-template-columns: 1fr;
-  }
-}
-
-.result-card {
-  border-radius: var(--radius-md);
-  padding: var(--spacing-4);
-  text-align: center;
-}
-
-.result-card h3 {
-  font-size: var(--label-sm);
+.prestamos-selectors .selector-group label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--on-surface-variant);
-  margin-bottom: var(--spacing-2);
 }
 
-.result-card .display-lg {
-  font-family: 'Manrope', sans-serif;
-}
-
-.result-card.highlight {
-  background: var(--surface-variant);
-}
-
+.prestamos-result,
 .prestamos-comparativa {
-  margin-bottom: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
+}
+
+.prestamos-page .result-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--spacing-4);
+}
+
+.prestamos-page .result-card {
+  text-align: left;
+}
+
+.prestamos-page .result-card h3 {
+  margin-bottom: var(--spacing-3);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+}
+
+.prestamos-page .result-card .display-lg {
+  font-family: var(--font-headline);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 800;
+}
+
+.prestamos-page .result-card.highlight {
+  background: var(--secondary-container);
+}
+
+.prestamos-page .result-card.highlight h3 {
+  color: var(--on-secondary-container);
 }
 
 .comparativa-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-3);
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-6);
 }
 
 .comparativa-card {
-  border-radius: var(--radius-md);
-  padding: var(--spacing-4);
-  border: 1px solid var(--outline-variant);
-  background: var(--surface-container);
-  transition: all 0.2s ease;
+  padding: var(--spacing-6);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
+  transition: background-color 0.2s ease;
 }
 
 .comparativa-card:hover {
-  background: var(--surface-container-high);
+  background: var(--surface-container);
 }
 
 .comparativa-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
 }
 
 .comparativa-titulo {
-  font-weight: 500;
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-headline);
+  font-weight: 700;
 }
 
-.tag {
-  background: var(--primary-fixed-dim);
+.prestamos-page .tag {
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-full);
+  background: rgba(var(--primary-rgb), 0.12);
   color: var(--primary);
   font-size: var(--caption);
-  padding: var(--spacing-1) var(--spacing-2);
-  border-radius: var(--radius-full);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .comparativa-info div {
+  margin-bottom: var(--spacing-1);
   font-size: var(--body-md);
   color: var(--on-surface-variant);
-  margin-bottom: var(--spacing-1);
 }
 
 .comparativa-result span {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 600;
+  font-family: var(--font-headline);
   font-size: var(--title-md);
+  font-weight: 700;
+  color: var(--primary);
 }
 
 .prestamos-info {
-  padding: var(--spacing-4);
-  background: var(--surface-container);
-  border-radius: var(--radius-md);
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
 }
 
-.consejos-list {
+.prestamos-page .consejos-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--spacing-4);
-  margin-top: var(--spacing-4);
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--spacing-6);
+  margin-top: var(--spacing-6);
 }
 
-@screen mobile {
-  .consejos-list {
-    grid-template-columns: 1fr;
-  }
-}
-
-.consejo-item {
+.prestamos-page .consejo-item {
   display: flex;
-  gap: var(--spacing-2);
+  gap: var(--spacing-3);
   font-size: var(--body-md);
-  color: var(--on-surface);
   line-height: 1.6;
+  color: var(--on-surface-variant);
 }
 
-.consejo-icon {
-  font-size: 1.5rem;
+.prestamos-page .consejo-icon {
   flex-shrink: 0;
+  font-size: 1.5rem;
 }

@@ -9,6 +9,7 @@
 import { useState, useEffect } from 'react'
 import { perfil as perfilApi } from '../utils/api'
 import { useAuth } from '../context/AuthContext'
+import Icono from '../components/Icono'
 import './ConfiguracionPerfil.css'
 
 /**
@@ -200,7 +201,7 @@ const ConfiguracionPerfil = () => {
               className="module-toggle"
               onClick={() => setModulos({ ...modulos, [key]: !enabled })}
             >
-              <div className="module-icon">{enabled ? '✓' : '○'}</div>
+              <div className="module-icon"><Icono nombre={enabled ? 'check' : 'circulo'} tamano={18} /></div>
               <span className="module-name">{key.charAt(0).toUpperCase() + key.slice(1)}</span>
               <span className={`module-status ${enabled ? 'enabled' : 'disabled'}`}>
                 {enabled ? 'Activado' : 'Desactivado'}

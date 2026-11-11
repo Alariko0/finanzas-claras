@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Icono from '../components/Icono'
 import './GastosFamiliares.css'
 
 /**
@@ -67,7 +68,7 @@ const GastosFamiliares = () => {
             <div key={gasto.id} className="gasto-item">
               <span className="gasto-label">{gasto.descricao}</span>
               <span className="gasto-value">{gasto.monto.toLocaleString('es-ES')} €</span>
-              <span className="gasto-icon">🏠</span>
+              <span className="gasto-icon"><Icono nombre="hipotecas" tamano={20} /></span>
             </div>
           ))}
         </div>
@@ -107,7 +108,7 @@ const GastosFamiliares = () => {
             <div key={gasto.id} className="gasto-item">
               <span className="gasto-label">{gasto.persona}</span>
               <span className="gasto-value">{gasto.gastos.toLocaleString('es-ES')} €</span>
-              <span className="gasto-icon">👤</span>
+              <span className="gasto-icon"><Icono nombre="cuenta" tamano={20} /></span>
             </div>
           ))}
         </div>

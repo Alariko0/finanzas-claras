@@ -4,56 +4,61 @@
  */
 
 :root {
-  /* --- Primary Colors --- */
-  --primary: #00694c;
-  --primary-container: #008560;
+  color-scheme: dark;
+
+  /* --- Primary Colors (tema oscuro de Stitch) --- */
+  --primary: #68dbae;
+  --on-primary: #003827;
+  --primary-container: #26a37a;
+  --on-primary-container: #003121;
   --primary-fixed: #86f8c9;
   --primary-fixed-dim: #68dbae;
 
   /* --- Secondary Colors --- */
-  --secondary: #3e6655;
-  --secondary-container: #bdead3;
+  --secondary: #a5d0ba;
+  --secondary-container: #295140;
+  --on-secondary-container: #97c2ac;
   --secondary-fixed: #c0ecd6;
   --secondary-fixed-dim: #a5d0ba;
 
   /* --- Tertiary Colors --- */
-  --tertiary: #993f3a;
-  --tertiary-container: #b85751;
+  --tertiary: #ffb3ad;
+  --tertiary-container: #db726b;
   --tertiary-fixed: #ffdad6;
   --tertiary-fixed-dim: #ffb3ad;
 
-  /* --- Surface Palette (Cloud System) --- */
-  --surface: #f8f9fa;
-  --surface-bright: #f8f9fa;
-  --surface-container: #edeeef;
-  --surface-container-high: #e7e8e9;
-  --surface-container-highest: #e1e3e4;
-  --surface-container-low: #f3f4f5;
-  --surface-container-lowest: #ffffff;
-  --surface-dim: #d9dadb;
-  --surface-variant: #e1e3e4;
+  /* --- Surface Palette --- */
+  --surface: #111415;
+  --surface-bright: #373a3b;
+  --surface-container: #1d2021;
+  --surface-container-high: #282a2b;
+  --surface-container-highest: #323536;
+  --surface-container-low: #191c1d;
+  --surface-container-lowest: #0c0f10;
+  --surface-dim: #111415;
+  --surface-variant: #323536;
 
   /* --- Background Colors --- */
-  --background: #f8f9fa;
-  --on-background: #191c1d;
+  --background: #111415;
+  --on-background: #e1e3e4;
 
   /* --- On-Surface Colors --- */
-  --on-surface: #191c1d;
-  --on-surface-variant: #3d4943;
+  --on-surface: #e1e3e4;
+  --on-surface-variant: #bccac1;
 
   /* --- Error Colors --- */
-  --error: #ba1a1a;
-  --error-container: #ffdad6;
-  --on-error: #ffffff;
-  --on-error-container: #93000a;
+  --error: #ffb4ab;
+  --error-container: #93000a;
+  --on-error: #690005;
+  --on-error-container: #ffdad6;
 
   /* --- Success Colors --- */
   --success: #68dbae;
   --success-dim: #68dbae;
 
   /* --- Outline Colors --- */
-  --outline: #6d7a73;
-  --outline-variant: #bccac1;
+  --outline: #87948c;
+  --outline-variant: #3d4943;
 
   /* --- Spacing Scale (base: 1rem = 16px) --- */
   --spacing-1: 0.25rem;   /* 4px */
@@ -71,11 +76,46 @@
   --radius-sm: 0.25rem;   /* 4px */
   --radius-md: 0.75rem;   /* 12px */
   --radius-lg: 1rem;      /* 16px */
+  --radius-xl: 1.5rem;    /* 24px */
   --radius-full: 9999px;  /* pill */
 
   /* --- Shadows --- */
-  --shadow-ambient: 0 8px 24px rgba(25, 28, 29, 0.06);
-  --shadow-focus: 0 8px 24px rgba(17, 20, 21, 0.06);
+  --shadow-ambient: 0 8px 24px rgba(12, 15, 16, 0.4);
+  --shadow-focus: 0 8px 24px rgba(12, 15, 16, 0.4);
+
+  --shadow-xl: 0 16px 40px rgba(12, 15, 16, 0.5);
+  --ambient-shadow: var(--shadow-ambient);
+
+  /* --- Layout --- */
+  --sidebar-width: 15rem;
+
+  /* --- Tipografía (familias y escala) --- */
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-headline: 'Manrope', system-ui, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --label-sm: 0.75rem;
+  --caption: 0.75rem;
+  --body-md: 0.875rem;
+  --title-md: 1rem;
+  --title-lg: 1.25rem;
+  --headline-sm: 1.5rem;
+  --headline-md: 2rem;
+
+  /* --- Aliases usados por páginas antiguas --- */
+  --spacing-0-25: 0.0625rem;
+  --spacing-0-5: 0.125rem;
+  --primary-variant: var(--primary-container);
+  --primary-rgb: 104, 219, 174;
+  --on-primary-fixed-dim: var(--primary-fixed-dim);
+  --on-tertiary-fixed-dim: var(--tertiary-fixed-dim);
+  --round-corner-sm: var(--radius-sm);
+  --radius-four: var(--radius-sm);
 
   /* --- Z-Index --- */
   --z-dropdown: 100;
@@ -191,6 +231,39 @@ h1, h2, h3, h4, h5, h6 {
 .text-tertiary { color: var(--tertiary); }
 .text-on-error { color: var(--on-error); }
 .text-on-surface { color: var(--on-surface); }
+.text-primary-fixed-dim { color: var(--primary-fixed-dim); }
+.text-tertiary-fixed-dim { color: var(--tertiary-fixed-dim); }
+
+.surface-container-lowest { background-color: var(--surface-container-lowest); }
+.surface-container-low { background-color: var(--surface-container-low); }
+.surface-container { background-color: var(--surface-container); }
+.surface-container-variant { background-color: var(--surface-container); }
+
+/* Iconos SVG: alineados con el texto cuando van en línea */
+.icono {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: -0.2em;
+}
+
+strong > .icono,
+.notification-badge > .icono {
+  margin-right: var(--spacing-1);
+}
+
+/* Rutas inexistentes y carga de rutas protegidas */
+.not-found,
+.page-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: var(--spacing-12);
+  font-family: var(--font-headline);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--on-surface-variant);
+}
 
 .bg-primary { background-color: var(--primary); }
 .bg-secondary { background-color: var(--secondary); }
@@ -250,17 +323,6 @@ h1, h2, h3, h4, h5, h6 {
 .gap-1 { gap: var(--spacing-1); }
 .gap-2 { gap: var(--spacing-2); }
 .gap-4 { gap: var(--spacing-4); }
-
-/*
- * Fondo oscuro para dark mode (opcional)
- */
-
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: var(--surface-dim);
-    color: var(--on-surface);
-  }
-}
 
 /*
  * Print styles

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Icono from '../components/Icono'
 import './DetalleActivo.css'
 
 /**
@@ -191,13 +192,13 @@ const DetalleActivo = ({ activoId = 1 }) => {
         <h2 className="headline-md">Notas</h2>
         <div className="notas-list">
           <div className="nota-item">
-            <strong>📅 Fecha de Adquisición:</strong> {activo.adquisicionFecha}
+            <strong><Icono nombre="jubilacion" tamano={16} /> Fecha de Adquisición:</strong> {activo.adquisicionFecha}
           </div>
           <div className="nota-item">
-            <strong>📊 Valoración Actual:</strong> Basado en comparables de mercado
+            <strong><Icono nombre="fiscal" tamano={16} /> Valoración Actual:</strong> Basado en comparables de mercado
           </div>
           <div className="nota-item">
-            <strong>💡 Recomendación:</strong> Considera amortización si encuentras oportunidad de plusvalía
+            <strong><Icono nombre="bombilla" tamano={16} /> Recomendación:</strong> Considera amortización si encuentras oportunidad de plusvalía
           </div>
         </div>
       </div>

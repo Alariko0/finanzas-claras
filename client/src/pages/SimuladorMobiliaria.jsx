@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Icono from '../components/Icono'
 import './SimuladorMobiliaria.css'
 
 /**
@@ -137,19 +138,19 @@ const SimuladorMobiliaria = () => {
         <h2 className="headline-md">Consejos para Optimizar</h2>
         <div className="consejos-list">
           <div className="consejo-item">
-            <span className="consejo-icon">📊</span>
+            <span className="consejo-icon"><Icono nombre="fiscal" /></span>
             <span>Mantén el ratio de apalancamiento por debajo del 60% para controlar el riesgo.</span>
           </div>
           <div className="consejo-item">
-            <span className="consejo-icon">⚖️</span>
+            <span className="consejo-icon"><Icono nombre="balanza" /></span>
             <span>El objetivo es llegar al tramo 31% (30-50%), donde el beneficio es óptimo.</span>
           </div>
           <div className="consejo-item">
-            <span className="consejo-icon">🔄</span>
+            <span className="consejo-icon"><Icono nombre="ciclo" /></span>
             <span>Recicla plusvalías entre activos para mantener el equilibrio fiscal.</span>
           </div>
           <div className="consejo-item">
-            <span className="consejo-icon">📈</span>
+            <span className="consejo-icon"><Icono nombre="inversion" /></span>
             <span>Busca propiedades con plusvalía mínima del 12% anual para superar el coste bancario.</span>
           </div>
         </div>

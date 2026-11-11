@@ -1,67 +1,57 @@
-/* HistorialCalculos - Basado en Esmeralda Clarity */
+/* HistorialCalculos - Esmeralda Clarity */
 
 .historial-page {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: var(--spacing-4);
-}
-
-.historial-page .page-header {
-  margin-bottom: var(--spacing-6);
+  max-width: 56rem;
 }
 
 .historial-page .filters {
   display: flex;
-  gap: var(--spacing-2);
-  margin-bottom: var(--spacing-4);
   flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-8);
 }
 
 .historial-page .filter-group {
   display: flex;
   align-items: center;
-  gap: var(--spacing-1);
+  gap: var(--spacing-2);
 }
 
 .historial-page .filter-label {
-  font-weight: 500;
-  color: var(--on-surface);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
 }
 
 .historial-page .filter-select {
-  padding: var(--spacing-1) var(--spacing-2);
-  border: none;
-  background: var(--surface-container-highest);
-  border-bottom: 2px solid transparent;
-  border-radius: var(--radius-sm);
-  font-family: inherit;
+  width: auto;
+  padding: var(--spacing-2) var(--spacing-4);
   font-size: var(--font-size-sm);
-}
-
-.historial-page .filter-select:focus {
-  outline: none;
-  background: var(--surface-container-lowest);
-  border-bottom-color: var(--primary);
 }
 
 .historial-page .filter-button {
-  padding: var(--spacing-1) var(--spacing-2);
-  border: none;
-  background: var(--surface-variant);
+  padding: var(--spacing-2) var(--spacing-4);
+  border: 0;
   border-radius: var(--radius-full);
+  background: var(--surface-container-highest);
+  color: var(--on-surface-variant);
   font-family: inherit;
   font-size: var(--font-size-sm);
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .historial-page .filter-button:hover {
-  background: var(--surface-container);
+  color: var(--on-surface);
 }
 
 .historial-page .filter-button.active {
-  background: var(--primary);
-  color: var(--surface-container-lowest);
+  background: var(--primary-container);
+  color: var(--on-primary-container);
 }
 
 .historial-page .calculations-list {
@@ -71,16 +61,16 @@
 }
 
 .historial-page .calculo-card {
-  padding: var(--spacing-3);
+  padding: var(--spacing-6) var(--spacing-8);
+  border-radius: var(--radius-xl);
   background: var(--surface-container-low);
-  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .historial-page .calculo-card:hover {
+  background: var(--surface-container);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-ambient);
 }
 
 .historial-page .calculo-header {
@@ -91,72 +81,91 @@
 }
 
 .historial-page .calculo-type {
-  padding: var(--spacing-0-5) var(--spacing-1);
-  background: var(--primary-fixed-dim);
+  padding: var(--spacing-1) var(--spacing-3);
   border-radius: var(--radius-full);
-  font-size: var(--font-size-xs);
+  background: rgba(var(--primary-rgb), 0.12);
   color: var(--primary);
-  font-weight: 600;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
 }
 
 .historial-page .calculo-title {
-  font-weight: 600;
-  color: var(--primary);
   margin: 0;
-  font-size: var(--font-size-md);
+  font-family: var(--font-headline);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--on-surface);
 }
 
 .historial-page .calculo-result {
-  font-size: var(--font-size-sm);
-  color: var(--on-surface-variant);
   margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--primary);
 }
 
-.historial-page .calculo-date {
+.historial-page .calculo-date,
+.historial-page .calculo-detail {
+  margin: 0;
   font-size: var(--font-size-xs);
   color: var(--on-surface-variant);
-  margin: 0;
 }
 
 .historial-page .calculo-detail {
-  font-size: var(--font-size-xs);
-  color: var(--on-surface-variant);
-  margin: 0;
   padding-top: var(--spacing-1);
 }
 
 .historial-page .empty-state {
+  padding: var(--spacing-12);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
   text-align: center;
-  padding: var(--spacing-6);
-  background: var(--surface-variant);
-  border-radius: var(--radius-md);
   color: var(--on-surface-variant);
 }
 
 .historial-page .help-section {
-  margin-top: var(--spacing-6);
-  padding: var(--spacing-3);
-  background: var(--surface-variant);
-  border-radius: var(--radius-md);
+  margin-top: var(--spacing-12);
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
 }
 
 .historial-page .help-section h3 {
-  margin: 0 0 var(--spacing-1) 0;
+  margin: 0 0 var(--spacing-2);
   color: var(--primary);
 }
 
 .historial-page .help-section p {
-  margin: 0 0 var(--spacing-1) 0;
+  margin: 0 0 var(--spacing-1);
   font-size: var(--font-size-sm);
+  color: var(--on-surface-variant);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-  .historial-page {
-    padding: var(--spacing-2);
-  }
-
   .historial-page .filters {
     flex-direction: column;
+    align-items: stretch;
   }
+}
+
+.historial-page .calculos-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.historial-page .result-label,
+.historial-page .date-label,
+.historial-page .detail-label {
+  margin-right: var(--spacing-2);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+}
+
+.historial-page .result-value {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  color: var(--primary);
 }

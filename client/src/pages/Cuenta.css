@@ -1,47 +1,49 @@
-/* Cuenta - Basado en Esmeralda Clarity */
+/* Cuenta - Esmeralda Clarity (las primitivas viven en styles/componentes.css) */
 
 .cuenta-page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: var(--spacing-4);
-}
-
-.cuenta-page .page-header {
-  margin-bottom: var(--spacing-4);
+  max-width: 56rem;
 }
 
 .cuenta-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-6);
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-12);
 }
 
 .cuenta-card {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-1);
-  padding: var(--spacing-4);
+  gap: var(--spacing-2);
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
   background: var(--surface-container-low);
-  border-radius: var(--radius-md);
   color: var(--on-surface);
   text-decoration: none;
-  transition: background 0.15s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .cuenta-card:hover,
 .cuenta-card:focus-visible {
-  background: var(--surface-container-high);
+  background: var(--surface-container);
+  transform: translateY(-2px);
 }
 
 .cuenta-icon {
-  font-size: 1.5rem;
+  display: inline-flex;
+  align-self: flex-start;
+  margin-bottom: var(--spacing-2);
+  padding: var(--spacing-3);
+  border-radius: var(--radius-lg);
+  background: rgba(var(--primary-rgb), 0.1);
+  color: var(--primary);
 }
 
 .cuenta-card-title {
   font-family: var(--font-headline);
-  font-weight: 600;
-  color: var(--primary);
+  font-size: var(--font-size-lg);
+  font-weight: 800;
+  color: var(--on-surface);
 }
 
 .cuenta-card-desc {
@@ -50,14 +52,17 @@
 }
 
 .cuenta-logout {
-  padding: var(--spacing-2) var(--spacing-4);
-  border: 1px solid var(--outline-variant);
+  padding: var(--spacing-3) var(--spacing-8);
+  border: 0;
   border-radius: var(--radius-full);
-  background: transparent;
+  background: var(--surface-container-highest);
   color: var(--on-surface);
+  font-weight: 700;
   cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .cuenta-logout:hover {
-  background: var(--surface-container);
+  background: var(--error-container);
+  color: var(--on-error-container);
 }

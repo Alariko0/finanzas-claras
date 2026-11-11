@@ -1,61 +1,65 @@
+/* GestionInversiones - Esmeralda Clarity */
+
 .inversion-page {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: var(--spacing-4);
+  max-width: 87.5rem;
 }
 
 .inversion-summary {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-3);
-  margin-bottom: var(--spacing-6);
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-12);
 }
 
-.summary-card {
-  border-radius: var(--radius-md);
-  padding: var(--spacing-4);
+.inversion-page .summary-card {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
 }
 
-.summary-label {
-  font-size: var(--label-sm);
+.inversion-page .summary-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--on-surface-variant);
 }
 
-.summary-card span:last-child {
-  font-family: 'Manrope', sans-serif;
+.inversion-page .summary-card span:last-child {
+  font-family: var(--font-headline);
   font-size: var(--headline-sm);
+  font-weight: 800;
 }
 
-.text-success {
+.inversion-page .text-success {
   color: var(--primary-fixed-dim);
 }
 
-.inversion-allocation {
+.inversion-allocation,
+.inversion-activos {
+  margin-bottom: var(--spacing-12);
+}
+
+.inversion-allocation h2,
+.inversion-activos h2,
+.inversion-tipos h2 {
   margin-bottom: var(--spacing-6);
+  font-size: 1.25rem;
 }
 
 .allocation-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   gap: var(--spacing-3);
 }
 
-@screen mobile {
-  .allocation-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 .allocation-item {
-  padding: var(--spacing-3) var(--spacing-4);
-  background: var(--surface-container);
-  border-radius: var(--radius-md);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: var(--spacing-4) var(--spacing-6);
+  border-radius: var(--radius-lg);
+  background: var(--surface-container-low);
   font-size: var(--body-md);
 }
 
@@ -64,143 +68,133 @@
 }
 
 .allocation-value {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 500;
-}
-
-.inversion-activos {
-  margin-bottom: var(--spacing-6);
+  font-family: var(--font-headline);
+  font-weight: 700;
 }
 
 .activos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--spacing-3);
-}
-
-@screen mobile {
-  .activos-grid {
-    grid-template-columns: 1fr;
-  }
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: var(--spacing-6);
 }
 
 .activo-card {
-  border-radius: var(--radius-md);
-  padding: var(--spacing-4);
-  background: var(--surface);
-  border: 1px solid var(--outline-variant);
-  transition: all 0.2s ease;
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .activo-card:hover {
-  border-color: var(--primary);
+  background: var(--surface-container);
   transform: translateY(-2px);
 }
 
 .activo-header {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
-  margin-bottom: var(--spacing-3);
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-6);
 }
 
 .activo-icon {
-  font-size: 2rem;
+  padding: var(--spacing-3);
+  border-radius: var(--radius-lg);
+  background: rgba(var(--primary-rgb), 0.1);
+  font-size: 1.5rem;
 }
 
 .activo-nombre {
-  font-weight: 500;
-  font-family: 'Manrope', sans-serif;
   flex: 1;
+  font-family: var(--font-headline);
+  font-weight: 800;
 }
 
 .activo-tipo {
-  font-size: var(--caption);
-  color: var(--on-surface-variant);
-  background: var(--surface-container);
-  padding: var(--spacing-1) var(--spacing-2);
+  padding: var(--spacing-1) var(--spacing-3);
   border-radius: var(--radius-full);
+  background: var(--surface-container-highest);
+  font-size: var(--caption);
+  font-weight: 600;
+  color: var(--on-surface-variant);
 }
 
 .activo-info {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
-  margin-bottom: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
 }
 
-.info-row {
+.inversion-page .info-row {
   display: flex;
   justify-content: space-between;
   font-size: var(--body-md);
 }
 
-.info-label {
-  color: var(--on-surface-variant);
+.inversion-page .info-label {
   font-size: var(--label-sm);
+  color: var(--on-surface-variant);
 }
 
-.info-value {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 500;
-}
-
-.text-primary {
-  color: var(--primary);
+.inversion-page .info-value {
+  font-family: var(--font-headline);
+  font-weight: 600;
 }
 
 .activo-ganancia {
-  padding-top: var(--spacing-3);
-  border-top: 1px solid var(--outline-variant);
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--radius-md);
+  background: rgba(var(--primary-rgb), 0.08);
 }
 
 .ganancia-label {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 600;
+  font-family: var(--font-headline);
+  font-weight: 700;
   color: var(--primary);
 }
 
 .inversion-tipos {
-  padding: var(--spacing-4);
-  background: var(--surface-container);
-  border-radius: var(--radius-md);
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
 }
 
 .tipos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: var(--spacing-3);
-  margin-top: var(--spacing-4);
-}
-
-@screen mobile {
-  .tipos-grid {
-    grid-template-columns: 1fr;
-  }
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: var(--spacing-4);
 }
 
 .tipo-card {
-  border-radius: var(--radius-md);
-  padding: var(--spacing-3);
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
   gap: var(--spacing-2);
+  padding: var(--spacing-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface-container);
+  text-align: center;
 }
 
 .tipo-color {
-  width: 24px;
-  height: 24px;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: var(--radius-full);
 }
 
 .tipo-nombre {
-  font-weight: 500;
   font-size: var(--body-md);
+  font-weight: 600;
 }
 
 .tipo-activos {
   font-size: var(--caption);
   color: var(--on-surface-variant);
+}
+
+@media (max-width: 768px) {
+  .activos-grid {
+    grid-template-columns: 1fr;
+  }
 }

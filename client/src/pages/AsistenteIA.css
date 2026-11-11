@@ -1,130 +1,100 @@
-/* AsistenteIA - Basado en Esmeralda Clarity */
+/* AsistenteIA - Esmeralda Clarity (las primitivas viven en styles/componentes.css) */
 
 .ia-page {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: var(--spacing-4);
-  height: calc(100vh - 60px);
+  max-width: 56rem;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+  padding-bottom: var(--spacing-8);
 }
 
 .ia-page .page-header {
-  margin-bottom: var(--spacing-2);
+  margin-bottom: var(--spacing-6);
 }
 
 .ia-page .chat-container {
   flex: 1;
+  margin-bottom: var(--spacing-4);
+  padding: var(--spacing-8);
   overflow-y: auto;
-  padding: var(--spacing-2);
-  background: var(--surface-variant);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-2);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-lowest);
 }
 
 .ia-page .message-bubble {
   max-width: 80%;
-  padding: var(--spacing-2);
-  margin-bottom: var(--spacing-2);
-  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-4);
+  padding: var(--spacing-4) var(--spacing-6);
+  border-radius: var(--radius-xl);
   font-family: var(--font-body);
   font-size: var(--font-size-sm);
+  line-height: 1.6;
   white-space: pre-wrap;
 }
 
 .ia-page .message-user {
   margin-left: auto;
-  background: var(--primary);
-  color: white;
   border-bottom-right-radius: var(--radius-sm);
+  background: var(--primary-container);
+  color: var(--on-primary-container);
 }
 
 .ia-page .message-assistant {
   margin-right: auto;
-  background: var(--surface-container-low);
-  color: var(--on-surface);
   border-bottom-left-radius: var(--radius-sm);
+  background: var(--surface-container-high);
+  color: var(--on-surface);
 }
 
 .ia-page .message-time {
   display: block;
-  margin-top: var(--spacing-0-5);
+  margin-top: var(--spacing-1);
   font-size: var(--font-size-xs);
   opacity: 0.7;
 }
 
 .ia-page .chips-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-1);
-  padding: var(--spacing-2);
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-4);
 }
 
 .ia-page .chip {
-  padding: var(--spacing-0-5) var(--spacing-1);
-  background: var(--surface-container);
-  border-radius: var(--radius-full);
-  font-family: var(--font-body);
+  padding: var(--spacing-2) var(--spacing-4);
   font-size: var(--font-size-xs);
-  cursor: pointer;
-  transition: background 0.2s ease;
 }
 
 .ia-page .chip:hover {
-  background: var(--surface-variant);
+  background: var(--surface-container-high);
+  color: var(--on-surface);
 }
 
 .ia-page .chip:active {
-  background: var(--primary);
-  color: white;
+  background: var(--primary-container);
+  color: var(--on-primary-container);
 }
 
 .ia-page .input-container {
   display: flex;
-  gap: var(--spacing-1);
+  gap: var(--spacing-3);
 }
 
 .ia-page .chat-input {
   flex: 1;
-  padding: var(--spacing-1);
-  border: none;
-  background: var(--surface-container-highest);
-  border-bottom: 2px solid transparent;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-body);
-  font-size: var(--font-size-sm);
-}
-
-.ia-page .chat-input:focus {
-  outline: none;
-  background: var(--surface-container-lowest);
-  border-bottom-color: var(--primary);
+  font-size: var(--font-size-md);
 }
 
 .ia-page .send-button {
-  padding: var(--spacing-1) var(--spacing-2);
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: var(--radius-full);
-  font-family: var(--font-body);
-  font-size: var(--font-size-sm);
-  cursor: pointer;
-  transition: background 0.2s ease;
+  padding: var(--spacing-3) var(--spacing-8);
 }
 
-.ia-page .send-button:hover {
-  background: var(--primary-container);
-}
-
-/* Typing indicator */
+/* Indicador de escritura */
 .ia-page .typing-indicator {
   display: none;
-  padding: var(--spacing-1) var(--spacing-2);
-  background: var(--surface-container-low);
-  border-radius: var(--radius-md);
   width: fit-content;
-  margin-bottom: var(--spacing-2);
+  margin-bottom: var(--spacing-4);
+  padding: var(--spacing-3) var(--spacing-6);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-high);
 }
 
 .ia-page .typing-indicator.show {
@@ -132,12 +102,12 @@
 }
 
 .ia-page .typing-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--on-surface-variant);
-  border-radius: 50%;
-  animation: bounce 1.4s infinite ease-in-out both;
+  width: 0.375rem;
+  height: 0.375rem;
   margin: 0 2px;
+  border-radius: 50%;
+  background: var(--on-surface-variant);
+  animation: bounce 1.4s infinite ease-in-out both;
 }
 
 .ia-page .typing-dot:nth-child(1) {
@@ -157,18 +127,28 @@
   }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .ia-page {
-    padding: var(--spacing-2);
     height: auto;
   }
 
-  .chat-container {
-    min-height: 300px;
+  .ia-page .chat-container {
+    min-height: 18rem;
+    padding: var(--spacing-4);
   }
 
-  .message-bubble {
+  .ia-page .message-bubble {
     max-width: 90%;
   }
+}
+
+.ia-page .disclaimer {
+  margin-top: var(--spacing-4);
+  font-size: var(--font-size-xs);
+  line-height: 1.6;
+  color: var(--outline);
+}
+
+.ia-page .disclaimer strong {
+  color: var(--on-surface-variant);
 }

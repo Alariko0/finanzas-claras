@@ -6,6 +6,7 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import Icono from '../components/Icono'
 import './Acceso.css'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -126,8 +127,39 @@ const Acceso = () => {
 
   const esLogin = pestana === 'login'
 
+  const cumplidos = Object.values(requisitos).filter(Boolean).length
+  const fuerza = password
+    ? [
+        { etiqueta: 'Baja', porcentaje: 33 },
+        { etiqueta: 'Baja', porcentaje: 33 },
+        { etiqueta: 'Media', porcentaje: 66 },
+        { etiqueta: 'Alta', porcentaje: 100 }
+      ][cumplidos]
+    : null
+
   return (
     <div className="acceso-page">
+      <aside className="acceso-brand">
+        <p className="acceso-marca">FinanzasClaras</p>
+        <h2 className="acceso-lema">
+          Tus finanzas, <span>claras</span> desde hoy.
+        </h2>
+        <ul className="acceso-ventajas">
+          <li>
+            <strong>Guarda tu historial</strong>
+            <span>Conserva cada cálculo y consúltalo cuando lo necesites.</span>
+          </li>
+          <li>
+            <strong>Datos con fuente oficial</strong>
+            <span>Escalas y cotizaciones tomadas del BOE y la AEAT.</span>
+          </li>
+          <li>
+            <strong>Estimaciones transparentes</strong>
+            <span>Cada resultado indica de qué fecha son los datos que usa.</span>
+          </li>
+        </ul>
+      </aside>
+
       <div className="acceso-card">
         <h1>{esLogin ? 'Iniciar sesión' : 'Crear cuenta'}</h1>
         <p className="acceso-subtitle">
@@ -272,10 +304,24 @@ const Acceso = () => {
                   {verPassword ? 'Ocultar' : 'Ver'}
                 </button>
               </div>
+              {fuerza && (
+                <div className="password-strength">
+                  <div className="password-strength-info">
+                    <span>Seguridad: {fuerza.etiqueta}</span>
+                    <span>{fuerza.porcentaje}%</span>
+                  </div>
+                  <div className="password-strength-bar">
+                    <div
+                      className="password-strength-fill"
+                      style={{ width: `${fuerza.porcentaje}%` }}
+                    />
+                  </div>
+                </div>
+              )}
               <ul className="password-requirements">
-                <li className={requisitos.longitud ? 'met' : ''}>{requisitos.longitud ? '✓' : '○'} 8 o más caracteres</li>
-                <li className={requisitos.mayuscula ? 'met' : ''}>{requisitos.mayuscula ? '✓' : '○'} Una mayúscula</li>
-                <li className={requisitos.numero ? 'met' : ''}>{requisitos.numero ? '✓' : '○'} Un número</li>
+                <li className={requisitos.longitud ? 'met' : ''}><Icono nombre={requisitos.longitud ? 'check' : 'circulo'} tamano={12} /> 8 o más caracteres</li>
+                <li className={requisitos.mayuscula ? 'met' : ''}><Icono nombre={requisitos.mayuscula ? 'check' : 'circulo'} tamano={12} /> Una mayúscula</li>
+                <li className={requisitos.numero ? 'met' : ''}><Icono nombre={requisitos.numero ? 'check' : 'circulo'} tamano={12} /> Un número</li>
               </ul>
             </div>
 

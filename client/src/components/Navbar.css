@@ -1,0 +1,164 @@
+/*
+ * Navbar - barra lateral fija (Esmeralda Clarity)
+ * Sin bordes de 1px para separar secciones: cambio tonal de superficie.
+ */
+
+.app {
+  min-height: 100vh;
+}
+
+.app > main {
+  margin-left: var(--sidebar-width);
+  min-height: 100vh;
+}
+
+.navbar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: var(--z-sticky);
+  width: var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  padding: var(--spacing-8) var(--spacing-4);
+  background-color: var(--surface-container-lowest);
+  overflow-y: auto;
+}
+
+.nav-brand {
+  padding: 0 var(--spacing-3);
+}
+
+.nav-brand-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--primary-container);
+}
+
+.nav-brand-tag {
+  margin-top: var(--spacing-1);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+}
+
+.nav-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3);
+  border-right: 3px solid transparent;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  color: var(--on-surface-variant);
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-link:hover {
+  background-color: var(--surface-container);
+  color: var(--on-surface);
+}
+
+.nav-link:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.nav-link.active {
+  background-color: var(--secondary-container);
+  border-right-color: var(--primary);
+  color: var(--primary);
+}
+
+.nav-icon {
+  width: 1.5rem;
+  text-align: center;
+}
+
+/* Subapartados de la sección activa */
+.nav-sub {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  margin: var(--spacing-1) 0 var(--spacing-2) calc(var(--spacing-3) + 1.5rem + var(--spacing-3));
+}
+
+.nav-sublink {
+  display: block;
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  color: var(--on-surface-variant);
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-sublink:hover {
+  background-color: var(--surface-container);
+  color: var(--on-surface);
+}
+
+.nav-sublink:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.nav-sublink.active {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Móvil: la barra pasa arriba y se desplaza en horizontal */
+@media (max-width: 900px) {
+  .app > main {
+    margin-left: 0;
+  }
+
+  .navbar {
+    position: sticky;
+    inset: 0 0 auto 0;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-4);
+    padding: var(--spacing-3) var(--spacing-4);
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .nav-brand-tag {
+    display: none;
+  }
+
+  .nav-items {
+    flex-direction: row;
+  }
+
+  /* En la barra superior los subapartados no caben: se omiten */
+  .nav-sub {
+    display: none;
+  }
+
+  .nav-link {
+    border-right: 0;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+  }
+
+  .nav-link.active {
+    border-bottom-color: var(--primary);
+  }
+}

@@ -1,91 +1,114 @@
-/* SimuladorViajes - Basado en Esmeralda Clarity */
+/* SimuladorViajes - Esmeralda Clarity (las primitivas viven en styles/componentes.css) */
 
-.viajes-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-4);
-}
-
-.viajes-page .page-header {
-  margin-bottom: var(--spacing-4);
-}
-
-.viajes-page .input-group {
-  margin-bottom: var(--spacing-2);
-}
-
-.viajes-page .input-field {
-  width: 100%;
-  padding: var(--spacing-1);
-  border: none;
-  background: var(--surface-container-highest);
-  border-bottom: 2px solid transparent;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-body);
-  font-size: var(--font-size-md);
-}
-
-.viajes-page .input-field:focus {
-  outline: none;
-  background: var(--surface-container-lowest);
-  border-bottom-color: var(--primary);
-}
-
-.viajes-page .participants-list {
-  margin: var(--spacing-4) 0;
-  padding: var(--spacing-2);
-  background: var(--surface-variant);
-  border-radius: var(--radius-md);
-}
-
-.viajes-page .participant-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-1) 0;
-  border-bottom: 1px solid var(--surface-container);
-}
-
-.viajes-page .expense-list {
-  margin: var(--spacing-4) 0;
-  padding: var(--spacing-2);
-  background: var(--surface-container-low);
-  border-radius: var(--radius-md);
-}
-
-.viajes-page .expense-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-1) 0;
-  border-bottom: 1px solid var(--surface-container);
-}
-
-.viajes-page .settlement-card {
-  margin: var(--spacing-4) 0;
-  padding: var(--spacing-2);
-  background: var(--primary-fixed-dim);
-  border-radius: var(--radius-md);
-  border-left: 4px solid var(--primary);
-}
-
+.viajes-page .participants-section,
+.viajes-page .expenses-section,
+.viajes-page .settlement-section,
 .viajes-page .summary-tab {
-  margin-top: var(--spacing-4);
-  padding: var(--spacing-2);
-  background: var(--surface-variant);
-  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-6);
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
 }
 
+.viajes-page .participants-section h3,
+.viajes-page .expenses-section h3,
+.viajes-page .settlement-section h3,
+.viajes-page .summary-tab h3 {
+  margin-bottom: var(--spacing-6);
+  font-family: var(--font-headline);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* Las tarjetas dentro de una sección ya no necesitan su propio panel */
+.viajes-page .participants-list,
+.viajes-page .expense-list {
+  margin: var(--spacing-4) 0 0;
+  padding: 0;
+  background: transparent;
+}
+
+.viajes-page .participant-item,
+.viajes-page .expense-item,
 .viajes-page .transfer-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-1) 0;
+  gap: var(--spacing-4);
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--radius-md);
+  background: var(--surface-container);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .viajes-page {
-    padding: var(--spacing-2);
-  }
+.viajes-page .participant-item + .participant-item,
+.viajes-page .expense-item + .expense-item,
+.viajes-page .transfer-item + .transfer-item {
+  margin-top: var(--spacing-1);
+}
+
+.viajes-page .remove-button {
+  padding: var(--spacing-1) var(--spacing-3);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--tertiary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.viajes-page .remove-button:hover {
+  background: rgba(255, 179, 173, 0.12);
+}
+
+.viajes-page .settlement-card {
+  padding: var(--spacing-6);
+  border-radius: var(--radius-lg);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
+}
+
+.viajes-page .settlement-card .transfer-item {
+  background: transparent;
+}
+
+.viajes-page .empty-message {
+  color: var(--on-secondary-container);
+  font-size: var(--font-size-sm);
+}
+
+.viajes-page .summary-tab {
+  margin-top: var(--spacing-6);
+  margin-bottom: 0;
+}
+
+.viajes-page .summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--spacing-4);
+}
+
+.viajes-page .summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  padding: var(--spacing-6);
+  border-radius: var(--radius-lg);
+  background: var(--surface-container);
+}
+
+.viajes-page .summary-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+}
+
+.viajes-page .summary-value {
+  font-family: var(--font-headline);
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  color: var(--primary);
 }

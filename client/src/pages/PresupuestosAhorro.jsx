@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Icono from '../components/Icono'
 import './PresupuestosAhorro.css'
 
 /**
@@ -116,9 +117,11 @@ const PresupuestosAhorro = () => {
             >
               <div className="categoria-header">
                 <span className="categoria-icon">
-                  {categoria.nombre === 'Necesidades' ? '🏠' :
-                   categoria.nombre === 'Deseos' ? '🎉' :
-                   categoria.nombre === 'Ahorro' ? '🐷' : '📈'}
+                  <Icono
+                    nombre={categoria.nombre === 'Necesidades' ? 'hipotecas' :
+                      categoria.nombre === 'Deseos' ? 'estrella' :
+                      categoria.nombre === 'Ahorro' ? 'ahorro' : 'inversion'}
+                  />
                 </span>
                 <span className="categoria-nombre">{categoria.nombre}</span>
               </div>
