@@ -102,7 +102,10 @@ function liquidacionIRPF(entrada = {}) {
   const rnt = rendimiento - cotizaciones
   const gastos = otrosGastos({ movilidadGeografica: !!entrada.movilidadGeografica, contribuyente, rntCentimos: rnt })
   const reduccion = reduccionArticulo20(rnt, otrasRentas)
-  const baseLiquidableGeneral = Math.max(0, rnt - gastos - reduccion)
+  // Reducciones de la base imponible general (p. ej. aportaciones a planes de pensiones, art. 51):
+  // las calcula quien llama, con su límite; aquí solo se restan
+  const reducciones = aCentimos(importe(entrada.reduccionesBase ?? 0, 'reduccionesBase'))
+  const baseLiquidableGeneral = Math.max(0, rnt - gastos - reduccion - reducciones)
 
   const minEstatal = calcularMinimos('estatal', personas)
   const minAutonomico = calcularMinimos(comunidad, personas)
@@ -127,6 +130,7 @@ function liquidacionIRPF(entrada = {}) {
     rendimientoNetoPrevio: euros(rnt),
     otrosGastos: euros(gastos),
     reduccionTrabajo: euros(reduccion),
+    reduccionesBase: euros(reducciones),
     baseLiquidableGeneral: euros(baseLiquidableGeneral),
     minimoEstatal: euros(minEstatal.total),
     minimoAutonomico: euros(minAutonomico.total),

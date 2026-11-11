@@ -4,26 +4,92 @@
   margin: var(--spacing-6) 0;
 }
 
+.plan-jubilacion-page .plan-jubilacion-avanzado {
+  margin: var(--spacing-6) 0;
+  padding: var(--spacing-4) var(--spacing-6);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
+}
+
+.plan-jubilacion-page .plan-jubilacion-avanzado summary {
+  cursor: pointer;
+  color: var(--on-surface-variant);
+  font-weight: 600;
+}
+
+.plan-jubilacion-page .plan-jubilacion-avanzado .plan-jubilacion-inputs {
+  margin-top: var(--spacing-4);
+}
+
+/* Gráfico de columnas apiladas: una por año, aportado abajo y rendimientos encima */
 .plan-jubilacion-page .projection-chart {
   display: flex;
   align-items: flex-end;
-  gap: var(--spacing-3);
+  gap: 2px;
   height: 16rem;
-  margin: var(--spacing-6) 0;
-  padding: var(--spacing-8) var(--spacing-8) var(--spacing-6);
+  margin: var(--spacing-6) 0 var(--spacing-2);
+  padding: var(--spacing-8) var(--spacing-8) var(--spacing-4);
   border-radius: var(--radius-xl);
   background: var(--surface-container-lowest);
 }
 
-.plan-jubilacion-page .projection-chart .chart-bar {
-  display: block;
+.plan-jubilacion-page .chart-columna {
+  display: flex;
   flex: 1;
-  min-width: 2rem;
-  height: auto;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+  height: 100%;
+}
+
+.plan-jubilacion-page .chart-columna .chart-bar {
+  display: block;
+  width: 100%;
+  height: 0;
   overflow: visible;
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
-  background: linear-gradient(to top, var(--primary-container), var(--primary));
   transition: height 0.3s ease;
+}
+
+.plan-jubilacion-page .chart-bar-aportado {
+  background: var(--secondary);
+}
+
+.plan-jubilacion-page .chart-bar-rendimiento {
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: var(--primary);
+}
+
+.plan-jubilacion-page .chart-ejes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+  padding: 0 var(--spacing-8);
+  color: var(--on-surface-variant);
+  font-size: 0.875rem;
+}
+
+.plan-jubilacion-page .chart-leyenda {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.plan-jubilacion-page .chart-punto {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-left: var(--spacing-3);
+  border-radius: 50%;
+}
+
+.plan-jubilacion-page .chart-punto-aportado {
+  background: var(--secondary);
+}
+
+.plan-jubilacion-page .chart-punto-rendimiento {
+  background: var(--primary);
 }
 
 .plan-jubilacion-page .coverage-info {
@@ -37,5 +103,9 @@
   .plan-jubilacion-page .projection-chart {
     height: 12rem;
     padding: var(--spacing-4);
+  }
+
+  .plan-jubilacion-page .chart-ejes {
+    padding: 0 var(--spacing-4);
   }
 }

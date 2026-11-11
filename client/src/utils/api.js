@@ -141,3 +141,24 @@ export const hogar = {
   reparto: calcularHogar('reparto'),
   presupuesto: calcularHogar('presupuesto')
 }
+
+/**
+ * Calculadoras de jubilación (públicas). `proyeccion` devuelve el capital al jubilarse (nominal y
+ * en euros de hoy), la serie año a año, la renta de retiro y cuánto dura el capital.
+ */
+const calcularJubilacion = (ruta) => async (entrada) =>
+  (await peticion(`/jubilacion/${ruta}`, { method: 'POST', body: entrada }, { auth: false })).data.resultado
+
+export const jubilacion = {
+  proyeccion: calcularJubilacion('proyeccion'),
+  planPrivado: calcularJubilacion('plan-privado') // ahorro fiscal, plan privado y rescate con los datos de la nómina
+}
+
+/**
+ * Pensión pública de jubilación (pública). Estima la pensión contributiva con el historial de
+ * cotización: base reguladora, porcentaje por años cotizados, tope, mínima e IRPF.
+ */
+export const pension = {
+  jubilacion: async (entrada) =>
+    (await peticion('/pension/jubilacion', { method: 'POST', body: entrada }, { auth: false })).data.resultado
+}

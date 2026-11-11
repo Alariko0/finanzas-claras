@@ -53,6 +53,13 @@
   gap: var(--spacing-1);
 }
 
+/* Separador entre niveles de prioridad (solo en la barra lateral) */
+.nav-nivel {
+  margin-top: var(--spacing-3);
+  padding-top: var(--spacing-3);
+  border-top: 1px solid var(--outline-variant);
+}
+
 .nav-link {
   display: flex;
   align-items: center;
@@ -150,6 +157,12 @@
   /* En la barra superior los subapartados no caben: se omiten */
   .nav-sub {
     display: none;
+  }
+
+  .nav-nivel {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
   }
 
   .nav-link {

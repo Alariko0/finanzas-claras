@@ -5,6 +5,7 @@ import TablaAmortizacion from '../components/TablaAmortizacion'
 import CamposTipoInteres from '../components/CamposTipoInteres'
 import { FORMULARIO_TIPO_INICIAL, entradaTipo, errorTipo } from '../utils/tipoInteres'
 import { euro, porcentaje, plazoTexto, hoyISO, fechaCorta } from '../utils/formato'
+import FuentesPie from '../components/FuentesPie'
 import './SimuladorHipotecas.css'
 
 /**
@@ -302,6 +303,7 @@ const SimuladorHipotecas = () => {
           </ul>
         </>
       )}
+      <FuentesPie pagina="hipotecas" />
     </div>
   )
 }

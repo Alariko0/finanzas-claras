@@ -8,20 +8,12 @@ import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { fiscal } from '../utils/api'
 import useCalculo from '../hooks/useCalculo'
+import { COMUNIDADES } from '../utils/comunidades'
+import FuentesPie from '../components/FuentesPie'
 import './IRPF.css'
 
 const euro = (n) => `${n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`
 const fecha = (iso) => new Date(iso).toLocaleDateString('es-ES')
-
-const COMUNIDADES = [
-  ['andalucia', 'Andalucía'], ['aragon', 'Aragón'], ['asturias', 'Asturias'], ['baleares', 'Illes Balears'],
-  ['canarias', 'Canarias'], ['cantabria', 'Cantabria'], ['castillaLaMancha', 'Castilla-La Mancha'],
-  ['castillaYLeon', 'Castilla y León'], ['cataluna', 'Cataluña'], ['extremadura', 'Extremadura'],
-  ['galicia', 'Galicia'], ['laRioja', 'La Rioja'], ['madrid', 'Comunidad de Madrid'],
-  ['murcia', 'Región de Murcia'], ['valencia', 'Comunitat Valenciana'],
-  ['paisVasco', 'País Vasco (régimen foral)'], ['navarra', 'Navarra (régimen foral)'],
-  ['ceuta', 'Ceuta'], ['melilla', 'Melilla']
-]
 
 const LIMITE_HIJOS = 8
 
@@ -76,7 +68,7 @@ const IRPF = () => {
           {resultado ? ` de ${fecha(resultado.fechaDatos)}` : ' de 2026'}.
         </p>
         <p className="irpf-enlace">
-          {desdeNomina && 'Datos traídos de tu nómina (elige tu comunidad). '}
+          {desdeNomina && 'Datos traídos de tu nómina. '}
           <Link to="/nomina">¿Buscas tu sueldo neto mensual? Ir a la calculadora de nómina</Link>
         </p>
       </div>
@@ -253,6 +245,7 @@ const IRPF = () => {
           </ul>
         </>
       )}
+      <FuentesPie pagina="irpf" />
     </div>
   )
 }

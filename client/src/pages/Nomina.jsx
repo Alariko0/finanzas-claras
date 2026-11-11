@@ -4,10 +4,13 @@
  * POST /api/fiscal/nomina. Aquí solo se recogen datos y se muestra el resultado.
  */
 
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { fiscal } from '../utils/api'
 import useCalculo from '../hooks/useCalculo'
+import { usePlan } from '../context/PlanContext'
+import { COMUNIDADES } from '../utils/comunidades'
+import { construirEntradaNomina } from '../utils/plan'
+import FuentesPie from '../components/FuentesPie'
 import './Nomina.css'
 
 const euro = (n) => `${n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`
@@ -15,43 +18,19 @@ const fecha = (iso) => new Date(iso).toLocaleDateString('es-ES')
 
 const LIMITE_HIJOS = 8
 
-// Convierte lo que el usuario escribe en el cuerpo que espera la API
-function construirEntrada(f) {
-  const menores3 = Math.min(f.hijosMenores3, f.hijos)
-  const descendientes = [
-    ...Array.from({ length: menores3 }, () => ({ edad: 1 })),
-    ...Array.from({ length: f.hijos - menores3 }, () => ({ edad: 10 }))
-  ]
-  return {
-    brutoAnual: f.brutoAnual,
-    pagas: f.pagas,
-    prorrateo: f.pagas === 14 && f.prorrateo,
-    grupoCotizacion: f.grupo,
-    contrato: f.contrato,
-    // La situación 1 exige hijos: sin ellos se calcula como «otra»
-    situacionFamiliar: f.hijos === 0 && f.situacion === 1 ? 3 : f.situacion,
-    contribuyente: { edad: f.edad },
-    descendientes
-  }
-}
-
 const Nomina = () => {
-  const [form, setForm] = useState({
-    brutoAnual: 30000,
-    pagas: 14,
-    prorrateo: false,
-    grupo: 1,
-    contrato: 'indefinido',
-    situacion: 3,
-    edad: 35,
-    hijos: 0,
-    hijosMenores3: 0
-  })
-  const { resultado, error, cargando } = useCalculo(fiscal.nomina, construirEntrada(form), {
+  // El formulario vive en PlanContext para que Plan de pensiones use estos mismos datos; la edad es
+  // la misma que se fija en Plan de jubilación (supuestos.edadActual)
+  const { nomina, setNomina, supuestos, setSupuestos } = usePlan()
+  const form = { ...nomina, edad: Number(supuestos.edadActual) || 0 }
+  const { resultado, error, cargando } = useCalculo(fiscal.nomina, construirEntradaNomina(form), {
     invalido: form.brutoAnual > 0 ? '' : 'Introduce un salario bruto anual mayor que 0.'
   })
 
-  const cambiar = (campo, valor) => setForm((anterior) => ({ ...anterior, [campo]: valor }))
+  const cambiar = (campo, valor) => {
+    if (campo === 'edad') setSupuestos((s) => ({ ...s, edadActual: String(valor) }))
+    else setNomina((anterior) => ({ ...anterior, [campo]: valor }))
+  }
   const entero = (campo, max) => (e) => {
     const n = Number.parseInt(e.target.value, 10)
     cambiar(campo, Number.isNaN(n) ? 0 : Math.min(max, Math.max(0, n)))
@@ -136,6 +115,18 @@ const Nomina = () => {
             {Array.from({ length: 11 }, (_, i) => i + 1).map((g) => (
               <option key={g} value={g}>Grupo {g}</option>
             ))}
+          </select>
+        </div>
+
+        <div className="input-group">
+          <label htmlFor="comunidad">Comunidad autónoma</label>
+          <select
+            id="comunidad"
+            value={form.comunidad}
+            onChange={(e) => cambiar('comunidad', e.target.value)}
+            className="input-field"
+          >
+            {COMUNIDADES.map(([clave, nombre]) => <option key={clave} value={clave}>{nombre}</option>)}
           </select>
         </div>
 
@@ -272,6 +263,7 @@ const Nomina = () => {
               desdeNomina: {
                 rendimiento: resultado.brutoAnual,
                 cotizaciones: Math.round(ss.totalTrabajadorAnual * 100) / 100,
+                comunidad: form.comunidad,
                 edad: form.edad,
                 hijos: form.hijos,
                 hijosMenores3: Math.min(form.hijosMenores3, form.hijos)
@@ -302,6 +294,7 @@ const Nomina = () => {
           ))}
         </div>
       )}
+      <FuentesPie pagina="nomina" />
     </div>
   )
 }

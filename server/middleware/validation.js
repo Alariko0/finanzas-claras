@@ -290,7 +290,69 @@ const hogarPresupuestoValidator = [
   handleValidationErrors
 ]
 
+/* ───────────── Calculadoras de jubilación (públicas) ───────────── */
+
+const jubilacionProyeccionValidator = [
+  body('edadActual').isInt({ min: 16, max: 99 }).withMessage('edadActual debe ser un entero entre 16 y 99'),
+  body('edadJubilacion').isInt({ min: 17, max: 100 }).withMessage('edadJubilacion debe ser un entero entre 17 y 100')
+    .bail()
+    .custom((v, { req }) => !Number.isInteger(req.body.edadActual) || v > req.body.edadActual)
+    .withMessage('edadJubilacion debe ser mayor que edadActual'),
+  numero('rentabilidad', { min: -20, max: 30, obligatorio: true }),
+  numero('rentabilidadJubilacion', { min: -20, max: 30 }),
+  numero('ahorroActual', { max: 1e9 }),
+  numero('aportacionMensual', { max: 1e9 }),
+  numero('crecimientoAportacion', { max: 30 }),
+  numero('inflacion', { min: -10, max: 30 }),
+  numero('tasaRetiro', { min: 0.1, max: 15 }),
+  numero('rentaDeseadaMensual', { max: 1e9 }),
+  numero('pensionPublicaMensual', { max: 1e9 }),
+  handleValidationErrors
+]
+
+const jubilacionPlanPrivadoValidator = [
+  comunidadValida,
+  numero('brutoAnual', { min: 0.01, max: 1e9, obligatorio: true }),
+  body('grupoCotizacion').optional().isInt({ min: 1, max: 11 }).withMessage('grupoCotizacion debe estar entre 1 y 11').toInt(),
+  body('contrato').optional().isIn(['indefinido', 'temporal']).withMessage('contrato no válido'),
+  booleano('movilidadGeografica'),
+  ...validadoresPersonas,
+  ...jubilacionProyeccionValidator.slice(0, -1), // edades, rentabilidad, inflación, retiro, pensión pública
+  numero('aportacionAnual', { max: 1e9 }),
+  numero('contribucionEmpresaAnual', { max: 1e9 }),
+  numero('saldoActual', { max: 1e9 }),
+  handleValidationErrors
+]
+
+/* ───────────── Pensión pública de jubilación (pública) ───────────── */
+
+const MES_AAAA_MM = /^\d{4}-(0[1-9]|1[0-2])$/
+const tramoPensionValido = (t) => esObjetoPlano(t) && typeof t.desde === 'string' && MES_AAAA_MM.test(t.desde) &&
+  typeof t.hasta === 'string' && MES_AAAA_MM.test(t.hasta) &&
+  esNumero(t.baseMensual) && t.baseMensual >= 0 && t.baseMensual <= 20000
+
+const pensionJubilacionValidator = [
+  body('edadActual').isInt({ min: 16, max: 99 }).withMessage('edadActual debe ser un entero entre 16 y 99'),
+  body('edadJubilacion').isInt({ min: 17, max: 100 }).withMessage('edadJubilacion debe ser un entero entre 17 y 100')
+    .bail()
+    .custom((v, { req }) => !Number.isInteger(req.body.edadActual) || v > req.body.edadActual)
+    .withMessage('edadJubilacion debe ser mayor que edadActual'),
+  body('fechaActual').optional().matches(MES_AAAA_MM).withMessage('fechaActual debe tener el formato AAAA-MM'),
+  body('tramos').optional().isArray({ max: 200 }).withMessage('tramos debe ser una lista de hasta 200 periodos').bail()
+    .custom((lista) => lista.every(tramoPensionValido))
+    .withMessage('tramos contiene datos no válidos (desde y hasta como AAAA-MM, baseMensual numérica)'),
+  numero('baseMensualActual', { max: 20000 }),
+  numero('crecimientoBases', { min: -10, max: 30 }),
+  numero('inflacion', { min: -10, max: 30 }),
+  body('situacionMinimo').optional().isIn(['sinConyuge', 'conyugeACargo', 'conyugeNoACargo']).withMessage('situacionMinimo no válida'),
+  body('comunidad').optional().isString().isLength({ max: 30 }),
+  handleValidationErrors
+]
+
 module.exports = {
+  pensionJubilacionValidator,
+  jubilacionProyeccionValidator,
+  jubilacionPlanPrivadoValidator,
   hogarRepartoValidator,
   hogarPresupuestoValidator,
   TIPOS_CALCULO,

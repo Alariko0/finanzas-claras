@@ -27,3 +27,5 @@ export const plazoTexto = (meses) => {
   if (resto) partes.push(`${resto} ${resto === 1 ? 'mes' : 'meses'}`)
   return partes.join(' y ') || '0 meses'
 }
+
+export const euroEntero = (n) => `${Math.round(Number(n)).toLocaleString('es-ES')} €`

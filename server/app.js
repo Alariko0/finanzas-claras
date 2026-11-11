@@ -44,6 +44,8 @@ app.use(require('./routes/health'))
 app.use('/api/fiscal', require('./routes/fiscal'))
 app.use('/api/prestamos', require('./routes/prestamos'))
 app.use('/api/hogar', require('./routes/hogar'))
+app.use('/api/jubilacion', require('./routes/jubilacion'))
+app.use('/api/pension', require('./routes/pension'))
 
 // Rate limiting: general para toda la API y más estricto en escrituras
 app.use('/api/', limitadorGeneral)

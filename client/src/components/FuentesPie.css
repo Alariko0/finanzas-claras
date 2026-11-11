@@ -1,0 +1,35 @@
+/* Letra pequeña con las fuentes de cada calculadora */
+
+.fuentes-pie {
+  max-width: 80rem;
+  margin: var(--spacing-12) auto 0;
+  padding-top: var(--spacing-6);
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+  color: var(--on-surface-variant);
+  opacity: 0.85;
+}
+
+.fuentes-pie-titulo {
+  margin-bottom: var(--spacing-2);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.fuentes-pie ul {
+  display: grid;
+  gap: var(--spacing-1);
+  padding-left: var(--spacing-4);
+  list-style: disc;
+}
+
+.fuentes-pie a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.fuentes-pie-nota {
+  margin-top: var(--spacing-3);
+}

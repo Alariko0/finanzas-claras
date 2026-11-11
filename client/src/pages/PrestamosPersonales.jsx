@@ -5,6 +5,7 @@ import { prestamos } from '../utils/api'
 import useCalculo from '../hooks/useCalculo'
 import { SISTEMAS } from '../utils/tipoInteres'
 import { euro, porcentaje, plazoTexto } from '../utils/formato'
+import FuentesPie from '../components/FuentesPie'
 import './PrestamosPersonales.css'
 
 /**
@@ -185,6 +186,7 @@ const PrestamosPersonales = () => {
           </div>
         </div>
       </div>
+      <FuentesPie pagina="prestamos" />
     </div>
   )
 }

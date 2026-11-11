@@ -65,6 +65,33 @@ const GASTOS_TRABAJO = {
   defensaJuridicaMax: 300 // art. 19.2.e)
 }
 
+// LIRPF arts. 51 y 52 — reducciones por aportaciones a sistemas de previsión social (planes de
+// pensiones). Fuente: BOE-A-2006-20764, versión consolidada; art. 52 en vigor desde 01-01-2023
+// (Ley 31/2022, de 23 de diciembre). Se leyó el texto del BOE el 2026-11-12.
+// Solo el caso de un trabajador por cuenta ajena; no se modelan el plan de autónomos (+4.250 €), las
+// primas de seguros de dependencia (+5.000 €), el límite de personas con discapacidad (art. 53) ni
+// el plan del cónyuge (art. 51.7: 1.000 € si el cónyuge gana menos de 8.000 €).
+const PREVISION_SOCIAL = {
+  porcentajeRendimientos: 30, // art. 52.1.a): 30 % de los rendimientos netos del trabajo y de actividades
+  limiteGeneral: 1500, // art. 52.1.b)
+  incrementoContribucionEmpresa: 8500, // art. 52.1.b).1.º (máximo conjunto: 1.500 + 8.500 = 10.000 €)
+  // Aportación del trabajador al mismo instrumento que también gana el incremento, según la
+  // contribución anual de la empresa C (art. 52.1.b).1.º, cuadro):
+  //   C ≤ 500        → C × 2,5
+  //   500 < C ≤ 1500 → 1.250 + 0,25 × (C − 500)
+  //   C > 1500       → C × 1
+  cuadroAportacionTrabajador: [
+    { hasta: 500, base: 0, multiplicador: 2.5, desde: 0 },
+    { hasta: 1500, base: 1250, multiplicador: 0.25, desde: 500 },
+    { hasta: null, base: 0, multiplicador: 1, desde: 0 }
+  ],
+  // Con más de 60.000 € de rendimientos íntegros de la empresa que contribuye: siempre ×1.
+  umbralMultiplicadorUno: 60000,
+  // Art. 52.2: lo que no se pueda reducir por falta de base o por el límite porcentual se arrastra
+  // cinco ejercicios (no lo que exceda del límite del art. 51.6).
+  ejerciciosArrastre: 5
+}
+
 // LIRPF art. 57 a 60 — mínimos personal y familiar ESTATALES.
 // (art. 57: 5.550 / +1.150 / +1.400; art. 58: 2.400/2.700/4.000/4.500 y +2.800 menor de 3;
 //  ascendientes y discapacidad confirmados con el algoritmo AEAT 2026, pág. 24-28.)
@@ -440,6 +467,7 @@ module.exports = {
   ESCALA_AHORRO_POR_PARTE,
   REDUCCION_TRABAJO,
   GASTOS_TRABAJO,
+  PREVISION_SOCIAL,
   MINIMOS_ESTATALES,
   ESCALAS_AUTONOMICAS,
   MINIMOS_AUTONOMICOS,

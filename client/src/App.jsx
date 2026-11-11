@@ -44,6 +44,7 @@ import Notificaciones from './pages/Notificaciones'
 
 // Grupo H - IA y Sistema
 import AsistenteIA from './pages/AsistenteIA'
+import Fuentes from './pages/Fuentes'
 
 function App() {
   return (
@@ -89,6 +90,7 @@ function App() {
 
             {/* Grupo H - IA y Sistema */}
             <Route path="/ia" element={<AsistenteIA />} />
+            <Route path="/fuentes" element={<Fuentes />} />
 
             {/* Página principal - Dashboard */}
             <Route path="/" element={<Inicio />} />

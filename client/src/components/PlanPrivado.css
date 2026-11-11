@@ -1,0 +1,36 @@
+/* PlanPrivado - Esmeralda Clarity (se muestra dentro de una página «-page», que aporta las primitivas) */
+
+.plan-privado {
+  margin-top: var(--spacing-12);
+}
+
+.plan-privado .plan-privado-intro {
+  max-width: 48rem;
+  margin: var(--spacing-2) 0 var(--spacing-6);
+  color: var(--on-surface-variant);
+}
+
+.plan-privado .plan-privado-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  column-gap: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
+  padding: var(--spacing-8) var(--spacing-8) var(--spacing-2);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
+}
+
+.plan-privado .headline-sm {
+  margin-top: var(--spacing-8);
+}
+
+.plan-privado .plan-privado-results {
+  margin-bottom: var(--spacing-8);
+}
+
+.plan-privado .plan-privado-nota {
+  margin: var(--spacing-6) 0;
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
+}

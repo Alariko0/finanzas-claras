@@ -4,12 +4,76 @@
   margin: var(--spacing-6) 0;
 }
 
-.pensiones-page .tax-savings-card {
-  margin: var(--spacing-4) 0;
+/* Resumen de los datos que llegan de Nómina y Plan de jubilación */
+.pensiones-page .pensiones-datos {
+  margin: var(--spacing-6) 0;
   padding: var(--spacing-6) var(--spacing-8);
   border-radius: var(--radius-xl);
-  background: var(--secondary-container);
-  color: var(--on-secondary-container);
+  background: var(--surface-container-low);
+}
+
+.pensiones-page .pensiones-datos dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--spacing-4);
+  margin: var(--spacing-4) 0;
+}
+
+.pensiones-page .pensiones-datos dt {
+  color: var(--on-surface-variant);
+  font-size: 0.875rem;
+}
+
+.pensiones-page .pensiones-datos dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Historial de cotización */
+.pensiones-page .pensiones-historial {
+  margin: var(--spacing-6) 0;
+  padding: var(--spacing-8) var(--spacing-8) var(--spacing-4);
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
+}
+
+.pensiones-page .pensiones-historial .selector-group {
+  margin: var(--spacing-4) 0;
+}
+
+.pensiones-page .pensiones-campos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  column-gap: var(--spacing-6);
+  margin-top: var(--spacing-4);
+}
+
+.pensiones-page .bases-anuales {
+  display: grid;
+  gap: var(--spacing-3);
+  margin: var(--spacing-4) 0;
+}
+
+.pensiones-page .bases-fila {
+  display: grid;
+  grid-template-columns: 8rem 1fr auto;
+  gap: var(--spacing-3);
+  align-items: center;
+}
+
+.pensiones-page .boton-secundario {
+  justify-self: start;
+  padding: var(--spacing-2) var(--spacing-6);
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface-container-high);
+  color: var(--on-surface);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pensiones-page .boton-secundario:hover {
+  background: var(--surface-container-highest);
 }
 
 .pensiones-page .pension-comparison {
@@ -24,4 +88,14 @@
   padding: var(--spacing-8);
   border-radius: var(--radius-xl);
   background: var(--surface-container-lowest);
+}
+
+@media (max-width: 768px) {
+  .pensiones-page .bases-fila {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pensiones-page .bases-fila .boton-secundario {
+    grid-column: 1 / -1;
+  }
 }

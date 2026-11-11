@@ -7,6 +7,8 @@ import './Navbar.css'
  * Navbar - Barra lateral de navegación
  * Diseño basado en: Esmeralda Clarity (from Stitch)
  * Cada sección despliega sus subapartados cuando está activa.
+ * El orden es por prioridad: fiscal y jubilación primero; hipotecas e inversión después;
+ * viajes, asistente, cuenta e inicio al final. `nivel: true` abre un grupo nuevo.
  */
 
 const Navbar = () => {
@@ -14,8 +16,7 @@ const Navbar = () => {
   const { pathname } = useLocation()
 
   const navItems = [
-    { label: 'Inicio', path: '/', icon: 'inicio' },
-    { label: 'Fiscal', path: '/irpf', icon: 'fiscal' },
+    { label: 'IRPF', path: '/irpf', icon: 'fiscal' },
     { label: 'Nómina', path: '/nomina', icon: 'nomina' },
     {
       label: 'Gastos',
@@ -27,7 +28,18 @@ const Navbar = () => {
       ],
     },
     {
+      label: 'Jubilación',
+      path: '/jubilacion',
+      icon: 'jubilacion',
+      hijos: [
+        { label: 'Plan de jubilación', path: '/jubilacion' },
+        { label: 'Plan de pensiones', path: '/jubilacion/pensiones' },
+        { label: 'Dashboard de patrimonio', path: '/jubilacion/dashboard' },
+      ],
+    },
+    {
       label: 'Hipotecas',
+      nivel: true,
       path: '/hipotecas',
       icon: 'hipotecas',
       hijos: [
@@ -46,17 +58,7 @@ const Navbar = () => {
         { label: 'Inversión mobiliaria', path: '/inversion/mobiliaria' },
       ],
     },
-    {
-      label: 'Jubilación',
-      path: '/jubilacion',
-      icon: 'jubilacion',
-      hijos: [
-        { label: 'Plan de jubilación', path: '/jubilacion' },
-        { label: 'Plan de pensiones', path: '/jubilacion/pensiones' },
-        { label: 'Dashboard de patrimonio', path: '/jubilacion/dashboard' },
-      ],
-    },
-    { label: 'Viajes', path: '/viajes', icon: 'viajes' },
+    { label: 'Viajes', path: '/viajes', icon: 'viajes', nivel: true },
     { label: 'Asistente fiscal', path: '/ia', icon: 'asistente' },
     {
       label: user ? 'Mi cuenta' : 'Entrar',
@@ -72,6 +74,8 @@ const Navbar = () => {
           ]
         : undefined,
     },
+    { label: 'Fuentes', path: '/fuentes', icon: 'fuentes' },
+    { label: 'Inicio', path: '/', icon: 'inicio' },
   ]
 
   const seccionActiva = (item) =>
@@ -88,7 +92,7 @@ const Navbar = () => {
 
       <ul className="nav-items">
         {navItems.map((item) => (
-          <li key={item.path}>
+          <li key={item.path} className={item.nivel ? 'nav-nivel' : undefined}>
             <NavLink
               to={item.path}
               className={() => (seccionActiva(item) ? 'nav-link active' : 'nav-link')}

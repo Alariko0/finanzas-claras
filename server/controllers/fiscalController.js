@@ -46,4 +46,4 @@ const ahorro = responder((b) =>
   })
 )
 
-module.exports = { irpf, nomina, ahorro }
+module.exports = { irpf, nomina, ahorro, personas }

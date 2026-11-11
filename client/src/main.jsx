@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext'
 import { HogarProvider } from './context/HogarContext'
+import { PlanProvider } from './context/PlanContext'
 import './styles/global.css'
 import './styles/componentes.css'
 
@@ -10,7 +11,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
       <HogarProvider>
-        <App />
+        <PlanProvider>
+          <App />
+        </PlanProvider>
       </HogarProvider>
     </AuthProvider>
   </React.StrictMode>,

@@ -73,6 +73,12 @@ const trazos = {
       <rect x="14" y="14" width="7" height="7" rx="1.5" />
     </>
   ),
+  fuentes: (
+    <>
+      <path d="M6 3h9l4 4v14H6z" />
+      <path d="M14 3v5h5M9 13h7M9 17h7" />
+    </>
+  ),
   asistente: (
     <>
       <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" />

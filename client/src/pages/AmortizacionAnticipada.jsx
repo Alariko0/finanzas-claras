@@ -5,6 +5,7 @@ import { prestamos } from '../utils/api'
 import useCalculo from '../hooks/useCalculo'
 import { FORMULARIO_TIPO_INICIAL, entradaTipo, errorTipo } from '../utils/tipoInteres'
 import { euro, porcentaje, plazoTexto, fechaCorta } from '../utils/formato'
+import FuentesPie from '../components/FuentesPie'
 import './AmortizacionAnticipada.css'
 
 /**
@@ -221,6 +222,7 @@ const AmortizacionAnticipada = () => {
           </div>
         </div>
       </div>
+      <FuentesPie pagina="amortizacion" />
     </div>
   )
 }
