@@ -2,10 +2,22 @@
 
 Fecha: 2026-11-11 · Base: auditoría del mismo día, re-auditada. Esta versión incorpora tus decisiones: **MVP con el máximo de módulos**, **lógica fiscal en el servidor**, **base de datos Supabase**, despliegue aún sin definir.
 
+## Estado (actualizado 2026-11-11)
+
+| Fase | Estado | Rama |
+|---|---|---|
+| F0 Preparación | ✅ hecha | `fase-0-preparacion` |
+| F1 Supabase, auth y RLS | ✅ hecha y validada (puerta 1 superada) | `fase-1-supabase-auth` |
+| F2 Plataforma backend | ✅ hecha (58 tests) | `fase-2-plataforma-backend` |
+| F3 Motor fiscal | ⏳ siguiente | — |
+| F4–F9 | pendientes | — |
+
+Decisiones D8 (calculadoras públicas, guardar con sesión), D9 (confirmación de correo) y D10 (el servidor usa el JWT del usuario) aprobadas. Nota: en F2 no se creó la capa `repositories/`; los controladores usan `req.supabase` directamente.
+
 ## Cómo trabajamos
 
 - Yo programo; tú validas en cada **puerta** (⛳) antes de pasar a la siguiente fase.
-- Una rama por fase (`fase-N-nombre`), commits pequeños. **No hago commit ni merge sin tu OK** (regla de AGENTS.md).
+- Una rama por fase (`fase-N-nombre`), commits pequeños. **No hago commit ni merge sin tu OK** (regla de las reglas del proyecto).
 - Cada tarea tiene un criterio de aceptación comprobable. Si no puedo comprobarlo, lo digo.
 - Gestor de paquetes: **pnpm** (hoy hay `package-lock.json` en ambos paquetes).
 - Cifras fiscales: las busco en BOE/AEAT durante F3 y dejo la fuente citada junto a cada dato. Nada de memoria.

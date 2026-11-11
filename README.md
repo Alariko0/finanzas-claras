@@ -1,6 +1,8 @@
 # FinanzasClaras 🏛️
 
-> Aplicación MERN que democratiza el acceso a herramientas financieras y fiscales complejas en España
+> Aplicación web (React + Express + Supabase) que democratiza el acceso a herramientas financieras y fiscales complejas en España
+
+Estado y hoja de ruta: [`PLAN-DE-ACCION.md`](PLAN-DE-ACCION.md) · Guía para desarrollo: las reglas del proyecto · API: [`server/README.md`](server/README.md)
 
 ---
 
@@ -146,26 +148,23 @@
 
 ```
 finanzas-claras/
-├── client/                    ← React + Vite
-│   ├── index.html
-│   ├── vite.config.js
-│   ├── package.json
+├── client/                    ← React + Vite (solo UI y Supabase Auth)
 │   └── src/
 │       ├── main.jsx
 │       ├── App.jsx            ← React Router con todas las rutas
-│       ├── styles/
-│       │   └── global.css     ← variables CSS del Design System
-│       ├── components/
-│       │   └── Navbar.jsx     ← navegación con categorías
-│       ├── pages/             ← una por pantalla de Stitch
-│       └── utils/             ← lógica fiscal pura separada del UI
-└── server/                    ← Node.js + Express + MongoDB
-    ├── index.js
-    ├── package.json
-    ├── .env.example
-    ├── models/
-    ├── controllers/
-    └── routes/
+│       ├── context/           ← AuthContext (sesión de Supabase)
+│       ├── components/        ← Navbar, RutaProtegida
+│       ├── pages/             ← una por pantalla (.jsx + .css)
+│       ├── styles/global.css  ← variables CSS del Design System
+│       └── utils/             ← api.js (cliente de la API), supabase.js
+├── server/                    ← Express (CommonJS) sobre Supabase
+│   ├── app.js / index.js      ← app testeable / arranque
+│   ├── config/                ← cliente de Supabase
+│   ├── middleware/            ← auth (JWT de Supabase), validación, rate limit
+│   ├── controllers/ routes/   ← endpoints
+│   ├── services/              ← lógica fiscal y financiera pura (fases 3-4)
+│   └── tests/                 ← Jest + Supertest
+└── supabase/migrations/       ← esquema y políticas RLS versionados
 ```
 
 ---
@@ -229,33 +228,26 @@ finanzas-claras/
 
 ## 📋 Requisitos del MVP
 
-### Fase 1: Módulos Core
-- [ ] Módulo de Gastos Compartidos
-- [ ] Calculadora IRPF 2025 (tramos + autonómico)
-- [ ] Calculadora de Nómina con desglose visual
+El detalle por fases, tareas y estimaciones está en [`PLAN-DE-ACCION.md`](PLAN-DE-ACCION.md).
 
-### Fase 2: Backend & Persistencia
-- [ ] Node.js + Express + MongoDB
-- [ ] Hipotecas con TAE y amortización
-- [ ] Viajes en grupo con divisas
-- [ ] Enlaces compartibles para cálculos
-
-### Fase 3: Ecosistema Avanzado
-- [ ] Autenticación JWT
-- [ ] Historial de cálculos guardados
-- [ ] Asistente IA fiscal
+- [x] Autenticación (Supabase Auth) y esquema con RLS
+- [x] API base: cálculos guardados, perfil, rate limits, health
+- [ ] Motor fiscal en servidor: IRPF, nómina, ahorro
+- [ ] Hipotecas, préstamos y amortización con TAE
+- [ ] Conectar las calculadoras con el historial
+- [ ] Inversión, jubilación, patrimonio, gastos, viajes y notificaciones reales
+- [ ] Asistente fiscal con contenido verificado
 
 ---
 
 ## 🛠️ Stack Tecnológico
 
-- **Frontend:** React 18 + Vite
-- **Routing:** React Router DOM
+- **Frontend:** React 18 + Vite + React Router DOM
 - **Estilos:** CSS nativo con variables del Design System
-- **Backend:** Node.js + Express
-- **Database:** MongoDB + Mongoose
-- **Auth:** JWT (preparado para Fase 3)
-- **Charts:** CSS-based charts (no librerías externas)
+- **Backend:** Node.js + Express (CommonJS)
+- **Base de datos y Auth:** Supabase (Postgres + Auth + RLS)
+- **Tests:** Jest + Supertest (server), Vitest (client)
+- **Paquetes:** pnpm
 
 ---
 
@@ -263,13 +255,20 @@ finanzas-claras/
 
 ```bash
 # Instalación
-npm install
+cd server && pnpm install
+cd ../client && pnpm install
 
-# Desarrollo
-npm run dev
+# Configuración (copia los ejemplos y rellena los valores; nunca subas .env)
+cp server/.env.example server/.env
+cp client/.env.example client/.env
 
-# Construcción
-npm run build
+# Desarrollo (dos terminales)
+cd server && pnpm dev     # http://localhost:3001
+cd client && pnpm dev     # http://localhost:3000
+
+# Tests y build
+cd server && pnpm test
+cd client && pnpm build
 ```
 
 ---
