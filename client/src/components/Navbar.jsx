@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 /**
  * Navbar - Navegación principal con categorías
@@ -6,6 +7,8 @@ import { NavLink } from 'react-router-dom'
  */
 
 const Navbar = () => {
+  const { user } = useAuth()
+
   const navItems = [
     { label: 'Fiscal', path: '/irpf', icon: '📊' },
     { label: 'Nómina', path: '/nomina', icon: '💰' },
@@ -14,7 +17,7 @@ const Navbar = () => {
     { label: 'Inversión', path: '/inversion', icon: '📈' },
     { label: 'Jubilación', path: '/jubilacion', icon: '📅' },
     { label: 'Viajes', path: '/viajes', icon: '✈️' },
-    { label: 'Cuenta', path: '/account', icon: '👤' },
+    { label: user ? 'Mi cuenta' : 'Entrar', path: '/account', icon: '👤' },
   ]
 
   return (

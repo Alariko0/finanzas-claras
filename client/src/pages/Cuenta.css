@@ -1,0 +1,63 @@
+/* Cuenta - Basado en Esmeralda Clarity */
+
+.cuenta-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-4);
+}
+
+.cuenta-page .page-header {
+  margin-bottom: var(--spacing-4);
+}
+
+.cuenta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+}
+
+.cuenta-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  padding: var(--spacing-4);
+  background: var(--surface-container-low);
+  border-radius: var(--radius-md);
+  color: var(--on-surface);
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.cuenta-card:hover,
+.cuenta-card:focus-visible {
+  background: var(--surface-container-high);
+}
+
+.cuenta-icon {
+  font-size: 1.5rem;
+}
+
+.cuenta-card-title {
+  font-family: var(--font-headline);
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.cuenta-card-desc {
+  font-size: var(--font-size-sm);
+  color: var(--on-surface-variant);
+}
+
+.cuenta-logout {
+  padding: var(--spacing-2) var(--spacing-4);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--on-surface);
+  cursor: pointer;
+}
+
+.cuenta-logout:hover {
+  background: var(--surface-container);
+}

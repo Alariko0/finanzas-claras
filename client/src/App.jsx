@@ -36,7 +36,7 @@ import DashboardPatrimonio from './pages/DashboardPatrimonio'
 import SimuladorViajes from './pages/SimuladorViajes'
 
 // Grupo G - Cuenta y Configuración
-import CrearCuenta from './pages/CrearCuenta'
+import Cuenta from './pages/Cuenta'
 import ConfiguracionPerfil from './pages/ConfiguracionPerfil'
 import HistorialCalculos from './pages/HistorialCalculos'
 import PersonalizarModulos from './pages/PersonalizarModulos'
@@ -81,7 +81,7 @@ function App() {
             <Route path="/viajes" element={<SimuladorViajes />} />
 
             {/* Grupo G - Cuenta y Configuración */}
-            <Route path="/account" element={<CrearCuenta />} />
+            <Route path="/account" element={<Cuenta />} />
             <Route path="/account/perfil" element={<RutaProtegida><ConfiguracionPerfil /></RutaProtegida>} />
             <Route path="/account/historial" element={<RutaProtegida><HistorialCalculos /></RutaProtegida>} />
             <Route path="/account/modulos" element={<RutaProtegida><PersonalizarModulos /></RutaProtegida>} />

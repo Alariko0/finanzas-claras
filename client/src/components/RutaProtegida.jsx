@@ -1,6 +1,6 @@
 /**
  * RutaProtegida - Solo deja pasar a usuarios con sesión.
- * Sin sesión redirige al inicio y pide abrir el login.
+ * Sin sesión redirige a /account (login) y recuerda a dónde quería ir.
  */
 
 import { Navigate, useLocation } from 'react-router-dom'
@@ -15,7 +15,7 @@ const RutaProtegida = ({ children }) => {
   }
 
   if (!user) {
-    return <Navigate to="/" replace state={{ requiereLogin: true, desde: location.pathname }} />
+    return <Navigate to="/account" replace state={{ desde: location.pathname }} />
   }
 
   return children

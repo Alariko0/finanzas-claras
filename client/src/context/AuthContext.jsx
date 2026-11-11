@@ -22,6 +22,12 @@ const traducirError = (error) => {
   if (codigo === 'user_already_exists' || mensaje.includes('already registered')) {
     return 'Este correo ya está registrado.'
   }
+  if (codigo === 'email_address_invalid') {
+    return 'Ese correo electrónico no es válido. Usa una dirección real.'
+  }
+  if (codigo === 'email_address_not_authorized') {
+    return 'Este correo no puede recibir mensajes de confirmación todavía. Prueba con otro.'
+  }
   if (codigo === 'weak_password' || mensaje.includes('password')) {
     return 'La contraseña no cumple los requisitos de seguridad.'
   }
@@ -77,16 +83,32 @@ export const AuthProvider = ({ children }) => {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { nombre } }
+          options: {
+            data: { nombre },
+            emailRedirectTo: `${window.location.origin}/account`
+          }
         })
 
-        if (error) return { ok: false, mensaje: traducirError(error) }
+        if (error) return { ok: false, mensaje: traducirError(error), codigo: error.code }
+
+        // Con "confirmar email" activo, un correo ya registrado devuelve un usuario
+        // sin identidades (Supabase no revela si existe). Lo tratamos como éxito genérico.
         return { ok: true, requiereConfirmacion: !data.session }
       },
 
       entrar: async ({ email, password }) => {
         const { error } = await supabase.auth.signInWithPassword({ email, password })
-        if (error) return { ok: false, mensaje: traducirError(error) }
+        if (error) return { ok: false, mensaje: traducirError(error), codigo: error.code }
+        return { ok: true }
+      },
+
+      reenviarConfirmacion: async (email) => {
+        const { error } = await supabase.auth.resend({
+          type: 'signup',
+          email,
+          options: { emailRedirectTo: `${window.location.origin}/account` }
+        })
+        if (error) return { ok: false, mensaje: traducirError(error), codigo: error.code }
         return { ok: true }
       },
 
