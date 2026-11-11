@@ -104,3 +104,28 @@ export const calculos = {
 
   eliminar: async (id) => peticion(`/calculos/${id}`, { method: 'DELETE' })
 }
+
+/**
+ * Calculadoras fiscales (públicas: no necesitan sesión). Devuelven `resultado`, que incluye
+ * `fechaDatos` y `avisos`; si el régimen no está soportado trae `soportado: false` y `aviso`.
+ */
+const calcularFiscal = (ruta) => async (entrada, opciones = {}) =>
+  (await peticion(`/fiscal/${ruta}`, { method: 'POST', body: entrada, ...opciones }, { auth: false })).data.resultado
+
+export const fiscal = {
+  irpf: calcularFiscal('irpf'),
+  nomina: calcularFiscal('nomina'),
+  ahorro: calcularFiscal('ahorro')
+}
+
+/**
+ * Calculadoras de préstamos e hipotecas (públicas). `cuadro` devuelve cuota, TAE, filas y
+ * resumen anual; `amortizacion` devuelve el efecto de amortizar por adelantado.
+ */
+const calcularPrestamo = (ruta) => async (entrada) =>
+  (await peticion(`/prestamos/${ruta}`, { method: 'POST', body: entrada }, { auth: false })).data.resultado
+
+export const prestamos = {
+  cuadro: calcularPrestamo('cuadro'),
+  amortizacion: calcularPrestamo('amortizacion')
+}

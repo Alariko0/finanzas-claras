@@ -39,6 +39,11 @@ app.use(express.json({ limit: '100kb' }))
 // Salud (sin rate limit para que los balanceadores no se bloqueen)
 app.use(require('./routes/health'))
 
+// Calculadoras fiscales públicas: límite propio (holgado, se usan mientras se teclea),
+// por eso van antes de los límites generales y de escritura
+app.use('/api/fiscal', require('./routes/fiscal'))
+app.use('/api/prestamos', require('./routes/prestamos'))
+
 // Rate limiting: general para toda la API y más estricto en escrituras
 app.use('/api/', limitadorGeneral)
 app.use('/api/', limitadorEscritura)

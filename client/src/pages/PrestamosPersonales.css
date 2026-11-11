@@ -23,8 +23,7 @@
   color: var(--on-surface-variant);
 }
 
-.prestamos-result,
-.prestamos-comparativa {
+.prestamos-result {
   margin-bottom: var(--spacing-8);
 }
 
@@ -61,59 +60,8 @@
   color: var(--on-secondary-container);
 }
 
-.comparativa-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-  gap: var(--spacing-4);
-  margin-top: var(--spacing-6);
-}
-
-.comparativa-card {
-  padding: var(--spacing-6);
-  border-radius: var(--radius-xl);
-  background: var(--surface-container-low);
-  transition: background-color 0.2s ease;
-}
-
-.comparativa-card:hover {
-  background: var(--surface-container);
-}
-
-.comparativa-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-4);
-}
-
-.comparativa-titulo {
-  font-family: var(--font-headline);
-  font-weight: 700;
-}
-
-.prestamos-page .tag {
-  padding: var(--spacing-1) var(--spacing-3);
-  border-radius: var(--radius-full);
-  background: rgba(var(--primary-rgb), 0.12);
-  color: var(--primary);
-  font-size: var(--caption);
-  font-weight: 700;
-}
-
-.comparativa-info div {
-  margin-bottom: var(--spacing-1);
-  font-size: var(--body-md);
-  color: var(--on-surface-variant);
-}
-
-.comparativa-result span {
-  font-family: var(--font-headline);
-  font-size: var(--title-md);
-  font-weight: 700;
-  color: var(--primary);
-}
-
 .prestamos-info {
+  margin-bottom: var(--spacing-8);
   padding: var(--spacing-8);
   border-radius: var(--radius-xl);
   background: var(--surface-container-low);

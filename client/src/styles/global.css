@@ -334,3 +334,34 @@ strong > .icono,
     color: black;
   }
 }
+
+/* Calculadoras que llaman a la API: error y nota de estimación */
+.calculo-error {
+  margin-bottom: var(--spacing-6);
+  padding: var(--spacing-4) var(--spacing-6);
+  border-radius: var(--radius-xl);
+  background: var(--error-container);
+  color: var(--on-error-container);
+}
+
+.calculo-aviso {
+  margin: var(--spacing-4) 0 var(--spacing-8);
+  font-size: var(--label-sm);
+  color: var(--on-surface-variant);
+}
+
+.calculo-avisos {
+  margin: var(--spacing-4) 0 var(--spacing-8);
+  padding-left: var(--spacing-6);
+  font-size: var(--label-sm);
+  color: var(--on-surface-variant);
+}
+
+/* Fila editable de «cambio supuesto del Euríbor» */
+.fila-cambio {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-2);
+  align-items: center;
+}

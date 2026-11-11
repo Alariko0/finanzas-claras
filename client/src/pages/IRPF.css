@@ -34,6 +34,19 @@
   gap: var(--spacing-6);
 }
 
+.irpf-chart .progress-bar {
+  height: 0.75rem;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--surface-container-highest);
+}
+
+.irpf-chart .progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.3s ease;
+}
+
 .irpf-chart .chart-bars {
   display: flex;
   align-items: flex-end;
@@ -73,20 +86,6 @@
   }
 }
 
-.irpf-table {
-  margin-top: var(--spacing-8);
-  padding: var(--spacing-8);
-  border-radius: var(--radius-xl);
-  background: var(--surface-container-low);
-}
-
-.irpf-table h3 {
-  margin-bottom: var(--spacing-6);
-  font-family: var(--font-headline);
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
 .irpf-chart .bar-label {
   font-size: var(--label-sm);
   font-weight: 600;
@@ -101,4 +100,34 @@
   font-family: var(--font-headline);
   font-weight: 700;
   color: var(--on-surface);
+}
+
+.irpf-results.calculando {
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.irpf-error {
+  margin-bottom: var(--spacing-6);
+  padding: var(--spacing-4) var(--spacing-6);
+  border-radius: var(--radius-xl);
+  background: var(--error-container);
+  color: var(--on-error-container);
+}
+
+.irpf-page .irpf-enlace {
+  margin: var(--spacing-3) 0 0;
+  font-size: var(--label-sm);
+  color: var(--on-surface-variant);
+}
+
+.irpf-page .irpf-enlace a {
+  color: var(--primary);
+}
+
+.irpf-avisos {
+  margin: var(--spacing-6) 0 0;
+  padding-left: var(--spacing-6);
+  font-size: var(--label-sm);
+  color: var(--on-surface-variant);
 }

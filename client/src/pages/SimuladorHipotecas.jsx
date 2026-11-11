@@ -1,223 +1,307 @@
 import { useState } from 'react'
+import { prestamos } from '../utils/api'
+import useCalculo from '../hooks/useCalculo'
+import TablaAmortizacion from '../components/TablaAmortizacion'
+import CamposTipoInteres from '../components/CamposTipoInteres'
+import { FORMULARIO_TIPO_INICIAL, entradaTipo, errorTipo } from '../utils/tipoInteres'
+import { euro, porcentaje, plazoTexto, hoyISO, fechaCorta } from '../utils/formato'
 import './SimuladorHipotecas.css'
 
 /**
- * Página: Simulador de Hipotecas Pro
- * Cálculo de cuota mensual, TAE y simulador de amortización
+ * Página: Simulador de Hipotecas (fija, variable y mixta; sistema francés, alemán o americano)
+ * El cálculo se hace en el servidor: POST /api/prestamos/cuadro.
  */
 
+const NOMBRE_SISTEMA = {
+  frances: 'sistema francés',
+  aleman: 'sistema alemán',
+  americano: 'sistema americano'
+}
+
 const SimuladorHipotecas = () => {
-  const [monto, setMonto] = useState(200000)
-  const [tasa, setTasa] = useState(3.5)
-  const [plazo, setPlazo] = useState(300)
-  const [tipoPlazo, setTipoPlazo] = useState('meses')
+  const [form, setForm] = useState({
+    ...FORMULARIO_TIPO_INICIAL,
+    capital: 200000,
+    plazo: 25,
+    unidad: 'anios',
+    comisionApertura: 0,
+    gastosMensuales: 0,
+    fechaInicio: hoyISO()
+  })
+  const meses = form.unidad === 'anios' ? form.plazo * 12 : form.plazo
 
-  // Cálculo de cuota mensual
-  const calcularCuota = () => {
-    const tasaMensual = tasa / 100 / 12
-    const pagosTotales = plazo / 12
-    const cuota = (monto * tasaMensual) / (1 - Math.pow(1 + tasaMensual, -pagosTotales))
-    return Math.round(cuota)
+  const entrada = {
+    capital: form.capital,
+    meses,
+    comisionApertura: form.comisionApertura,
+    gastosMensuales: form.gastosMensuales,
+    ...(form.fechaInicio ? { fechaInicio: form.fechaInicio } : {}),
+    ...entradaTipo(form)
   }
+  const invalido = !(Number.isInteger(meses) && meses >= 1 && meses <= 600)
+    ? 'El plazo debe ser un número entero entre 1 mes y 50 años.'
+    : errorTipo(form, meses)
+  const { resultado: r, error, cargando } = useCalculo(prestamos.cuadro, entrada, { invalido })
 
-  const cuota = calcularCuota()
-  const pagosTotales = cuota * plazo
-  const interesesTotales = pagosTotales - monto
-  const tae = (tasa + 2.5).toFixed(2) // Simplificado: TAN + comisiones
+  const cambiar = (campo, valor) => setForm((anterior) => ({ ...anterior, [campo]: valor }))
+  const numero = (campo) => (e) => cambiar(campo, Math.max(0, Number(e.target.value) || 0))
 
-  // Cálculo de tabla de amortización (primeros 6 pagos + último)
-  const amortizacion = (() => {
-    const tasaMensual = tasa / 100 / 12
-    const cuota = calcularCuota()
-    const tabla = []
-    let capitalRestante = monto
-
-    for (let i = 1; i <= Math.min(plazo, 6); i++) {
-      const interesesMes = capitalRestante * tasaMensual
-      const pagoCapital = cuota - interesesMes
-      capitalRestante -= pagoCapital
-      tabla.push({
-        mes: i,
-        fecha: `01/${i <= 3 ? (i + 1) % 4 + '00' : '12'}${i <= 6 ? '25' : ''}`,
-        cuota,
-        intereses: Math.round(interesesMes),
-        capital: Math.round(pagoCapital),
-        capitalRestante: Math.max(0, Math.round(capitalRestante))
-      })
-    }
-
-    // Último pago
-    if (capitalRestante > 0) {
-      const ultimoInteres = capitalRestante * tasaMensual
-      tabla.push({
-        mes: plazo,
-        fecha: `31/${plazo <= 12 ? (plazo % 3 + 1) + '00' : '12'}${plazo <= 60 ? '30' : ''}`,
-        cuota,
-        intereses: Math.round(ultimoInteres),
-        capital: Math.round(cuota - ultimoInteres),
-        capitalRestante: 0
-      })
-    }
-
-    return tabla
-  })()
-
-  const progreso = ((plazo - 300) / plazo) * 100 // Simplificado para demo
+  const parteCapital = r ? (r.capital / r.totalCuotas) * 100 : 0
+  const variable = r && r.tipoInteres !== 'fijo'
+  const etiquetaCuota = r?.sistema === 'frances' && !variable ? 'Cuota mensual' : 'Primera cuota'
 
   return (
     <div className="hipotecas-page">
       <div className="page-header">
-        <h1>Simulador de Hipotecas Pro</h1>
+        <h1>Simulador de Hipotecas</h1>
         <p className="page-subtitle">
-          Calcula tu cuota mensual, TAE y tabla de amortización
+          Cuota, TAE y cuadro de amortización de una hipoteca a tipo fijo, variable o mixto.
+          El sistema francés (cuota constante) es el habitual en España.
         </p>
       </div>
 
       <div className="hipotecas-grid">
         <div className="hipotecas-inputs">
           <div className="input-group">
-            <label htmlFor="monto" className="label-sm">Monto del Préstamo</label>
+            <label htmlFor="capital" className="label-sm">Capital del préstamo (€)</label>
             <input
-              id="monto"
-              type="range"
-              min="50000"
-              max="600000"
-              value={monto}
-              onChange={(e) => setMonto(parseInt(e.target.value))}
-              className="input-range"
+              id="capital"
+              type="number"
+              value={form.capital}
+              onChange={numero('capital')}
+              className="input-field"
+              min="1"
+              max="100000000"
             />
-            <span className="input-value">{monto.toLocaleString('es-ES')} €</span>
           </div>
 
-          <div className="input-group">
-            <label htmlFor="tasa" className="label-sm">Tasa de Interés (%)</label>
-            <input
-              id="tasa"
-              type="range"
-              min="1"
-              max="10"
-              step="0.1"
-              value={tasa}
-              onChange={(e) => setTasa(parseFloat(e.target.value))}
-              className="input-range"
-            />
-            <span className="input-value">{tasa}%</span>
-          </div>
+          <CamposTipoInteres form={form} cambiar={cambiar} meses={meses} idBase="hip" />
 
           <div className="input-group">
             <label htmlFor="plazo" className="label-sm">Plazo</label>
-            <select
+            <input
               id="plazo"
-              value={tipoPlazo}
-              onChange={(e) => setTipoPlazo(e.target.value)}
+              type="number"
+              value={form.plazo}
+              onChange={(e) => cambiar('plazo', Math.max(0, Math.trunc(Number(e.target.value)) || 0))}
+              className="input-field"
+              min="1"
+              max={form.unidad === 'anios' ? 50 : 600}
+            />
+            <select
+              aria-label="Unidad del plazo"
+              value={form.unidad}
+              onChange={(e) => {
+                const unidad = e.target.value
+                setForm((a) => ({
+                  ...a,
+                  unidad,
+                  plazo: unidad === 'anios' ? Math.max(1, Math.round(meses / 12)) : meses
+                }))
+              }}
               className="input-field"
             >
-              <option value="meses">Meses</option>
               <option value="anios">Años</option>
+              <option value="meses">Meses</option>
             </select>
+            <span className="input-subtitle">{plazoTexto(meses)} ({meses} cuotas)</span>
           </div>
 
           <div className="input-group">
-            <label htmlFor="plazoValue" className="label-sm">Duración</label>
+            <label htmlFor="comision" className="label-sm">Comisión de apertura (% del capital)</label>
             <input
-              id="plazoValue"
+              id="comision"
               type="number"
-              value={tipoPlazo === 'meses' ? plazo : Math.floor(plazo / 12)}
-              onChange={(e) => setPlazo(tipoPlazo === 'anios' ? parseInt(e.target.value) * 12 : parseInt(e.target.value))}
+              value={form.comisionApertura}
+              onChange={numero('comisionApertura')}
               className="input-field"
-              min="12"
-              max="600"
+              min="0"
+              max="100"
+              step="0.05"
             />
-            <span className="input-subtitle">
-              {tipoPlazo === 'anios' ? `(${Math.floor(plazo / 12)} años)` : `${plazo} meses`}
-            </span>
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="seguros" className="label-sm">Seguros vinculados (€ al mes)</label>
+            <input
+              id="seguros"
+              type="number"
+              value={form.gastosMensuales}
+              onChange={numero('gastosMensuales')}
+              className="input-field"
+              min="0"
+            />
+            <span className="input-subtitle">No cambian la cuota, pero sí la TAE.</span>
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="fecha" className="label-sm">Fecha de firma</label>
+            <input
+              id="fecha"
+              type="date"
+              value={form.fechaInicio}
+              onChange={(e) => cambiar('fechaInicio', e.target.value)}
+              className="input-field"
+            />
           </div>
         </div>
 
-        <div className="hipotecas-result">
-          <div className="result-card surface-container-lowest">
-            <h2 className="title-md text-primary">Cuota Mensual Estimada</h2>
-            <div className="balance-totem text-primary-fixed-dim">
-              <span className="label-sm">Cuota Mensual</span>
-              <span className="display-lg">{cuota.toLocaleString('es-ES')} €</span>
-            </div>
-          </div>
+        <div className="hipotecas-result" aria-busy={cargando}>
+          {error && <p className="calculo-error" role="alert">{error}</p>}
+          {r && (
+            <>
+              <div className="result-card surface-container-lowest">
+                <h2 className="title-md text-primary">{etiquetaCuota} ({NOMBRE_SISTEMA[r.sistema]})</h2>
+                <div className="balance-totem text-primary-fixed-dim">
+                  <span className="display-lg">{euro(r.cuota)}</span>
+                </div>
+              </div>
 
-          <div className="result-row">
-            <span>Tasa Anual</span>
-            <span>{tasa}%</span>
-          </div>
-          <div className="result-row">
-            <span>TAE Estimada</span>
-            <span>{tae}%</span>
-          </div>
-          <div className="result-row">
-            <span>Total a Pagar</span>
-            <span>{pagosTotales.toLocaleString('es-ES')} €</span>
-          </div>
-          <div className="result-row highlight">
-            <span>Intereses Totales</span>
-            <span className="text-tertiary">{interesesTotales.toLocaleString('es-ES')} €</span>
-          </div>
+              <div className="result-row">
+                <span>{variable ? 'TIN inicial' : 'TIN'}</span>
+                <span>{porcentaje(r.tinInicial)}</span>
+              </div>
+              {(variable || r.sistema !== 'frances') && (
+                <>
+                  <div className="result-row">
+                    <span>Cuota máxima</span>
+                    <span>{euro(r.cuotaMaxima)}</span>
+                  </div>
+                  <div className="result-row">
+                    <span>Cuota mínima</span>
+                    <span>{euro(r.cuotaMinima)}</span>
+                  </div>
+                </>
+              )}
+              <div className="result-row">
+                <span>TAE{variable ? ' (supuesto legal)' : ''}</span>
+                <span>{r.tae === null ? 'No calculable' : porcentaje(r.tae)}</span>
+              </div>
+              <div className="result-row">
+                <span>Total en cuotas</span>
+                <span>{euro(r.totalCuotas)}</span>
+              </div>
+              {r.comisionApertura > 0 && (
+                <div className="result-row">
+                  <span>Comisión de apertura</span>
+                  <span>{euro(r.comisionApertura)}</span>
+                </div>
+              )}
+              <div className="result-row highlight">
+                <span>Intereses totales</span>
+                <span className="text-tertiary">{euro(r.totalIntereses)}</span>
+              </div>
+              {r.fechaFin && (
+                <div className="result-row">
+                  <span>Última cuota</span>
+                  <span>{fechaCorta(r.fechaFin)}</span>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
 
-      <div className="hipotecas-tabla">
-        <h2 className="headline-md">Tabla de Amortización (Primeros 6 meses)</h2>
-        <div className="tabla-container">
-          <table className="amortizacion-table">
-            <thead>
-              <tr>
-                <th>Mes</th>
-                <th>Fecha</th>
-                <th>Cuota</th>
-                <th>Intereses</th>
-                <th>Capital</th>
-                <th>Restante</th>
-              </tr>
-            </thead>
-            <tbody>
-              {amortizacion.map((fila, idx) => (
-                <tr key={idx}>
-                  <td className="mes">{fila.mes}</td>
-                  <td className="fecha">{fila.fecha}</td>
-                  <td className="cuota">{fila.cuota.toLocaleString('es-ES')} €</td>
-                  <td className="intereses">{fila.intereses.toLocaleString('es-ES')} €</td>
-                  <td className="capital">{fila.capital.toLocaleString('es-ES')} €</td>
-                  <td className="capitalRestante">{fila.capitalRestante.toLocaleString('es-ES')} €</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {r && variable && (
+        <>
+          <div className="hipotecas-tabla">
+            <h2 className="headline-md">Si el Euríbor cambia</h2>
+            <div className="tabla-container">
+              <table className="amortizacion-table">
+                <thead>
+                  <tr>
+                    <th>Euríbor</th>
+                    <th>TIN final</th>
+                    <th>Cuota máxima</th>
+                    <th>Cuota mínima</th>
+                    <th>Intereses totales</th>
+                    <th>Diferencia</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="mes">Tu supuesto</td>
+                    <td>{porcentaje(r.filas[r.filas.length - 1].tin)}</td>
+                    <td>{euro(r.cuotaMaxima)}</td>
+                    <td>{euro(r.cuotaMinima)}</td>
+                    <td>{euro(r.totalIntereses)}</td>
+                    <td>—</td>
+                  </tr>
+                  {r.escenarios.map((e) => (
+                    <tr key={e.puntos}>
+                      <td className="mes">{e.puntos > 0 ? `+${e.puntos}` : e.puntos} puntos</td>
+                      <td>{porcentaje(e.tinFinal)}</td>
+                      <td>{euro(e.cuotaMaxima)}</td>
+                      <td>{euro(e.cuotaMinima)}</td>
+                      <td>{euro(e.totalIntereses)}</td>
+                      <td className={e.diferenciaIntereses > 0 ? 'text-tertiary' : ''}>
+                        {e.diferenciaIntereses > 0 ? '+' : ''}{euro(e.diferenciaIntereses)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-      <div className="hipotecas-chart">
-        <h2 className="headline-md">Desglose de Pagos</h2>
-        <div className="chart-container">
-          <div className="chart-bar">
-            <div
-              className="bar-fill"
-              style={{
-                width: `${(monto / (cuota * Math.max(1, plazo))) * 100}%`,
-                background: 'var(--primary)'
-              }}
-            />
-            <div
-              className="bar-fill"
-              style={{ flex: 1, background: 'var(--tertiary)' }}
-            />
-          </div>
-          <div className="chart-legend">
-            <div className="legend-item primary">
-              <span className="legend-label">Capital ({Math.round(monto / (cuota * Math.max(1, plazo)) * 100)}%)</span>
+          <div className="hipotecas-tabla">
+            <h2 className="headline-md">Revisiones del tipo y de la cuota</h2>
+            <div className="tabla-container">
+              <table className="amortizacion-table">
+                <thead>
+                  <tr>
+                    <th>Cuota nº</th>
+                    {r.revisiones[0].fecha && <th>Fecha</th>}
+                    <th>TIN</th>
+                    <th>Cuota desde aquí</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {r.revisiones.map((v) => (
+                    <tr key={v.numero}>
+                      <td className="mes">{v.numero}</td>
+                      {v.fecha && <td className="fecha">{fechaCorta(v.fecha)}</td>}
+                      <td>{porcentaje(v.tin)}</td>
+                      <td>{euro(v.cuota)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <div className="legend-item secondary">
-              <span className="legend-label">Intereses ({Math.round(interesesTotales / (cuota * Math.max(1, plazo)) * 100)}%)</span>
+          </div>
+        </>
+      )}
+
+      {r && (
+        <>
+          <div className="hipotecas-tabla">
+            <h2 className="headline-md">Cuadro de amortización</h2>
+            <TablaAmortizacion filas={r.filas} resumenAnual={r.resumenAnual} />
+          </div>
+
+          <div className="hipotecas-chart">
+            <h2 className="headline-md">Desglose de pagos</h2>
+            <div className="chart-container">
+              <div className="chart-bar">
+                <div className="bar-fill" style={{ width: `${parteCapital}%`, background: 'var(--primary)' }} />
+                <div className="bar-fill" style={{ flex: 1, background: 'var(--tertiary)' }} />
+              </div>
+              <div className="chart-legend">
+                <div className="legend-item primary">
+                  <span className="legend-label">Capital ({parteCapital.toFixed(0)} %)</span>
+                </div>
+                <div className="legend-item secondary">
+                  <span className="legend-label">Intereses ({(100 - parteCapital).toFixed(0)} %)</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+
+          <ul className="calculo-avisos">
+            {r.avisos.map((aviso) => <li key={aviso}>{aviso}</li>)}
+          </ul>
+        </>
+      )}
     </div>
   )
 }

@@ -138,4 +138,12 @@ function liquidacionIRPF(entrada = {}) {
   }
 }
 
-module.exports = { liquidacionIRPF, ErrorEntrada, COMUNIDADES_SOPORTADAS, COMUNIDADES_NO_SOPORTADAS }
+module.exports = {
+  liquidacionIRPF,
+  ErrorEntrada,
+  COMUNIDADES_SOPORTADAS,
+  COMUNIDADES_NO_SOPORTADAS,
+  importe,
+  reduccionArticulo20,
+  otrosGastos
+}

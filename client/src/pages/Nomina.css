@@ -95,6 +95,50 @@
   color: var(--on-surface-variant);
 }
 
+.nomina-result.calculando {
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.nomina-error {
+  margin-bottom: var(--spacing-6);
+  padding: var(--spacing-4) var(--spacing-6);
+  border-radius: var(--radius-xl);
+  background: var(--error-container);
+  color: var(--on-error-container);
+}
+
+.nomina-avisos {
+  margin: var(--spacing-6) 0 0;
+  padding-left: var(--spacing-6);
+  font-size: var(--label-sm);
+  color: var(--on-surface-variant);
+}
+
+.nomina-result .result-row-desc .text-secondary {
+  font-weight: 400;
+}
+
+.nomina-page .nomina-renta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-6);
+}
+
+.nomina-page .nomina-renta p {
+  margin: 0;
+  max-width: 60ch;
+  font-size: var(--label-sm);
+  color: var(--on-surface-variant);
+}
+
+.nomina-page .nomina-renta .action-button {
+  text-decoration: none;
+}
+
 @media (max-width: 768px) {
   .nomina-inputs {
     grid-template-columns: 1fr;

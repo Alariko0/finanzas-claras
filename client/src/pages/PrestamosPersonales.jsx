@@ -1,173 +1,171 @@
 import { useState } from 'react'
 import Icono from '../components/Icono'
+import TablaAmortizacion from '../components/TablaAmortizacion'
+import { prestamos } from '../utils/api'
+import useCalculo from '../hooks/useCalculo'
+import { SISTEMAS } from '../utils/tipoInteres'
+import { euro, porcentaje, plazoTexto } from '../utils/formato'
 import './PrestamosPersonales.css'
 
 /**
  * Página: Préstamos Personales
- * Cálculo de pagos y condiciones para diferentes tipos de préstamos
+ * Cuota, coste total y TAE con comisiones. El cálculo se hace en el servidor:
+ * POST /api/prestamos/cuadro.
  */
 
 const PrestamosPersonales = () => {
-  const [tipoPrestamo, setTipoPrestamo] = useState('personal')
-  const [monto, setMonto] = useState(10000)
-  const [tasa, setTasa] = useState(6.5)
-  const [plazo, setPlazo] = useState(48)
+  const [form, setForm] = useState({
+    sistema: 'frances',
+    capital: 10000,
+    tin: 6.5,
+    meses: 48,
+    comisionApertura: 0,
+    gastosMensuales: 0
+  })
 
-  const calcularCuota = () => {
-    const tasaMensual = tasa / 100 / 12
-    const cuota = (monto * tasaMensual) / (1 - Math.pow(1 + tasaMensual, -plazo))
-    return Math.round(cuota)
-  }
+  const { resultado: r, error, cargando } = useCalculo(prestamos.cuadro, form, {
+    invalido: Number.isInteger(form.meses) && form.meses >= 1 && form.meses <= 600
+      ? ''
+      : 'El plazo debe ser un número entero de meses entre 1 y 600.'
+  })
 
-  const cuota = calcularCuota()
-  const pagosTotales = cuota * plazo
-  const interesesTotales = pagosTotales - monto
-  const costoEfectivo = ((interesesTotales / monto) * 100).toFixed(1)
-
-  const tiposPrestamo = [
-    { id: 'personal', nombre: 'Préstamo Personal', tasaBase: 6.5, minTasa: 5, maxTasa: 12 },
-    { id: 'coche', nombre: 'Préstamo para Coche', tasaBase: 5.5, minTasa: 4, maxTasa: 8 },
-    { id: 'renovacion', nombre: 'Renovación de Deuda', tasaBase: 6.0, minTasa: 5, maxTasa: 10 },
-    { id: 'consumo', nombre: 'Préstamo de Consumo', tasaBase: 7.0, minTasa: 6, maxTasa: 12 }
-  ]
+  const numero = (campo) => (e) => setForm((a) => ({ ...a, [campo]: Math.max(0, Number(e.target.value) || 0) }))
 
   return (
     <div className="prestamos-page">
       <div className="page-header">
         <h1>Préstamos Personales</h1>
         <p className="page-subtitle">
-          Compara condiciones y calcula tu pago mensual
+          Calcula tu cuota mensual, el coste total y la TAE real incluyendo comisiones
         </p>
       </div>
 
       <div className="prestamos-selectors">
         <div className="selector-group">
-          <label htmlFor="tipoPrestamo" className="label-sm">Tipo de Préstamo</label>
+          <label htmlFor="capital" className="label-sm">Importe del préstamo (€)</label>
+          <input
+            id="capital"
+            type="number"
+            value={form.capital}
+            onChange={numero('capital')}
+            className="input-field"
+            min="1"
+            max="100000000"
+          />
+        </div>
+
+        <div className="selector-group">
+          <label htmlFor="tin" className="label-sm">Tipo de interés nominal, TIN (% anual)</label>
+          <input
+            id="tin"
+            type="number"
+            value={form.tin}
+            onChange={numero('tin')}
+            className="input-field"
+            min="0"
+            max="50"
+            step="0.1"
+          />
+        </div>
+
+        <div className="selector-group">
+          <label htmlFor="meses" className="label-sm">Plazo (meses)</label>
+          <input
+            id="meses"
+            type="number"
+            value={form.meses}
+            onChange={(e) => setForm((a) => ({ ...a, meses: Math.max(0, Math.trunc(Number(e.target.value)) || 0) }))}
+            className="input-field"
+            min="1"
+            max="600"
+          />
+          <span className="input-value">{plazoTexto(form.meses)}</span>
+        </div>
+
+        <div className="selector-group">
+          <label htmlFor="sistema" className="label-sm">Sistema de amortización</label>
           <select
-            id="tipoPrestamo"
-            value={tipoPrestamo}
-            onChange={(e) => {
-              setTipoPrestamo(e.target.value)
-              const tipo = tiposPrestamo.find(t => t.id === e.target.value)
-              setMonto(10000)
-              setTasa(tipo.tasaBase)
-            }}
+            id="sistema"
+            value={form.sistema}
+            onChange={(e) => setForm((a) => ({ ...a, sistema: e.target.value }))}
             className="input-field"
           >
-            {tiposPrestamo.map((tipo) => (
-              <option key={tipo.id} value={tipo.id}>{tipo.nombre}</option>
-            ))}
+            {SISTEMAS.map(([valor, nombre]) => <option key={valor} value={valor}>{nombre}</option>)}
           </select>
         </div>
 
         <div className="selector-group">
-          <label htmlFor="monto" className="label-sm">Monto del Préstamo</label>
+          <label htmlFor="comision" className="label-sm">Comisión de apertura (%)</label>
           <input
-            id="monto"
-            type="range"
-            min="1000"
-            max="100000"
-            value={monto}
-            onChange={(e) => setMonto(parseInt(e.target.value))}
-            className="input-range"
-          />
-          <span className="input-value">{monto.toLocaleString('es-ES')} €</span>
-        </div>
-
-        <div className="selector-group">
-          <label htmlFor="tasa" className="label-sm">Tasa de Interés (% anual)</label>
-          <input
-            id="tasa"
-            type="range"
-            min={tiposPrestamo.find(t => t.id === tipoPrestamo)?.minTasa || 4}
-            max={tiposPrestamo.find(t => t.id === tipoPrestamo)?.maxTasa || 12}
+            id="comision"
+            type="number"
+            value={form.comisionApertura}
+            onChange={numero('comisionApertura')}
+            className="input-field"
+            min="0"
+            max="100"
             step="0.1"
-            value={tasa}
-            onChange={(e) => setTasa(parseFloat(e.target.value))}
-            className="input-range"
           />
-          <span className="input-value">{tasa}%</span>
         </div>
 
         <div className="selector-group">
-          <label htmlFor="plazo" className="label-sm">Plazo</label>
+          <label htmlFor="seguro" className="label-sm">Seguro del préstamo (€ al mes)</label>
           <input
-            id="plazo"
-            type="range"
-            min="6"
-            max="120"
-            step="6"
-            value={plazo}
-            onChange={(e) => setPlazo(parseInt(e.target.value))}
-            className="input-range"
+            id="seguro"
+            type="number"
+            value={form.gastosMensuales}
+            onChange={numero('gastosMensuales')}
+            className="input-field"
+            min="0"
           />
-          <span className="input-value">{plazo} meses ({Math.floor(plazo / 12)} años)</span>
         </div>
       </div>
 
-      <div className="prestamos-result">
-        <div className="result-card surface-container-lowest">
-          <h2 className="title-md text-primary">Cuota Mensual Estimada</h2>
-          <div className="balance-totem text-primary-fixed-dim">
-            <span className="label-sm">Cuota Mensual</span>
-            <span className="display-lg">{cuota.toLocaleString('es-ES')} €</span>
-          </div>
-        </div>
+      {error && <p className="calculo-error" role="alert">{error}</p>}
 
-        <div className="result-cards">
-          <div className="result-card">
-            <h3 className="title-md">Total a Pagar</h3>
-            <span className="display-lg">{pagosTotales.toLocaleString('es-ES')} €</span>
-          </div>
-
-          <div className="result-card highlight">
-            <h3 className="title-md">Intereses Totales</h3>
-            <span className="display-lg text-tertiary">{interesesTotales.toLocaleString('es-ES')} €</span>
-          </div>
-
-          <div className="result-card">
-            <h3 className="title-md">Costo Efectivo</h3>
-            <span className="display-lg">{costoEfectivo}%</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="prestamos-comparativa">
-        <h2 className="headline-md">Comparativa de Tipos</h2>
-        <div className="comparativa-grid">
-          {tiposPrestamo.map((tipo) => {
-            const tipoCuota = calcularCuota(tipo.tasaBase, tipo.id === tipoPrestamo ? monto : 10000)
-            const tipoIntereses = (tipoCuota * plazo) - 10000
-
-            return (
-              <div
-                key={tipo.id}
-                className="comparativa-card"
-                style={{
-                  border: tipo.id === tipoPrestamo ? `2px solid var(--primary)` : 'none',
-                  background: tipo.id === tipoPrestamo ? 'var(--surface-container-highest)' : 'var(--surface-container)'
-                }}
-              >
-                <div className="comparativa-header">
-                  <span className="comparativa-titulo">{tipo.nombre}</span>
-                  {tipo.id === tipoPrestamo && <span className="tag">Seleccionado</span>}
-                </div>
-                <div className="comparativa-info">
-                  <div>Tasa: {tipo.tasaBase}%</div>
-                  <div>Monto: {10000} €</div>
-                  <div>Plazo: {plazo} meses</div>
-                </div>
-                <div className="comparativa-result">
-                  <span>Cuota: {tipoCuota.toLocaleString('es-ES')} €</span>
-                </div>
+      {r && (
+        <>
+          <div className="prestamos-result" aria-busy={cargando}>
+            <div className="result-card surface-container-lowest">
+              <h2 className="title-md text-primary">
+                {form.sistema === 'frances' ? 'Cuota mensual (sistema francés)' : 'Primera cuota'}
+              </h2>
+              <div className="balance-totem text-primary-fixed-dim">
+                <span className="display-lg">{euro(r.cuota)}</span>
               </div>
-            )
-          })}
-        </div>
-      </div>
+            </div>
+
+            <div className="result-cards">
+              <div className="result-card">
+                <h3 className="title-md">Total a pagar</h3>
+                <span className="display-lg">{euro(r.totalPagado)}</span>
+              </div>
+
+              <div className="result-card highlight">
+                <h3 className="title-md">Coste total</h3>
+                <span className="display-lg text-tertiary">{euro(r.costeTotal)}</span>
+              </div>
+
+              <div className="result-card">
+                <h3 className="title-md">TAE</h3>
+                <span className="display-lg">{r.tae === null ? '—' : porcentaje(r.tae)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="prestamos-info">
+            <h2 className="headline-md">Cuadro de amortización</h2>
+            <TablaAmortizacion filas={r.filas} resumenAnual={r.resumenAnual} />
+          </div>
+
+          <ul className="calculo-avisos">
+            {r.avisos.map((aviso) => <li key={aviso}>{aviso}</li>)}
+          </ul>
+        </>
+      )}
 
       <div className="prestamos-info">
-        <h2 className="headline-md">Consejos para Reducir Costos</h2>
+        <h2 className="headline-md">Consejos para reducir costes</h2>
         <div className="consejos-list">
           <div className="consejo-item">
             <span className="consejo-icon"><Icono nombre="bombilla" /></span>
@@ -175,15 +173,15 @@ const PrestamosPersonales = () => {
           </div>
           <div className="consejo-item">
             <span className="consejo-icon"><Icono nombre="trofeo" /></span>
-            <span>Negocia una tasa inferior: cada 0.5% de descuento puede ahorrarte miles en intereses.</span>
+            <span>Compara siempre la TAE, no el TIN: incluye comisiones y seguros que te obliguen a contratar.</span>
           </div>
           <div className="consejo-item">
             <span className="consejo-icon"><Icono nombre="jubilacion" /></span>
-            <span>Considera pagos anticipados para reducir el capital pendiente y ahorrar intereses.</span>
+            <span>Los pagos anticipados reducen el capital pendiente y los intereses: pruébalo en «Amortización anticipada».</span>
           </div>
           <div className="consejo-item">
             <span className="consejo-icon"><Icono nombre="alerta" /></span>
-            <span>Evita comisiones por amortización anticipada. Busca productos sin penalización.</span>
+            <span>Revisa la comisión por amortización anticipada o cancelación antes de firmar.</span>
           </div>
         </div>
       </div>

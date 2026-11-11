@@ -44,7 +44,7 @@ describe('datos2026: estructura', () => {
     expect(Math.round(total * 100) / 100).toBe(6.5)
   })
   test('mínimos con tope legal = estatal × 1,10 (Asturias, Valencia)', () => {
-    ;['asturias', 'valencia'].forEach((c) => {
+    ['asturias', 'valencia'].forEach((c) => {
       const m = datos.MINIMOS_AUTONOMICOS[c]
       expect(m.contribuyente).toBeCloseTo(datos.MINIMOS_ESTATALES.contribuyente * 1.1, 2)
       expect(m.discapacidad33).toBeCloseTo(datos.MINIMOS_ESTATALES.discapacidad33 * 1.1, 2)

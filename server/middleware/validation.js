@@ -126,6 +126,124 @@ const perfilValidator = [
   handleValidationErrors
 ]
 
+/* ───────────── Calculadoras fiscales (públicas) ───────────── */
+
+const esNumero = (v) => typeof v === 'number' && Number.isFinite(v)
+const DISCAPACIDADES = ['ninguna', '33', '65']
+
+// Número opcional/obligatorio dentro de un rango (los strings no valen: el servicio exige number)
+const numero = (campo, { min = 0, max = 1e9, obligatorio = false } = {}) => {
+  const v = body(campo)
+  return (obligatorio ? v.exists({ values: 'undefined' }).withMessage(`${campo} es obligatorio`).bail() : v.optional())
+    .custom((valor) => esNumero(valor) && valor >= min && valor <= max)
+    .withMessage(`${campo} debe ser un número entre ${min} y ${max}`)
+}
+
+const booleano = (campo) => body(campo).optional().isBoolean({ strict: true }).withMessage(`${campo} debe ser verdadero o falso`)
+
+const personaValida = (valor, extras = []) =>
+  esObjetoPlano(valor) &&
+  Number.isInteger(valor.edad) && valor.edad >= 0 && valor.edad <= 120 &&
+  (valor.discapacidad === undefined || DISCAPACIDADES.includes(valor.discapacidad)) &&
+  (valor.movilidadReducida === undefined || typeof valor.movilidadReducida === 'boolean') &&
+  extras.every(([clave, comprobar]) => valor[clave] === undefined || comprobar(valor[clave]))
+
+const listaPersonas = (campo, extras) =>
+  body(campo)
+    .optional()
+    .isArray({ max: 15 }).withMessage(`${campo} debe ser una lista de hasta 15 personas`)
+    .bail()
+    .custom((lista) => lista.every((p) => personaValida(p, extras)))
+    .withMessage(`${campo} contiene datos no válidos`)
+
+const validadoresPersonas = [
+  body('contribuyente').optional().custom((v) => personaValida(v)).withMessage('contribuyente no válido'),
+  listaPersonas('descendientes', [['computoPorMitad', (v) => typeof v === 'boolean']]),
+  listaPersonas('ascendientes', [['compartidoCon', (v) => Number.isInteger(v) && v >= 1 && v <= 10]])
+]
+
+const comunidadValida = body('comunidad').isString().withMessage('comunidad es obligatoria').bail().isLength({ max: 30 })
+
+const fiscalIrpfValidator = [
+  comunidadValida,
+  numero('rendimientoIntegro', { obligatorio: true }),
+  numero('cotizacionesSS'),
+  numero('otrasRentas'),
+  booleano('movilidadGeografica'),
+  ...validadoresPersonas,
+  handleValidationErrors
+]
+
+const fiscalNominaValidator = [
+  numero('brutoAnual', { min: 0.01, obligatorio: true }),
+  body('pagas').optional().isIn([12, 14]).withMessage('pagas debe ser 12 o 14'),
+  booleano('prorrateo'),
+  body('grupoCotizacion').optional().isInt({ min: 1, max: 11 }).withMessage('grupoCotizacion debe estar entre 1 y 11').toInt(),
+  body('contrato').optional().isIn(['indefinido', 'temporal']).withMessage('contrato no válido'),
+  body('contratoRetencion').optional().isIn(['general', 'especial', 'inferiorAnio']).withMessage('contratoRetencion no válido'),
+  body('situacionFamiliar').optional().isIn([1, 2, 3]).withMessage('situacionFamiliar debe ser 1, 2 o 3'),
+  numero('tasaAccidentes', { max: 100 }),
+  booleano('movilidadGeografica'),
+  booleano('prestamoVivienda'),
+  ...validadoresPersonas,
+  handleValidationErrors
+]
+
+const fiscalAhorroValidator = [
+  comunidadValida,
+  numero('baseLiquidableAhorro', { obligatorio: true }),
+  numero('baseLiquidableGeneral'),
+  ...validadoresPersonas,
+  handleValidationErrors
+]
+
+/* ───────────── Calculadoras de préstamos e hipotecas (públicas) ───────────── */
+
+const validadoresPrestamo = [
+  numero('capital', { min: 0.01, max: 100000000, obligatorio: true }),
+  numero('tin', { max: 50 }), // obligatorio en fijo y mixto: lo comprueba el servicio
+  body('meses').isInt({ min: 1, max: 600 }).withMessage('meses debe ser un entero entre 1 y 600').bail()
+    .custom((v) => typeof v === 'number').withMessage('meses debe ser un número'),
+  body('sistema').optional().isIn(['frances', 'aleman', 'americano']).withMessage('sistema debe ser frances, aleman o americano'),
+  body('tipoInteres').optional().isIn(['fijo', 'variable', 'mixto']).withMessage('tipoInteres debe ser fijo, variable o mixto'),
+  numero('diferencial', { max: 20 }),
+  numero('euribor', { min: -5, max: 30 }),
+  body('periodoRevision').optional().custom((v) => Number.isInteger(v) && v >= 1 && v <= 60)
+    .withMessage('periodoRevision debe ser un entero entre 1 y 60'),
+  body('primeraRevision').optional().custom((v) => Number.isInteger(v) && v >= 1 && v <= 600)
+    .withMessage('primeraRevision debe ser un entero entre 1 y 600'),
+  body('mesesFijos').optional().custom((v) => Number.isInteger(v) && v >= 1 && v <= 599)
+    .withMessage('mesesFijos debe ser un entero entre 1 y 599'),
+  body('euriborFuturo').optional().isArray({ max: 50 }).withMessage('euriborFuturo debe ser una lista de hasta 50 puntos').bail()
+    .custom((lista) => lista.every((p) => esObjetoPlano(p) && Number.isInteger(p.mes) && p.mes >= 1 && p.mes <= 600 &&
+      esNumero(p.valor) && p.valor >= -5 && p.valor <= 30))
+    .withMessage('euriborFuturo contiene puntos no válidos (mes 1-600, valor -5 a 30)'),
+  body('escenariosEuribor').optional().isArray({ max: 5 }).withMessage('escenariosEuribor debe ser una lista de hasta 5 valores').bail()
+    .custom((lista) => lista.every((v) => esNumero(v) && v >= -10 && v <= 10))
+    .withMessage('escenariosEuribor contiene valores no válidos (-10 a 10)'),
+  body('fechaInicio').optional().isISO8601({ strict: true, strictSeparator: true }).withMessage('fechaInicio debe ser AAAA-MM-DD')
+    .bail().matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('fechaInicio debe ser AAAA-MM-DD')
+]
+
+const prestamoCuadroValidator = [
+  ...validadoresPrestamo,
+  numero('comisionApertura', { max: 100 }),
+  numero('gastosIniciales', { max: 100000000 }),
+  numero('gastosMensuales', { max: 100000000 }),
+  handleValidationErrors
+]
+
+const prestamoAmortizacionValidator = [
+  ...validadoresPrestamo,
+  body('mesAmortizacion').custom((v) => Number.isInteger(v) && v >= 0 && v <= 599)
+    .withMessage('mesAmortizacion debe ser un entero entre 0 y 599'),
+  numero('importe', { min: 0.01, max: 100000000, obligatorio: true }),
+  body('modo').optional().isIn(['reducirCuota', 'reducirPlazo']).withMessage('modo debe ser reducirCuota o reducirPlazo'),
+  numero('comisionPct', { max: 100 }),
+  numero('nuevoTin', { max: 50 }),
+  handleValidationErrors
+]
+
 module.exports = {
   TIPOS_CALCULO,
   MODULOS_PREFERENCIAS,
@@ -134,5 +252,10 @@ module.exports = {
   paginacionValidator,
   calculoValidator,
   calculoActualizarValidator,
-  perfilValidator
+  perfilValidator,
+  fiscalIrpfValidator,
+  fiscalNominaValidator,
+  fiscalAhorroValidator,
+  prestamoCuadroValidator,
+  prestamoAmortizacionValidator
 }

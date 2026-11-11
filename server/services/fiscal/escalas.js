@@ -47,6 +47,7 @@ function cuotaConMinimo(baseCentimos, minimoCentimos, escala) {
 }
 
 module.exports = {
+  UNIDADES_POR_CENTIMO,
   aCentimos,
   prepararEscala,
   cuotaEnUnidades,

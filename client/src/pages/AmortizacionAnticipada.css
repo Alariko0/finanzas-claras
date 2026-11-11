@@ -22,7 +22,7 @@
 
 .amortizacion-page .result-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: var(--spacing-4);
 }
 
@@ -32,6 +32,30 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: var(--on-surface-variant);
+}
+
+/* Cifras largas («21 años y 10 meses», «172.640,66 €») deben caber en su tarjeta */
+.amortizacion-page .result-card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.amortizacion-page .result-card .display-lg {
+  display: block;
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.amortizacion-page .result-card .balance-totem {
+  align-items: flex-start;
+}
+
+.amortizacion-page .result-card .input-value {
+  display: block;
+  margin-top: var(--spacing-2);
+  font-size: var(--label-sm);
   color: var(--on-surface-variant);
 }
 
