@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Prestamo = require('../models/Prestamo')
+const { authenticate } = require('../middleware/auth')
 
 // Cálculo de cuota hipotecaria
 const calcularCuotaMensual = (monto, tasa, plazo) => {
@@ -48,8 +49,8 @@ router.post('/calcular', (req, res) => {
   }
 })
 
-// Obtener lista de préstamos guardados
-router.get('/mis-prestamos', async (req, res) => {
+// Obtener lista de préstamos guardados (requiere autenticación)
+router.get('/mis-prestamos', authenticate, async (req, res) => {
   try {
     const prestamos = await Prestamo.find({ usuario: req.usuario.id })
       .populate('usuario', 'nombre')
@@ -64,8 +65,8 @@ router.get('/mis-prestamos', async (req, res) => {
   }
 })
 
-// Crear nuevo préstamo
-router.post('/crear', async (req, res) => {
+// Crear nuevo préstamo (requiere autenticación)
+router.post('/crear', authenticate, async (req, res) => {
   try {
     const prestamo = new Prestamo({
       usuario: req.usuario.id,

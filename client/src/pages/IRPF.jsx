@@ -21,7 +21,7 @@ import './IRPF.css'
 
 const IRPF = () => {
   const [rendimientoAnual, setRendimientoAnual] = useState(25000)
-  const [comunidad, setComunidad] = useState('Castilla y León')
+  const [comunidad, setComunidad] = useState('Comunidad de Madrid')
 
   // Obtener resultado de cálculo usando utilidad
   const resultado = calcularIRPFUtils({
@@ -93,12 +93,12 @@ const IRPF = () => {
           </div>
           <div className="result-row">
             <span className="result-label">Impuesto Estatal</span>
-            <span className="result-value">{resultado.impuestoEstatal.toLocaleString('es-ES')} €</span>
+            <span className="result-value">{resultado.cuotaEstatal.toLocaleString('es-ES')} €</span>
           </div>
-          {resultado.impuestoAutonomico > 0 && (
+          {resultado.cuotaAutonomica > 0 && (
             <div className="result-row">
               <span className="result-label">Impuesto Autonómico</span>
-              <span className="result-value">{resultado.impuestoAutonomico.toLocaleString('es-ES')} €</span>
+              <span className="result-value">{resultado.cuotaAutonomica.toLocaleString('es-ES')} €</span>
             </div>
           )}
           <div className="result-row highlight">
@@ -119,7 +119,7 @@ const IRPF = () => {
                 <span className="legend-color primary"></span>
                 <span>Estatal</span>
               </div>
-              {resultado.impuestoAutonomico > 0 && (
+              {resultado.cuotaAutonomica > 0 && (
                 <div className="legend-item">
                   <span className="legend-color secondary"></span>
                   <span>Autonómico</span>
@@ -130,17 +130,17 @@ const IRPF = () => {
               <div className="chart-bar-container">
                 <div
                   className="chart-bar"
-                  style={{ height: `${(resultado.impuestoEstatal / (resultado.impuestoEstatal + resultado.impuestoAutonomico || 1)) * 150}%` }}
+                  style={{ height: `${(resultado.cuotaEstatal / (resultado.cuotaEstatal + resultado.cuotaAutonomica || 1)) * 150}%` }}
                 />
-                <span className="bar-label">{resultado.impuestoEstatal.toLocaleString('es-ES')} €</span>
+                <span className="bar-label">{resultado.cuotaEstatal.toLocaleString('es-ES')} €</span>
               </div>
-              {resultado.impuestoAutonomico > 0 && (
+              {resultado.cuotaAutonomica > 0 && (
                 <div className="chart-bar-container">
                   <div
                     className="chart-bar"
-                    style={{ height: `${(resultado.impuestoAutonomico / (resultado.impuestoEstatal + resultado.impuestoAutonomico)) * 150}%` }}
+                    style={{ height: `${(resultado.cuotaAutonomica / (resultado.cuotaEstatal + resultado.cuotaAutonomica)) * 150}%` }}
                   />
-                  <span className="bar-label">{resultado.impuestoAutonomico.toLocaleString('es-ES')} €</span>
+                  <span className="bar-label">{resultado.cuotaAutonomica.toLocaleString('es-ES')} €</span>
                 </div>
               )}
             </div>

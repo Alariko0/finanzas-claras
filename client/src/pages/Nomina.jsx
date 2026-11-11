@@ -13,7 +13,7 @@
 'use client'
 
 import { useState } from 'react'
-import { calcularIRPF, calcularCuotaSeguridadSocial, calcularCuotaEmpresa, calcularRetencionIRPF } from '../utils/calcularIRPF'
+import { calcularIRPF, calcularCuotaSeguridadSocial, calcularCuotaEmpresa } from '../utils/calcularIRPF'
 import './Nomina.css'
 
 /**
@@ -48,10 +48,7 @@ const Nomina = () => {
   const cea = calcularCuotaEmpresa(salarioMensual)
 
   // Cálculo de retención IRPF aproximado
-  const retencionIrf = () => {
-    const retencionBase = resultadoIRPF.cuotaLiquida / 12
-    return retencionBase * (haciendaRetencion / 100)
-  }
+  const retencionIrf = resultadoIRPF.retencionPct || 0
 
   return (
     <div className="nomina-page">
@@ -121,14 +118,14 @@ const Nomina = () => {
         <div className="result-row">
           <div className="result-label">Seguridad Social (Trabajador)</div>
           <div className="result-row-desc">
-            <span className="text-secondary">Cua:</span> {calcularCua(salarioMensual)}€
+            <span className="text-secondary">Cua:</span> {cua}€
           </div>
         </div>
 
         <div className="result-row">
           <div className="result-label">Cotización Empresa</div>
           <div className="result-row-desc">
-            <span className="text-secondary">Cea:</span> {calcularCea(salarioMensual)}€
+            <span className="text-secondary">Cea:</span> {cea}€
           </div>
         </div>
 
@@ -142,7 +139,7 @@ const Nomina = () => {
         <div className="result-row">
           <div className="result-label">Retenciones IRPF</div>
           <div className="result-row-desc">
-            <span className="text-secondary">{estadoCivil} - {hijos} hijos:</span> {calcularRetencionIrf().toFixed(2)}€
+            <span className="text-secondary">{estadoCivil} - {hijos} hijos:</span> {retencionIrf.toFixed(2)}€
           </div>
         </div>
 
@@ -157,7 +154,7 @@ const Nomina = () => {
           <div className="result-label">Neto A Perceber (estimado)</div>
           <div className="balance-totem text-primary-fixed-dim">
             <span className="label-sm">Salario Neto</span>
-            <span className="display-lg">{(resultadoIRPF.netoMensual - calcularRetencionIrf()).toFixed(2)} €</span>
+            <span className="display-lg">{(resultadoIRPF.netoMensual - retencionIrf).toFixed(2)} €</span>
           </div>
         </div>
       </div>
@@ -186,13 +183,13 @@ const Nomina = () => {
               <div
                 className="progress-fill"
                 style={{
-                  width: `${(retencionIrf() / salarioMensual) * 100}%`,
+                  width: `${(retencionIrf / salarioMensual) * 100}%`,
                   backgroundColor: 'var(--tertiary)'
                 }}
               />
             </div>
             <div className="progress-label">
-              <span className="text-tertiary">{retencionIrf().toFixed(2)}€</span>
+              <span className="text-tertiary">{retencionIrf.toFixed(2)}€</span>
             </div>
           </div>
         </div>

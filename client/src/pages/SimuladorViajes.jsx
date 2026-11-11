@@ -50,7 +50,7 @@ const SimuladorViajes = () => {
     }
     setError('')
     setParticipantes(participantes.filter((p) => p.nombre !== nombre))
-    setGastos(gastos.filter((g) => g.participante !== nombre))
+    setGastos(gastos.filter((g) => g.quienPago !== nombre))
   }
 
   // Validación para agregar gastos
@@ -92,57 +92,62 @@ const SimuladorViajes = () => {
 
   // Algoritmo de liquidación mínima
   const calcularLiquidacion = () => {
-    const totalGastado = gastos.reduce((sum, g) => sum + (parseFloat(g.monto) || 0), 0)
-    const totalAportado = participantes.reduce((sum, p) => {
-      const aportado = gastos
-        .filter((g) => g.participante === p.nombre)
-        .reduce((sum2, g) => sum2 + (parseFloat(g.monto) || 0), 0)
-      return sum + aportado
-    }, 0)
+    if (participantes.length === 0 || gastos.length === 0) {
+      return { transferencias: [] }
+    }
 
-    const diferencia = totalGastado - totalAportado
-    const deudaPromedio = diferencia / participantes.length
+    // Calcular cuánto aportó cada participante
+    const aportes = {}
+    participantes.forEach((p) => {
+      aportes[p.nombre] = 0
+    })
 
-    // Transferencias mínimas
-    const transferencias = []
-    const saldos = participantes.map((p) => {
-      const saldo = gastos
-        .filter((g) => g.participante === p.nombre)
-        .reduce((sum, g) => sum + (parseFloat(g.monto) || 0), 0)
-      return {
-        ...p,
-        saldo: Math.round(saldo)
+    gastos.forEach((g) => {
+      const quienPago = g.quienPago
+      if (aportes[quienPago] !== undefined) {
+        aportes[quienPago] += parseFloat(g.monto) || 0
       }
     })
 
-    // Ordenar por saldo para optimizar
-    saldos.sort((a, b) => b.saldo - a.saldo)
+    // Calcular lo que cada uno debería haber aportado (split igualitario)
+    const totalGastado = Object.values(aportes).reduce((sum, a) => sum + a, 0)
+    const cuotaPorPersona = totalGastado / participantes.length
 
-    let saldoPendiente = 0
-    for (const persona of saldos) {
-      const neto = persona.saldo - saldoPendiente
-      if (neto > 0) {
-        // Esta persona debe dinero
-        const posiblesPagos = saldos.filter((p) => p.saldo < 0).map((p) => ({
-          debe: p,
-          debeCantidad: Math.min(-p.saldo, neto)
-        }))
-        posiblesPagos.forEach(({ debe, debeCantidad }) => {
-          transferencias.push({
-            de: persona.nombre,
-            a: debe.nombre,
-            cantidad: debeCantidad,
-            razon: `Por ${debe.descripcion || 'desglose'}`
-          })
-          saldoPendiente += debeCantidad
+    // Calcular balances (positivo = le deben, negativo = debe)
+    const balances = participantes.map((p) => ({
+      nombre: p.nombre,
+      balance: aportes[p.nombre] - cuotaPorPersona
+    }))
+
+    // Algoritmo greedy de transferencias mínimas
+    const transferencias = []
+    const debeRecibir = balances.filter((b) => b.balance > 0.01).sort((a, b) => b.balance - a.balance)
+    const debePagar = balances.filter((b) => b.balance < -0.01).sort((a, b) => a.balance - b.balance)
+
+    let i = 0
+    let j = 0
+    while (i < debeRecibir.length && j < debePagar.length) {
+      const receptor = debeRecibir[i]
+      const pagador = debePagar[j]
+
+      const monto = Math.min(receptor.balance, -pagador.balance)
+
+      if (monto > 0.01) {
+        transferencias.push({
+          de: pagador.nombre,
+          a: receptor.nombre,
+          cantidad: Math.round(monto * 100) / 100
         })
-      } else if (neto < 0) {
-        // Esta persona debe ser pagada
-        saldoPendiente += neto
       }
+
+      receptor.balance -= monto
+      pagador.balance += monto
+
+      if (receptor.balance < 0.01) i++
+      if (pagador.balance > -0.01) j++
     }
 
-    return { transferencias }
+    return { transferencias, totalGastado, cuotaPorPersona: Math.round(cuotaPorPersona * 100) / 100 }
   }
 
   const liquidacion = calcularLiquidacion()

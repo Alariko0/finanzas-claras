@@ -7,18 +7,10 @@
  */
 'use client'
 
-import { NavLink, useState, useEffect } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import { auth, obtenerToken, eliminarToken, obtenerUsuario } from '../utils/api'
 import './Inicio.css'
-
-// Estados del formulario
-const [activeTab, setActiveTab] = useState('login')
-const [formData, setFormData] = useState({
-  email: '',
-  password: '',
-  nombre: '',
-  confirmPassword: ''
-})
 
 /**
  * Inicio - Dashboard principal de FinanzasClaras
@@ -37,6 +29,8 @@ const Inicio = () => {
     nombre: '',
     confirmPassword: ''
   })
+  const [errorMsg, setErrorMsg] = useState('')
+  const [successMsg, setSuccessMsg] = useState('')
 
   // Cargar estado de autenticación
   useEffect(() => {
@@ -55,44 +49,54 @@ const Inicio = () => {
     try {
       eliminarToken()
       setUser(null)
-      alert('Has cerrado sesión correctamente.')
+      setSuccessMsg('Has cerrado sesión correctamente.')
+      setTimeout(() => setSuccessMsg(''), 3000)
     } catch (err) {
       console.error('Error al cerrar sesión:', err)
-      alert('Error al cerrar sesión.')
+      setErrorMsg('Error al cerrar sesión.')
+      setTimeout(() => setErrorMsg(''), 3000)
     }
   }
 
   // Login con API
   const handleLogin = async (email, password) => {
+    setErrorMsg('')
+    setSuccessMsg('')
     try {
       const response = await auth.login({ email, password })
 
       if (response.success) {
         setUser(response.usuario)
         setShowLoginModal(false)
-        alert(response.message)
+        setSuccessMsg(response.message)
+        setTimeout(() => setSuccessMsg(''), 3000)
       } else {
-        alert(response.message)
+        setErrorMsg(response.message)
       }
     } catch (err) {
-      alert('Error en el login: ' + err.message)
+      setErrorMsg('Error en el login: ' + err.message)
+      setTimeout(() => setErrorMsg(''), 5000)
     }
   }
 
   // Registro con API
   const handleRegister = async (nombre, email, password) => {
+    setErrorMsg('')
+    setSuccessMsg('')
     try {
       const response = await auth.registro({ nombre, email, password })
 
       if (response.success) {
         setUser(response.usuario)
         setShowLoginModal(false)
-        alert(response.message)
+        setSuccessMsg(response.message)
+        setTimeout(() => setSuccessMsg(''), 3000)
       } else {
-        alert(response.message)
+        setErrorMsg(response.message)
       }
     } catch (err) {
-      alert('Error en el registro: ' + err.message)
+      setErrorMsg('Error en el registro: ' + err.message)
+      setTimeout(() => setErrorMsg(''), 5000)
     }
   }
   const modules = [
@@ -202,6 +206,10 @@ const Inicio = () => {
             </div>
 
             <div className="modal-body">
+              {/* Mensajes de error y éxito */}
+              {errorMsg && <div className="error-message">{errorMsg}</div>}
+              {successMsg && <div className="success-message">{successMsg}</div>}
+
               <div className="tabs">
                 <button
                   className={`tab ${activeTab === 'login' ? 'active' : ''}`}

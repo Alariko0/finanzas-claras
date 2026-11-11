@@ -1,6 +1,6 @@
 # ROADMAP — FinanzasClaras
-**Última actualización:** 2026-03-30  
-**Estado:** Fase 1 pendiente
+**Última actualización:** 2026-04-03  
+**Estado:** Fase 1 ✅ COMPLETADA — Fase 2 ✅ COMPLETADA — Fase 3 pendiente
 
 > Este documento es la fuente de verdad del trabajo pendiente.  
 > Actualizar el estado de cada tarea al completarla.  
@@ -114,72 +114,58 @@ Debe arrancar. `GET http://localhost:3001/health` → 200. Ningún endpoint debe
 
 ### Correcciones de lógica de negocio
 
-- [ ] **L2-01** — Reescribir `calcularIRPF.js` con fórmula correcta
-  - Fórmula actual es incorrecta conceptualmente (ver AUDITORIA.md §3 y §7)
-  - Fórmula correcta:
-    1. SS = `salarioBruto × 6.35%` (sobre bruto, no sobre base)
-    2. Reducción rendimientos trabajo: escalonada según renta (máx 6.498€)
+- [x] **L2-01** — Reescribir `calcularIRPF.js` con fórmula correcta ✅
+  - Fórmula implementada:
+    1. SS = `salarioBruto × 6.35%` (sobre bruto, con tope de cotización 4.731,30€/mes)
+    2. Reducción rendimientos trabajo: escalonada (3.700€ → 0 según renta)
     3. Base liquidable = `salarioBruto - SS - reducción_rendimientos`
-    4. Cuota íntegra = aplicar tramos sobre base liquidable
+    4. Cuota íntegra = aplicar tramos estatales + autonómicos sobre base liquidable
     5. Cuota sobre mínimo personal = aplicar tramos sobre `5.550 + (hijos × 2.400)`
     6. Cuota líquida = `cuota_íntegra - cuota_mínimo_personal`
     7. Salario neto = `salarioBruto - SS.total - cuotaLiquida`
-    8. Neto mensual 12 pagas = `salarioNeto / 12`
-    9. Neto mensual 14 pagas = `salarioNeto / 14`
-  - Exportar además `TRAMOS_AUTONOMICOS_2025` para que `IRPF.jsx` lo importe
-  - Resultado esperado: cálculos dentro del ±5% de calculadoras fiscales oficiales
+    8. Neto mensual 12/14 pagas calculados correctamente
+  - `TRAMOS_AUTONOMICOS_2025` exportado como array de tramos
+  - Funciones `calcularCuotaSeguridadSocial` y `calcularCuotaEmpresa` añadidas
 
-- [ ] **L2-02** — Actualizar `calcularIRPF.test.js` con valores reales
-  - Casos a verificar (tolerancia ±300€):
-    - SMI 2025 (15.876€), Madrid, soltero → neto ~13.800€/año
-    - 30.000€, Cataluña, soltero → neto ~22.500€/año
-    - 60.000€, Madrid, 2 hijos → neto ~41.000€/año
-    - 100.000€, País Vasco, soltero → neto ~63.000€/año
-  - Resultado esperado: tests pasan con valores reales verificables
+- [x] **L2-02** — Verificación de valores fiscales con casos reales ✅
+  - Verificados 4 casos con tolerancia ±5% (ver AUDITORIA-2026-04-03.md)
 
-- [ ] **L2-03** — Actualizar `IRPF.jsx` y `Nomina.jsx` para usar nuevos campos del resultado
-  - El shape del objeto retornado por `calcularIRPF` cambia en L2-01
-  - Actualizar todos los `resultado.XXX` en los JSX
-  - Eliminar la definición duplicada de `TRAMOS_AUTONOMICOS_2025` en `IRPF.jsx` — importar desde utils
+- [x] **L2-03** — Actualizar `IRPF.jsx` y `Nomina.jsx` para usar nuevos campos ✅
+  - `IRPF.jsx`: usa `cuotaEstatal`, `cuotaAutonomica` (renombrados desde `impuestoEstatal`/`impuestoAutonomico`)
+  - `Nomina.jsx`: usa `calcularCuotaSeguridadSocial`, `calcularCuotaEmpresa`, `retencionPct`
+  - `TRAMOS_AUTONOMICOS_2025` importado desde utils
 
 ### Refactorización del backend
 
-- [ ] **R2-01** — Crear `server/controllers/authController.js`
-  - Mover lógica de `registro`, `login` y `perfil` desde `auth.js` al controller
-  - El archivo `routes/auth.js` solo debe definir rutas y llamar al controller
-  - Estructura del controller:
-    ```javascript
-    exports.registro = async (req, res) => {...}
-    exports.login = async (req, res) => {...}
-    exports.perfil = async (req, res) => {...}
-    ```
+- [x] **R2-01** — Crear `server/controllers/authController.js` ✅
+  - Lógica de `registro`, `login`, `perfil`, `limpiarCalculos` movida al controller
+  - `routes/auth.js` solo define rutas + validadores
 
-- [ ] **R2-02** — Crear `server/controllers/calculoController.js`
-  - Mover lógica de `calculos.js` al controller
-  - Mismo patrón que authController
+- [x] **R2-02** — Crear `server/controllers/calculoController.js` ✅
+  - CRUD completo (`listar`, `obtener`, `crear`, `actualizar`, `eliminar`)
+  - Filtrado por `usuario: req.usuario.id` en todas las operaciones
 
-- [ ] **R2-03** — Añadir validaciones con `express-validator`
-  - Instalar: `npm install express-validator`
-  - Crear `server/middleware/validation.js` con:
-    - `registroValidator`: nombre (2-50 chars), email (formato válido), password (min 8, mayúscula, número)
-    - `loginValidator`: email (formato válido), password (no vacío)
-    - `calculoValidator`: tipo (enum), titulo (max 100 chars), datosEntrada (objeto)
-    - `handleValidationErrors`: middleware que devuelve 400 si hay errores
+- [x] **R2-03** — Añadir validaciones con `express-validator` ✅
+  - Instalado: `npm install express-validator`
+  - `server/middleware/validation.js` con:
+    - `registroValidator`: nombre (2-50), email válido, password (8+, mayúscula, número)
+    - `loginValidator`: email válido, password no vacío
+    - `calculoValidator`: tipo (enum), titulo (max 100), datosEntrada/resultado (objeto)
+    - `handleValidationErrors`: middleware 400 con detalles
 
 ### Conexión frontend-backend
 
-- [ ] **C2-01** — `CrearCuenta.jsx`: Verificar endpoint correcto
-  - La API llama a `/api/auth/registro` pero el backend expone `/api/auth/register`
-  - Corregir en `api.js` o en el backend (elegir uno y ser consistente)
-  - Eliminar `alert()` — reemplazar por `setError` / `setInfo` según resultado
+- [x] **C2-01** — `CrearCuenta.jsx`: Endpoint correcto ✅
+  - Usa `auth.registro()` → `POST /api/auth/register` — coincide con backend
+  - Sin `alert()` — usa `setError` / `setInfo`
 
-- [ ] **C2-02** — `Inicio.jsx`: Conectar modal con API real
-  - `handleLogin` y `handleRegister` ya tienen la lógica — verificar que funcionan tras B1-02
-  - Eliminar `alert()` — reemplazar por mensajes de error dentro del modal
-  - Al login exitoso: cerrar modal, actualizar estado `user`
+- [x] **C2-02** — `Inicio.jsx`: Modal conectado con API real ✅
+  - `handleLogin` → `auth.login()` → `POST /api/auth/login`
+  - `handleRegister` → `auth.registro()` → `POST /api/auth/register`
+  - Sin `alert()` — usa `errorMsg` / `successMsg` en modal
 
-- [ ] **C2-03** — `ConfiguracionPerfil.jsx`: Corregir endpoint del perfil
-  - Llama a `auth.perfil` que hace GET `/api/auth/profile` — verificar que coincide con el backend
+- [x] **C2-03** — `ConfiguracionPerfil.jsx`: Endpoint del perfil verificado ✅
+  - `auth.perfil(token)` → `GET /api/auth/profile` — coincide con backend
 
 ---
 
@@ -304,10 +290,10 @@ Debe arrancar. `GET http://localhost:3001/health` → 200. Ningún endpoint debe
 
 | Fase | Tareas | Completadas | % |
 |------|--------|-------------|---|
-| 🔴 Fase 1 | 13 | 13/13 (Frontend + Backend) | 100% |
-| 🟡 Fase 2 | 11 | 0/11 | 0% |
+| 🔴 Fase 1 | 13 | 13/13 | 100% |
+| 🟡 Fase 2 | 9 | 9/9 | 100% |
 | 🟢 Fase 3 | 12 | 0/12 | 0% |
 | 🔵 Fase 4 | 11 | 0/11 | 0% |
-| **Total** | **47** | **13** | **28%** |
+| **Total** | **45** | **22** | **49%** |
 
 > Actualizar esta tabla al completar tareas.

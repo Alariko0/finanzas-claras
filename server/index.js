@@ -20,11 +20,12 @@ const mongoSanitize = require('express-mongo-sanitize')
 const app = express()
 const PORT = process.env.PORT || 3001
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/finanzas-claras'
-const JWT_SECRET = process.env.JWT_SECRET || 'FC_SECRET_KEY_CHANGE_ME_IN_PRODUCTION'
+const JWT_SECRET = process.env.JWT_SECRET
 
-// Validar JWT_SECRET (no continuar sin él en producción)
-if (!JWT_SECRET || JWT_SECRET === 'FC_SECRET_KEY_CHANGE_ME_IN_PRODUCTION') {
-  console.warn('ADVERTENCIA: JWT_SECRET no configurado correctamente')
+// Validar JWT_SECRET (obligatorio para arrancar)
+if (!JWT_SECRET) {
+  console.error('❌ JWT_SECRET no está definido en .env. El servidor no puede arrancar.')
+  process.exit(1)
 }
 
 // Seguridad básica con helmet
@@ -63,12 +64,16 @@ const authRoutes = require('./routes/auth')
 const calculoRoutes = require('./routes/calculos')
 const irpfRoutes = require('./routes/irpf')
 const nominaRoutes = require('./routes/nomina')
+const gastosRoutes = require('./routes/gastos')
+const hipotecasRoutes = require('./routes/hipotecas')
 
 // Definir rutas
 app.use('/api/auth', authRoutes)
 app.use('/api/calculos', calculoRoutes)
 app.use('/api/irpf', irpfRoutes)
 app.use('/api/nomina', nominaRoutes)
+app.use('/api/gastos', gastosRoutes)
+app.use('/api/hipotecas', hipotecasRoutes)
 
 // Conexión a MongoDB
 mongoose
