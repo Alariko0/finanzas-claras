@@ -47,8 +47,9 @@ Respuesta: `{ success, message?, data?, errors? }`.
 | PUT | `/api/calculos/:id` | Actualizar `titulo`, `datosEntrada`, `resultado` |
 | DELETE | `/api/calculos/:id` | Eliminar |
 
-Los cálculos fiscales y financieros (IRPF, nómina, préstamos, etc.) se añaden en las fases 3 y 4
-del plan (`PLAN-DE-ACCION.md`) como servicios en `server/services/`.
+Los cálculos fiscales y financieros viven como funciones puras en `server/services/` (hoy
+`services/fiscal/`: datos 2026 con fuente, escalas, mínimos y `liquidacionIRPF`). Los endpoints
+`/api/fiscal/*` y los préstamos se añaden en las fases 3 y 4 del desarrollo.
 
 ## Scripts
 

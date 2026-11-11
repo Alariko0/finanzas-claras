@@ -2,7 +2,7 @@
 
 > Aplicación web (React + Express + Supabase) que democratiza el acceso a herramientas financieras y fiscales complejas en España
 
-Estado y hoja de ruta: [`PLAN-DE-ACCION.md`](PLAN-DE-ACCION.md) · Guía para desarrollo: las reglas del proyecto · API: [`server/README.md`](server/README.md)
+API: [`server/README.md`](server/README.md)
 
 ---
 
@@ -162,7 +162,8 @@ finanzas-claras/
 │   ├── config/                ← cliente de Supabase
 │   ├── middleware/            ← auth (JWT de Supabase), validación, rate limit
 │   ├── controllers/ routes/   ← endpoints
-│   ├── services/              ← lógica fiscal y financiera pura (fases 3-4)
+│   ├── services/fiscal/       ← motor fiscal puro: datos 2026 con fuente, escalas, mínimos, liquidación IRPF
+│   │                            (los préstamos llegan en la fase 4)
 │   └── tests/                 ← Jest + Supertest
 └── supabase/migrations/       ← esquema y políticas RLS versionados
 ```
@@ -172,7 +173,7 @@ finanzas-claras/
 ## 📱 Módulos y Jerarquía
 
 ### Grupo A — Núcleo Fiscal
-- **Lógica Fiscal IRPF 2025** - Cálculo de impuestos progresivo + autonómico
+- **Lógica Fiscal IRPF 2026** - Cálculo de impuestos progresivo + autonómico, con datos y fuente oficial por comunidad
 - **Calculadora de Nómina** - Desglose visual de retenciones y Seguridad Social
 
 ### Grupo B — Gastos
@@ -188,7 +189,7 @@ finanzas-claras/
 ### Grupo D — Inversión
 - **Gestión de Inversiones** - Portafolio completo
 - **Simulador Inversión Inmobiliaria** - ROI de propiedades
-- **Simulador Inversión Mobiliaria** - Tramos 2025
+- **Simulador Inversión Mobiliaria** - Escala del ahorro vigente
 - **Detalle de Activo** - Análisis de activos individuales
 
 ### Grupo E — Planificación
@@ -207,9 +208,8 @@ finanzas-claras/
 - **Personalizar Módulos** - Configuración de módulos
 - **Notificaciones y Alertas** - Gestión de notificaciones
 
-### Grupo H — IA y Sistema
-- **Asistente de IA Fiscal** - Chatbot especializado en dudas fiscales
-- **Estructura Backend MERN** - Referencia técnica
+### Grupo H — Asistente
+- **Asistente Fiscal** - Respuestas a dudas fiscales basadas en reglas, con fuente oficial
 
 ---
 
@@ -228,11 +228,9 @@ finanzas-claras/
 
 ## 📋 Requisitos del MVP
 
-El detalle por fases, tareas y estimaciones está en [`PLAN-DE-ACCION.md`](PLAN-DE-ACCION.md).
-
 - [x] Autenticación (Supabase Auth) y esquema con RLS
 - [x] API base: cálculos guardados, perfil, rate limits, health
-- [ ] Motor fiscal en servidor: IRPF, nómina, ahorro
+- [ ] Motor fiscal en servidor: IRPF, nómina, ahorro _(en curso: datos 2026 y liquidación del IRPF hechos; faltan retención, nómina, ahorro y endpoints)_
 - [ ] Hipotecas, préstamos y amortización con TAE
 - [ ] Conectar las calculadoras con el historial
 - [ ] Inversión, jubilación, patrimonio, gastos, viajes y notificaciones reales
@@ -253,21 +251,38 @@ El detalle por fases, tareas y estimaciones está en [`PLAN-DE-ACCION.md`](PLAN-
 
 ## 🚀 Comienzo Rápido
 
+### 1. Supabase
+
+La base de datos y la autenticación están en Supabase (no hay MongoDB ni login propio).
+
+1. Crea un proyecto en [supabase.com](https://supabase.com) y copia la **URL** y la **clave publishable** (`sb_publishable_…`) desde *Settings > API*.
+2. Aplica el esquema: ejecuta en orden los archivos de `supabase/migrations/` (con el CLI de Supabase o desde el editor SQL). Crean las tablas y las políticas RLS (`user_id = auth.uid()`).
+3. En *Authentication* deja activada la confirmación de correo. Con el SMTP por defecto de Supabase el límite de correos es bajo: en producción configura uno propio.
+
+### 2. Instalación y variables
+
 ```bash
-# Instalación
 cd server && pnpm install
 cd ../client && pnpm install
 
-# Configuración (copia los ejemplos y rellena los valores; nunca subas .env)
+# Copia los ejemplos y rellena la URL y la clave publishable (nunca subas .env)
 cp server/.env.example server/.env
 cp client/.env.example client/.env
+```
 
-# Desarrollo (dos terminales)
+El servidor no usa la clave de servicio (`service_role`): consulta la base con el token del usuario.
+
+### 3. Desarrollo (dos terminales)
+
+```bash
 cd server && pnpm dev     # http://localhost:3001
 cd client && pnpm dev     # http://localhost:3000
+```
 
-# Tests y build
-cd server && pnpm test
+### 4. Tests y build
+
+```bash
+cd server && pnpm test && pnpm lint
 cd client && pnpm build
 ```
 

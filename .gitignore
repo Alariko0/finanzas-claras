@@ -1,47 +1,22 @@
-# Node dependencies
+# Dependencias
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Environment files
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Build outputs
-dist/
-build/
-
-# Logs
-logs
-*.log
-pids
-*.pid
-*.seed
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# VSCode
-.vscode/
-
-# Vite / React
-*.vitepress/cache
-*.turbo
-
-# MacOS
-*.DS_Store
 
 # Secretos y entornos (nunca se suben; solo .env.example)
 .env
 .env.*
 !.env.example
 *.env
-supabase/.temp/
-supabase/.branches/
 *.pem
 *.key
+supabase/.temp/
+supabase/.branches/
+
+# Build (Vite genera dist/)
+dist/
+
+# Logs
+*.log
+pnpm-debug.log*
+
+# Windows
+Thumbs.db
